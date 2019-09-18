@@ -1,4 +1,4 @@
-package com.mourad.datamule
+package com.project.datamule
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Datamule</string>
+    <string name="title">Data Mule</string>
 
-    <string name="splash_title">Data Mule</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <!--HomeActivity Strings-->
+    <string name="title_activity_home">fdsfs</string>
 </resources>

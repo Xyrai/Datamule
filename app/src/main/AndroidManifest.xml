@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mourad.datamule">
+          package="com.project.datamule">
 
     <application
             android:allowBackup="true"
@@ -10,12 +10,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".HomeActivity"
-                android:label="@string/title_activity_home"
+                android:name="com.project.datamule.HomeActivity"
+                android:label="@string/title"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".SplashActivity"
+                android:name="com.project.datamule.SplashActivity"
                 android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

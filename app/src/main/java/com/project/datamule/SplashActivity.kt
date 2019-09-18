@@ -1,4 +1,4 @@
-package com.mourad.datamule
+package com.project.datamule
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +44,6 @@ class SplashActivity : AppCompatActivity() {
                 )
             )
             finish()
-        }, 1000)
+        }, 2000)
     }
 }

@@ -1,4 +1,4 @@
-package com.mourad.datamule
+package com.project.datamule
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

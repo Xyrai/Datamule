@@ -1,4 +1,4 @@
-package com.mourad.datamule
+package com.project.datamule
 
 import org.junit.Test
 
