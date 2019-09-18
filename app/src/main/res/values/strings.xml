@@ -3,5 +3,6 @@
     <string name="title">Data Mule</string>
 
     <!--HomeActivity Strings-->
-    <string name="title_activity_home">fdsfs</string>
+    <string name="menu_button_title">Settings</string>
+    <string name="add_new_pi_button">Add a new Pi</string>
 </resources>
