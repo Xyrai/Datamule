@@ -9,5 +9,9 @@
     <!--SettingsActivity Strings-->
     <string name="settings_title">Settings</string>
 
-
+    <!--SearchPiActivity Strings-->
+    <string name="add_pi_text">No Pi\'s Found!</string>
+    <string name="add_pi_desc_text">Try adding one
+    \nby clicking \'Search\'</string>
+    <string name="search_button">Search</string>
 </resources>
