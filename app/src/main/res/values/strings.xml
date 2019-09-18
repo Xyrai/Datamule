@@ -8,6 +8,8 @@
 
     <!--SettingsActivity Strings-->
     <string name="settings_title">Settings</string>
+    <string name="settings_max_storage">storage: %d MB</string>
+    <string name="settings_ram">available ram: %d MB</string>
 
 
 </resources>
