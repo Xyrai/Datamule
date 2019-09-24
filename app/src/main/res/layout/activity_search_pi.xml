@@ -8,7 +8,7 @@
 
     <Button
         android:id="@+id/btnSearchPi"
-        android:layout_width="wrap"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="@drawable/custom_button"
