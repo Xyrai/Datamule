@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Datamule</string>
-    <string name="title">Data Mule</string>
+    <string name="app_name">DataMule</string>
 
     <!--HomeActivity Strings-->
     <string name="menu_button_title">Settings</string>

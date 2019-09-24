@@ -16,13 +16,11 @@
         <activity android:name=".UI.SearchPiActivity"
             android:parentActivityName=".UI.HomeActivity"></activity>
         <activity
-            android:name=".UI.SettingsActivity"
-            android:label="@string/settings_title" />
+            android:name=".UI.SettingsActivity"/>
 
         <activity
             android:name=".UI.HomeActivity"
-            android:label="@string/title"
-            android:theme="@style/AppTheme.NoActionBar" />
+            />
         <activity
             android:name=".UI.SplashActivity">
             <intent-filter>
