@@ -10,9 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_home.*
-import android.widget.Toast
 import com.project.datamule.Constants.Companion.REQUEST_ENABLE_BT
-
+import kotlinx.android.synthetic.main.content_home.*
 
 class HomeActivity : AppCompatActivity() {
 
@@ -29,6 +28,12 @@ class HomeActivity : AppCompatActivity() {
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()
 //        }
+
+        btnNewPi.setOnClickListener {
+            // Handler code here.
+            val intent = Intent(this, SearchPiActivity::class.java)
+            startActivity(intent);
+        }
     }
 
     /**
