@@ -1,11 +1,11 @@
-package com.project.datamule
+package com.project.datamule.UI
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ProgressBar
 import android.os.Handler
-
+import com.project.datamule.R
 
 
 class SplashActivity : AppCompatActivity() {
@@ -27,8 +27,8 @@ class SplashActivity : AppCompatActivity() {
                     pgsBar.progress = i
                 })
                 try {
-                    // Sleep for 100 milliseconds to show the progress slowly.
-                    Thread.sleep(100)
+                    // Sleep for 50 milliseconds to show the progress slowly.
+                    Thread.sleep(50)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
@@ -44,6 +44,6 @@ class SplashActivity : AppCompatActivity() {
                 )
             )
             finish()
-        }, 2000)
+        }, 2500)
     }
 }

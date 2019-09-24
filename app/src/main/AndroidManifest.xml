@@ -13,18 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchPiActivity"
-            android:parentActivityName=".HomeActivity"></activity>
+        <activity android:name=".UI.SearchPiActivity"
+            android:parentActivityName=".UI.HomeActivity"></activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".UI.SettingsActivity"
             android:label="@string/settings_title" />
+
         <activity
-            android:name=".HomeActivity"
+            android:name=".UI.HomeActivity"
             android:label="@string/title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SplashActivity"
-            android:theme="@style/SplashScreenTheme">
+            android:name=".UI.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,9 +32,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

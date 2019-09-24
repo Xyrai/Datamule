@@ -21,4 +21,7 @@
     <string name="add_pi_desc_text">Try adding one
     \nby clicking \'Search\'</string>
     <string name="search_button">Search</string>
+
+    <!--FontAwesome5 Strings-->
+    <string name="font_awesome_cog_icon">&#xf013;</string>
 </resources>

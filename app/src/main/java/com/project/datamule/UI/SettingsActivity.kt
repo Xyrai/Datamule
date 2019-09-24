@@ -1,4 +1,4 @@
-package com.project.datamule
+package com.project.datamule.UI
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +11,7 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_home.*
+import com.project.datamule.R
 
 
 class SettingsActivity : AppCompatActivity() {

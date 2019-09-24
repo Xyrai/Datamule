@@ -1,7 +1,8 @@
-package com.project.datamule
+package com.project.datamule.UI
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.project.datamule.R
 
 class SearchPiActivity : AppCompatActivity() {
 
