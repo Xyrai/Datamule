@@ -27,8 +27,8 @@ class SplashActivity : AppCompatActivity() {
                     pgsBar.progress = i
                 })
                 try {
-                    // Sleep for 100 milliseconds to show the progress slowly.
-                    Thread.sleep(100)
+                    // Sleep for 50 milliseconds to show the progress slowly.
+                    Thread.sleep(50)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
