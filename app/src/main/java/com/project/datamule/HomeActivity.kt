@@ -1,16 +1,26 @@
 package com.project.datamule
 
+import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_home.*
+import android.widget.Toast
+import com.project.datamule.Constants.Companion.REQUEST_ENABLE_BT
+
 
 class HomeActivity : AppCompatActivity() {
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+//        isBluetoothAvailable()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
@@ -43,6 +53,43 @@ class HomeActivity : AppCompatActivity() {
         }
         return true
     }
+
+//    private fun isBluetoothAvailable() {
+//        var manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+//        var mBluetoothAdapter = manager.adapter
+//
+//        if (mBluetoothAdapter.isEnabled) {
+//            Toast.makeText(this, "wel bluetooth!!!", Toast.LENGTH_LONG).show()
+//        } else {
+//            Toast.makeText(this, "NOOOO bluetooth!!!", Toast.LENGTH_LONG).show()
+////            buildAlertMessageNoBluetooth(mBluetoothAdapter)
+//        }
+//    }
+
+//    private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
+////        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+//
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle(R.string.bluetooth_alert_title)
+//            .setMessage(R.string.bluetooth_alert_text)
+//            .setCancelable(false)
+//            .setPositiveButton(R.string.bluetooth_alert_positive_button
+//            ) { dialog, id ->
+//                // Button for going to wifi settings
+//                bluetoothAdapter.enable()
+////                val enableBtIntent = Intent()
+////                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+//            }
+//            .setNegativeButton(R.string.bluetooth_alert_negative_button
+//            ) { dialog, which ->
+//                // Cancel button, brings you back to main activity
+//                val intent = Intent(Intent.ACTION_MAIN)
+//                intent.addCategory(Intent.CATEGORY_HOME)
+//                startActivity(intent)
+//            }
+//        val alert = builder.create()
+//        alert.show()
+//    }
 
 
 }

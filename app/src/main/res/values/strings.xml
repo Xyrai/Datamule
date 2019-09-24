@@ -6,6 +6,11 @@
     <string name="menu_button_title">Settings</string>
     <string name="add_new_pi_button">Add a new Pi</string>
 
+    <string name="bluetooth_alert_title">Bluetooth is turned off</string>
+    <string name="bluetooth_alert_text">Your bluetooth is turned off. Please turn on your bluetooth to continue.</string>
+    <string name="bluetooth_alert_positive_button">Turn on</string>
+    <string name="bluetooth_alert_negative_button">Cancel</string>
+
     <!--SettingsActivity Strings-->
     <string name="settings_title">Settings</string>
 

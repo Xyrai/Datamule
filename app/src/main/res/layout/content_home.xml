@@ -10,7 +10,7 @@
         tools:context=".HomeActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/rvPiList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -27,7 +27,7 @@
             android:text="@string/add_new_pi_button"
             android:textAllCaps="false"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
+            app:layout_constraintBottom_toBottomOf="@+id/rvPiList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.75" />
