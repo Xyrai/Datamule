@@ -7,6 +7,20 @@
     tools:context=".UI.SettingsActivity">
 
     <TextView
+        android:id="@+id/tvBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|top"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:text="@string/font_awesome_arrow_icon"
+        android:textSize="36sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/tvStorage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -49,19 +63,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="325dp"
-        android:layout_height="260dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="59dp"
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="266dp"
+        android:text="TextView"
+        android:elevation="6dp"
+        android:gravity="center"
+        android:background="@drawable/setting_pill"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRam"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/tvRam" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

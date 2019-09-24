@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_home.*
@@ -23,11 +24,14 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Data Mule"
-
+        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
+        tvBack.setTypeface(fontAwesomeFont)
+        tvBack.setOnClickListener { onClickBack() }
         setStorage()
+    }
+
+    fun onClickBack() {
+        finish()
     }
 
     private fun setStorage() {
@@ -55,19 +59,5 @@ class SettingsActivity : AppCompatActivity() {
     }
 
 
-    /**
-     * Handles a click on the menu option to get a place.
-     * @param item The menu item to handle.
-     * @return Boolean.
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item?.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
 
 }

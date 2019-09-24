@@ -23,5 +23,7 @@
     <string name="search_button">Search</string>
 
     <!--FontAwesome5 Strings-->
+    <!--remove from x till ; -->
     <string name="font_awesome_cog_icon">&#xf013;</string>
+    <string name="font_awesome_arrow_icon">&#xf060;</string>
 </resources>

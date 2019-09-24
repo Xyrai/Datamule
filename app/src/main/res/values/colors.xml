@@ -8,4 +8,10 @@
     <!--Button pressed colors-->
     <color name="colorPressedPrimary">#9af10e</color>
     <color name="colorPressedPrimaryDark">#6cc00c</color>
+
+    <!-- Settings progressbarcolors-->
+    <color name="pbColorGreen">#6EBB1D</color>
+    <color name="pbColorBlue">#0072CE</color>
+    <color name="pbColorOrange">#FF6F34</color>
+    <color name="pbColorBlack">#2D2D2D</color>
 </resources>
