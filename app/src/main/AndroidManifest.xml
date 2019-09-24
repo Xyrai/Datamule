@@ -17,8 +17,7 @@
             android:parentActivityName=".HomeActivity"></activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/settings_title"
-            android:parentActivityName=".HomeActivity" />
+            android:label="@string/settings_title" />
         <activity
             android:name=".HomeActivity"
             android:label="@string/title"

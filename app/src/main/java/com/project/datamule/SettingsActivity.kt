@@ -7,6 +7,10 @@ import android.os.StatFs
 import kotlinx.android.synthetic.main.activity_settings.*
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_home.*
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -19,6 +23,15 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun initView() {
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Data Mule"
+
+        setStorage()
+    }
+
+    private fun setStorage() {
+
+        setProgressBar()
         //storage
         //TODO fix internal storage size (its the SDcard size now)
         val stat: StatFs = StatFs(Environment.getExternalStorageDirectory().getPath())
@@ -34,11 +47,26 @@ class SettingsActivity : AppCompatActivity() {
         val availableRam = memInfo.availMem / 0x100000L
         println("HIEROO" + availableRam)
         tvRam.text = getString(R.string.settings_ram, availableRam)
-
-
-
-
-
-
     }
+
+    private fun setProgressBar() {
+        pbStorage.setProgress(45)
+    }
+
+
+    /**
+     * Handles a click on the menu option to get a place.
+     * @param item The menu item to handle.
+     * @return Boolean.
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
 }
