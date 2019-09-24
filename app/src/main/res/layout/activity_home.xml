@@ -5,22 +5,24 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HomeActivity">
+        tools:context=".UI.HomeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+            android:theme="@style/AppTheme.AppBarOverlay"/>
 
     <include layout="@layout/content_home"/>
+
+    <TextView
+            android:id="@+id/tvSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/top_button"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:text="@string/font_awesome_cog_icon"
+            android:textSize="36sp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

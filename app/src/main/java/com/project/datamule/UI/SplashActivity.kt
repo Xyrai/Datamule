@@ -1,11 +1,11 @@
-package com.project.datamule
+package com.project.datamule.UI
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ProgressBar
 import android.os.Handler
-
+import com.project.datamule.R
 
 
 class SplashActivity : AppCompatActivity() {
