@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="top_button">25dp</dimen>
+    <dimen name="end_pill">220dp</dimen>
 </resources>
