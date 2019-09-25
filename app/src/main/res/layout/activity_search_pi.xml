@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".UI.SearchPiActivity">
 
+    <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_arrow" />
+
     <include
         android:id="@+id/include"
         layout="@layout/logo_overlay"
@@ -62,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/rubik"
+        android:gravity="center"
         android:text="@string/add_pi_desc_text"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/myRectangleView"
@@ -77,16 +89,5 @@
         app:layout_constraintEnd_toEndOf="@+id/myRectangleView"
         app:layout_constraintStart_toStartOf="@+id/myRectangleView"
         app:layout_constraintTop_toTopOf="@+id/myRectangleView" />
-
-    <TextView
-            android:id="@+id/tvBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/top_button"
-            android:text="@string/font_awesome_arrow_icon"
-            android:textColor="@color/colorAccent"
-            android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

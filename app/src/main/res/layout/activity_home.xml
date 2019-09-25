@@ -14,21 +14,13 @@
 
     <include layout="@layout/content_home"/>
 
-    <include
-            layout="@layout/logo_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    <TextView
-            android:id="@+id/tvSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <ImageView
+            android:id="@+id/ivSettings"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="top|end"
             android:layout_margin="@dimen/top_button"
-            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:text="@string/font_awesome_cog_icon"
-            android:textColor="@color/colorAccent"
-            android:textSize="30sp" />
+            app:srcCompat="@drawable/logo_cog" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

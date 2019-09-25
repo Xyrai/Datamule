@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".UI.SettingsActivity">
 
+<<<<<<< HEAD
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout9"
         android:layout_width="0dp"
@@ -52,6 +53,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/log"
             app:layout_constraintTop_toTopOf="parent" />
+=======
+    <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_arrow" />
+>>>>>>> 9ba28b440f74be51836806128c360b37f5606b3f
 
         <ImageView
             android:id="@+id/ivlog"
@@ -217,6 +230,7 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         app:layout_constraintWidth_percent="0.85">
 
+<<<<<<< HEAD
         <TextView
             android:id="@+id/down"
             android:layout_width="wrap_content"
@@ -265,6 +279,15 @@
             app:srcCompat="@drawable/circle_color_blue" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+=======
+    <include
+            layout="@layout/logo_overlay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+>>>>>>> 9ba28b440f74be51836806128c360b37f5606b3f
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

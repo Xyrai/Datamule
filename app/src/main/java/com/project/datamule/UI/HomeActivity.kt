@@ -3,18 +3,24 @@ package com.project.datamule.UI
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.project.datamule.Adapter.PiAdapter
+import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 
 class HomeActivity : AppCompatActivity() {
 
-
+    private var pi_s = arrayListOf<Pi>()
+    private var piAdapter = PiAdapter(pi_s, {clickedPi: Pi -> onPiClicked(clickedPi)})
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        isBluetoothAvailable()
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
@@ -22,11 +28,19 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun initViews() {
-        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
-        tvSettings.setTypeface(fontAwesomeFont)
-        tvSettings.setOnClickListener { onClickOpenSettings() }
+        //Initialize Buttons
+        ivSettings.setOnClickListener { onClickOpenSettings() }
 
         btnNewPi.setOnClickListener { onClickOpenSearchPi() }
+
+        //Initialize RecyclerView
+        rvPiList.layoutManager = LinearLayoutManager(this@HomeActivity, RecyclerView.VERTICAL, false)
+        rvPiList.adapter = piAdapter
+
+        for (i in Pi.PI_S.indices) {
+            pi_s.add(Pi(Pi.PI_S[i]))
+        }
+        piAdapter.notifyDataSetChanged()
     }
 
     fun onClickOpenSearchPi() {
@@ -38,6 +52,13 @@ class HomeActivity : AppCompatActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
     }
+
+    fun onPiClicked(clickedPi: Pi) {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra(PI_EXTRA, clickedPi)
+        startActivity(intent)
+    }
+
 
 //
 //    /**

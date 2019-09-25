@@ -16,9 +16,9 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
-        tvBack.setTypeface(fontAwesomeFont)
-        tvBack.setOnClickListener { onClickBack() }
+//        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
+//        tvBack.setTypeface(fontAwesomeFont)
+        ivBack.setOnClickListener { onClickBack() }
     }
 
     fun onClickBack() {
