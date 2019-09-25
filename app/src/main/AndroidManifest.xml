@@ -8,9 +8,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ecology"
+        android:icon="@drawable/logo_no_text"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ecology"
+        android:roundIcon="@drawable/logo_no_text"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".UI.SearchPiActivity"

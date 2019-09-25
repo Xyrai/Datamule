@@ -11,5 +11,5 @@
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginTop="15dp"
-            app:srcCompat="@drawable/logo_no_bg" />
+            app:srcCompat="@drawable/logo_text_no_bg" />
 </LinearLayout>

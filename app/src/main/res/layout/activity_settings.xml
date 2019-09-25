@@ -72,7 +72,7 @@
         android:layout_marginTop="72dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="266dp"
-        android:background="@drawable/setting_pill"
+        android:background="@drawable/rectangle_color_white"
         android:drawableLeft="@drawable/circle_color_green"
         android:elevation="6dp"
         android:gravity="left|center_vertical"
@@ -93,7 +93,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:background="@drawable/setting_pill"
+        android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
