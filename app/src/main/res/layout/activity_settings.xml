@@ -6,20 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".UI.SettingsActivity">
 
-    <TextView
-            android:id="@+id/tvBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|top"
+    <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="25dp"
             android:layout_marginTop="25dp"
-            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:text="@string/font_awesome_arrow_icon"
-            android:textColor="@color/colorAccent"
-            android:textSize="36sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_arrow" />
 
     <TextView
         android:id="@+id/tvStorage"

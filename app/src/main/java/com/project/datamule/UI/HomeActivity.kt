@@ -29,9 +29,7 @@ class HomeActivity : AppCompatActivity() {
 
     fun initViews() {
         //Initialize Buttons
-        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
-        tvSettings.setTypeface(fontAwesomeFont)
-        tvSettings.setOnClickListener { onClickOpenSettings() }
+        ivSettings.setOnClickListener { onClickOpenSettings() }
 
         btnNewPi.setOnClickListener { onClickOpenSearchPi() }
 
