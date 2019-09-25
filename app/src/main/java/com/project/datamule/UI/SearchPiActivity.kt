@@ -1,6 +1,5 @@
 package com.project.datamule.UI
 
-import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.project.datamule.R

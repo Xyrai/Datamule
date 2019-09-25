@@ -7,11 +7,6 @@ import android.os.StatFs
 import kotlinx.android.synthetic.main.activity_settings.*
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent
-import android.graphics.Typeface
-import android.view.Menu
-import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_home.*
 import com.project.datamule.R
 
 

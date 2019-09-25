@@ -15,6 +15,10 @@
     <string name="settings_max_storage">storage: %d MB</string>
     <string name="settings_ram">available ram: %d MB</string>
 
+    <!--DetailActivity Strings-->
+    <string name="detail_text_distance_1">Raspberry Pi is</string>
+    <string name="detail_text_distance_2">%dm away</string>
+
     <!--SearchPiActivity Strings-->
     <string name="add_pi_text">No Pi\'s Found!</string>
     <string name="add_pi_desc_text">Try adding one
