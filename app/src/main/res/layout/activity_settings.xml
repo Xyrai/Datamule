@@ -6,9 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".UI.SettingsActivity">
 
-<<<<<<< HEAD
+    <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_arrow" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout9"
+        android:id="@+id/clChangeLog"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -20,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout8"
+        app:layout_constraintTop_toBottomOf="@+id/clPushNotification"
         app:layout_constraintWidth_percent="0.85">
 
         <TextView
@@ -53,18 +63,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/log"
             app:layout_constraintTop_toTopOf="parent" />
-=======
-    <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
-            android:clickable="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo_arrow" />
->>>>>>> 9ba28b440f74be51836806128c360b37f5606b3f
 
         <ImageView
             android:id="@+id/ivlog"
@@ -82,7 +80,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout4"
+        android:id="@+id/clStorageCache"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -92,10 +90,10 @@
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
         android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout5"
+        app:layout_constraintBottom_toTopOf="@+id/clStorageFree"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/clStorageDownloads"
         app:layout_constraintWidth_percent="0.85">
 
         <TextView
@@ -148,7 +146,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout5"
+        android:id="@+id/clStorageFree"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -161,7 +159,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnDeleteCache"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
+        app:layout_constraintTop_toBottomOf="@+id/clStorageCache"
         app:layout_constraintWidth_percent="0.85">
 
         <TextView
@@ -214,7 +212,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+        android:id="@+id/clStorageDownloads"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -224,13 +222,12 @@
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
         android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
+        app:layout_constraintBottom_toTopOf="@+id/clStorageCache"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintTop_toBottomOf="@+id/clStorageOtherApps"
         app:layout_constraintWidth_percent="0.85">
 
-<<<<<<< HEAD
         <TextView
             android:id="@+id/down"
             android:layout_width="wrap_content"
@@ -279,7 +276,7 @@
             app:srcCompat="@drawable/circle_color_blue" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-=======
+
     <include
             layout="@layout/logo_overlay"
             android:layout_width="0dp"
@@ -287,10 +284,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
->>>>>>> 9ba28b440f74be51836806128c360b37f5606b3f
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/clStorageOtherApps"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -300,7 +296,7 @@
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
         android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/clStorageDownloads"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.475"
         app:layout_constraintStart_toStartOf="parent"
@@ -357,7 +353,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout8"
+        android:id="@+id/clPushNotification"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -420,21 +416,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-            android:id="@+id/tvBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|top"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:text="@string/font_awesome_arrow_icon"
-            android:textColor="@color/colorAccent"
-            android:textSize="36sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/tvStorage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -446,7 +427,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnDeleteCache"
         app:layout_constraintEnd_toStartOf="@+id/tvRam"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/clStorageFree" />
 
     <TextView
         android:id="@+id/tvRam"
@@ -458,7 +439,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnDeleteCache"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvStorage"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/clStorageFree" />
 
     <ProgressBar
         android:id="@+id/pbStorage"
@@ -469,7 +450,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintBottom_toTopOf="@+id/clStorageOtherApps"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -483,17 +464,17 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:layout_marginBottom="29dp"
-        android:text="@string/storage_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/pbStorage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include2" />
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="29dp"
+            android:text="@string/storage_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintBottom_toTopOf="@+id/pbStorage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include2" />
 
     <Button
         android:id="@+id/btnDeleteCache"
@@ -511,7 +492,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/clStorageFree" />
 
     <View
         android:id="@+id/divider2"
@@ -519,7 +500,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="8dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout8"
+        app:layout_constraintBottom_toTopOf="@+id/clPushNotification"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDeleteCache" />

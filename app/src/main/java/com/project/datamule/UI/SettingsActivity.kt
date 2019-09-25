@@ -7,6 +7,7 @@ import android.os.StatFs
 import kotlinx.android.synthetic.main.activity_settings.*
 import android.app.ActivityManager
 import android.content.Context
+import android.graphics.Typeface
 import com.project.datamule.R
 
 
@@ -19,16 +20,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-<<<<<<< HEAD
         var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
-        tvBack.setTypeface(fontAwesomeFont)
         tvPushArrow.setTypeface(fontAwesomeFont)
-        tvBack.setOnClickListener { onClickBack() }
-=======
-//        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
-//        tvBack.setTypeface(fontAwesomeFont)
         ivBack.setOnClickListener { onClickBack() }
->>>>>>> 9ba28b440f74be51836806128c360b37f5606b3f
         setStorage()
     }
 
