@@ -14,4 +14,11 @@
     <color name="pbColorBlue">#0072CE</color>
     <color name="pbColorOrange">#FF6F34</color>
     <color name="pbColorBlack">#2D2D2D</color>
+
+    <!-- Settings delete cache -->
+    <color name="deleteCacheColorGreyPrimary">#707070</color>
+    <color name="deleteCacheColorDarkGreyPrimary">#595959</color>
+    <color name="deleteCacheColorGreyPressed">#8c8c8c</color>
+    <color name="deleteCacheColorDarkGreyPressed">#808080</color>
+
 </resources>

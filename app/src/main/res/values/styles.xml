@@ -16,4 +16,9 @@
     <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.NoActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light.NoActionBar"/>
 
+    <style name="SwitchTheme">
+        <item name="colorControlActivated">@color/pbColorGreen</item>
+    </style>
+
+
 </resources>
