@@ -5,9 +5,11 @@
     <color name="colorAccent">#000000</color>
     <color name="white">#FFFFFF</color>
 
-    <!--Button pressed colors-->
+    <!--Button default colors-->
     <color name="colorPressedPrimary">#9af10e</color>
     <color name="colorPressedPrimaryDark">#6cc00c</color>
+    <color name="colorDisabledPrimary">#737373</color>
+    <color name="colorDisabledSecondary">#8c8c8c</color>
 
     <!-- Settings progressbarcolors-->
     <color name="pbColorGreen">#6EBB1D</color>
@@ -15,10 +17,16 @@
     <color name="pbColorOrange">#FF6F34</color>
     <color name="pbColorBlack">#2D2D2D</color>
 
-    <!-- Settings delete cache -->
+    <!-- Button delete cache -->
     <color name="deleteCacheColorGreyPrimary">#707070</color>
     <color name="deleteCacheColorDarkGreyPrimary">#595959</color>
     <color name="deleteCacheColorGreyPressed">#8c8c8c</color>
     <color name="deleteCacheColorDarkGreyPressed">#808080</color>
+
+    <!-- Button delete -->
+    <color name="deletePrimary">#ff1a1a</color>
+    <color name="deleteSecondary">#ff4d4d</color>
+    <color name="deletePrimaryPressed">#ff3333</color>
+    <color name="deleteSecondaryPressed">#ff6666</color>
 
 </resources>

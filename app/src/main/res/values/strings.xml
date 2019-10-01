@@ -27,6 +27,13 @@
     <!--DetailActivity Strings-->
     <string name="detail_text_distance_1">Raspberry Pi is</string>
     <string name="detail_text_distance_2">%dm away</string>
+    <string name="detail_text_distance_3">Get closer for DataTransfer</string>
+    <string name="detail_no_data">No data available to be synced</string>
+    <string name="detail_no_data_mb">0 MB</string>
+    <string name="detail_data">Data available</string>
+    <string name="detail_data_mb">%d MB</string>
+    <string name="detail_data_button">Transfer Data</string>
+    <string name="detail_data_button_disabled">No Data to Transfer</string>
 
     <!--SearchPiActivity Strings-->
     <string name="add_pi_text">No Pi\'s Found!</string>

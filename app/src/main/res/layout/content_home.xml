@@ -46,5 +46,5 @@
             app:layout_constraintBottom_toBottomOf="@+id/rvPiList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.80" />
+            app:layout_constraintWidth_percent="0.85" />
 </androidx.constraintlayout.widget.ConstraintLayout>
