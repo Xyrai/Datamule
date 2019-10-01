@@ -44,6 +44,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.75" />
 
+    <TextView
+        android:id="@+id/tvNearbyPiTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/rubik"
+        android:text="@string/nearby_pi_title"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <TextView
+        android:id="@+id/tvNearbyPiDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/rubik"
+        android:text="@string/nearby_pi_desc"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNearbyPiTitle" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearchPi"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNearbyPiDesc" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clRectangle"
         android:layout_width="0dp"
@@ -58,7 +94,7 @@
         app:layout_constraintTop_toBottomOf="@+id/include">
 
         <View
-            android:id="@+id/noPiRectangle"
+            android:id="@+id/vNoPiRectangle"
             android:layout_width="294dp"
             android:layout_height="278dp"
             android:background="@drawable/rectangle_color_gray"
@@ -74,9 +110,9 @@
             android:layout_height="116dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/logo_not_found"
-            app:layout_constraintEnd_toEndOf="@+id/noPiRectangle"
-            app:layout_constraintStart_toStartOf="@+id/noPiRectangle"
-            app:layout_constraintTop_toTopOf="@+id/noPiRectangle" />
+            app:layout_constraintEnd_toEndOf="@+id/vNoPiRectangle"
+            app:layout_constraintStart_toStartOf="@+id/vNoPiRectangle"
+            app:layout_constraintTop_toTopOf="@+id/vNoPiRectangle" />
 
         <TextView
             android:id="@+id/tvNoPi"
@@ -84,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/rubik"
-            android:text="@string/add_pi_text"
+            android:text="@string/add_pi_title"
             android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="@+id/clRectangle"
             app:layout_constraintStart_toStartOf="@+id/clRectangle"
@@ -97,11 +133,12 @@
             android:layout_marginTop="16dp"
             android:fontFamily="@font/rubik"
             android:gravity="center"
-            android:text="@string/add_pi_desc_text"
+            android:text="@string/add_pi_desc"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/noPiRectangle"
-            app:layout_constraintStart_toStartOf="@+id/noPiRectangle"
+            app:layout_constraintEnd_toEndOf="@+id/vNoPiRectangle"
+            app:layout_constraintStart_toStartOf="@+id/vNoPiRectangle"
             app:layout_constraintTop_toBottomOf="@+id/tvNoPi" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

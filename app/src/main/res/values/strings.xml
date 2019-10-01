@@ -29,9 +29,11 @@
     <string name="detail_text_distance_2">%dm away</string>
 
     <!--SearchPiActivity Strings-->
-    <string name="add_pi_text">No Pi\'s Found!</string>
-    <string name="add_pi_desc_text">Try adding one
-    \nby clicking \'Search\'</string>
+    <string name="add_pi_title">No Pi\'s Found!</string>
+    <string name="add_pi_desc">Try adding one by clicking
+        \n\'Search\'</string>
+    <string name="nearby_pi_title">%d Raspberry Pi\'s Nearby</string>
+    <string name="nearby_pi_desc">Select to add</string>
     <string name="search_button">Search</string>
 
     <!--FontAwesome5 Strings-->
