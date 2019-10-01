@@ -1,11 +1,14 @@
 package com.project.datamule.UI
 
+import android.animation.AnimatorInflater
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ProgressBar
 import android.os.Handler
+import android.os.Looper
 import com.project.datamule.R
+import kotlinx.android.synthetic.main.activity_splash.*
+import java.util.concurrent.ThreadPoolExecutor
 
 
 class SplashActivity : AppCompatActivity() {
@@ -16,25 +19,11 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        var pgsBar: ProgressBar = findViewById(R.id.pBar)
 
-        var i = pgsBar.progress
-        Thread(Runnable {
-            while (i < 100) {
-                i += 1
-                // Update the progress bar and display the current value in text view
-                hdlr.post(Runnable {
-                    pgsBar.progress = i
-                })
-                try {
-                    // Sleep for 50 milliseconds to show the progress slowly.
-                    Thread.sleep(50)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
+        var animatorSet = AnimatorInflater.loadAnimator(this@SplashActivity, R.animator.loading_animator)
+        animatorSet.setTarget(ivLoader)
 
-            }
-        }).start()
+        animatorSet.start()
 
         Handler().postDelayed({
             startActivity(
@@ -45,5 +34,6 @@ class SplashActivity : AppCompatActivity() {
             )
             finish()
         }, 2500)
+
     }
 }
