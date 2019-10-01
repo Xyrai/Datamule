@@ -1,13 +1,10 @@
 package com.project.datamule.UI
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.project.datamule.Adapter.PiAdapter
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
