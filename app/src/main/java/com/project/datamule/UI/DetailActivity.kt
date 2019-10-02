@@ -1,15 +1,11 @@
 package com.project.datamule.UI
 
+import android.animation.AnimatorInflater
 import android.app.Dialog
-import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
-import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -64,6 +60,12 @@ class DetailActivity : AppCompatActivity() {
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
+
+        var animatorSet = AnimatorInflater.loadAnimator(this@DetailActivity,
+            R.animator.loading_animator)
+        animatorSet.setTarget(dialog.ivTransferLoader)
+        animatorSet.start()
+
         dialog.show()
     }
 

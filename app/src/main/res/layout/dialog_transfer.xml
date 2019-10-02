@@ -7,7 +7,7 @@
         android:background="@drawable/rectangle_color_white_rounded">
 
     <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/ivTransferLoader"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginTop="16dp"
@@ -31,7 +31,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+            app:layout_constraintTop_toBottomOf="@+id/ivTransferLoader" />
 
     <ProgressBar
             android:id="@+id/progressBar"
