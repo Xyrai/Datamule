@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">DataMule</string>
 
+    <!--General Strings -->
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+
     <!--HomeActivity Strings-->
     <string name="menu_button_title">Settings</string>
     <string name="add_new_pi_button">Add a new Pi</string>
@@ -8,7 +12,6 @@
     <string name="bluetooth_alert_title">Bluetooth is turned off</string>
     <string name="bluetooth_alert_text">Your bluetooth is turned off. Please turn on your bluetooth to continue.</string>
     <string name="bluetooth_alert_positive_button">Turn on</string>
-    <string name="bluetooth_alert_negative_button">Cancel</string>
 
     <!--SettingsActivity Strings-->
     <string name="settings_title">Settings</string>
@@ -34,6 +37,8 @@
     <string name="detail_data_mb">%d MB</string>
     <string name="detail_data_button">Transfer Data</string>
     <string name="detail_data_button_disabled">No Data to Transfer</string>
+
+    <string name="detail_dialog_question">Are you sure you want to\n start the Data Transfer?</string>
 
     <!--SearchPiActivity Strings-->
     <string name="add_pi_title">No Pi\'s Found!</string>

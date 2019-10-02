@@ -22,7 +22,6 @@ class SplashActivity : AppCompatActivity() {
 
         var animatorSet = AnimatorInflater.loadAnimator(this@SplashActivity, R.animator.loading_animator)
         animatorSet.setTarget(ivLoader)
-
         animatorSet.start()
 
         Handler().postDelayed({
