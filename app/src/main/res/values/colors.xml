@@ -12,10 +12,9 @@
     <color name="colorDisabledSecondary">#8c8c8c</color>
 
     <!-- Settings progressbarcolors-->
-    <color name="pbColorGreen">#6EBB1D</color>
-    <color name="pbColorBlue">#0072CE</color>
-    <color name="pbColorOrange">#FF6F34</color>
-    <color name="pbColorBlack">#2D2D2D</color>
+    <color name="pbColorPrimary">#83dd22</color>
+    <color name="pbColorPrimaryDark">#519009</color>
+    <color name="pbColorBackground">#2D2D2D</color>
 
     <!-- Button delete cache -->
     <color name="deleteCacheColorGreyPrimary">#707070</color>

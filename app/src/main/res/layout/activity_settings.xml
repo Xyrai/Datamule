@@ -75,7 +75,7 @@
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="@string/font_awesome_arrow2_icon"
-            android:textColor="@color/pbColorGreen"
+            android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -126,7 +126,7 @@
             android:fontFamily="@font/rubik"
             android:gravity="center|center_vertical"
             android:text="TextView"
-            android:textColor="@color/pbColorOrange"
+            android:textColor="@color/pbColorPrimaryDark"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -141,7 +141,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle_color_orange" />
+            app:srcCompat="@drawable/circle_color_primary_dark" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -187,7 +187,7 @@
             android:fontFamily="@font/rubik"
             android:gravity="center|center_vertical"
             android:text="TextView"
-            android:textColor="@color/pbColorBlack"
+            android:textColor="@color/pbColorBackground"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -202,7 +202,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle_color_black" />
+            app:srcCompat="@drawable/circle_color_background" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -248,7 +248,7 @@
             android:fontFamily="@font/rubik"
             android:gravity="center|center_vertical"
             android:text="TextView"
-            android:textColor="@color/pbColorGreen"
+            android:textColor="@color/pbColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -263,7 +263,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle_color_green" />
+            app:srcCompat="@drawable/circle_color_primary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -340,16 +340,17 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
-            android:id="@+id/pbStorageUsed"
-            style="@style/customProgressBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="42dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:id="@+id/pbStorage"
+        style="@style/customProgressBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintWidth_percent="0.85" />
 
     <include
         android:id="@+id/include2"
@@ -456,7 +457,7 @@
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="@string/font_awesome_arrow2_icon"
-            android:textColor="@color/pbColorGreen"
+            android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -474,7 +475,7 @@
             android:text="@string/settings_total_storage"
             android:textColor="@android:color/black"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/pbStorageUsed"
-            app:layout_constraintEnd_toEndOf="@+id/pbStorageUsed" />
+            app:layout_constraintBottom_toTopOf="@+id/pbStorage"
+            app:layout_constraintEnd_toEndOf="@+id/pbStorage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

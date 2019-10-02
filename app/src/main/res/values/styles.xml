@@ -17,13 +17,11 @@
     <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light.NoActionBar"/>
 
     <style name="SwitchTheme">
-        <item name="colorControlActivated">@color/pbColorGreen</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
     <style name="customProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/memory_indicator_progress</item>
-        <item name="android:minWidth">200dp</item>
-        <item name="android:height">100dp</item>
     </style>
 
 
