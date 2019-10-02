@@ -15,6 +15,7 @@
     <color name="pbColorPrimary">#83dd22</color>
     <color name="pbColorPrimaryDark">#519009</color>
     <color name="pbColorBackground">#2D2D2D</color>
+    <color name="pbTransferBackground">#E5E5E5</color>
 
     <!-- Button delete cache -->
     <color name="deleteCacheColorGreyPrimary">#707070</color>
