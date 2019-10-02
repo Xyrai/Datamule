@@ -67,17 +67,20 @@ class SettingsActivity : AppCompatActivity() {
         //1: green, 2:black 3:orange
 
         pbStorageUsed.max = getTotalStorageInMB().toInt()
-        pbStorageFree.max = getTotalStorageInMB().toInt()
-        pbStorageCache.max = getTotalStorageInMB().toInt()
 
         //todo plus cache size
-        pbStorageFree.setProgress((getFreeStorageInMB() * 0.5).toInt())
+//        pbStorageFree.setProgress((getFreeStorageInMB() * 0.5).toInt())
+//
+//
+//
+//        pbStorageCache.setProgress((getUsedStorageInMB() + getFreeStorageInMB() * 0.5).toInt())
 
+        var cache = (getUsedStorageInMB() + getFreeStorageInMB() * 0.5).toInt()
 
-
-        pbStorageCache.setProgress((getUsedStorageInMB() + getFreeStorageInMB() * 0.5).toInt())
-
-        pbStorageUsed.setProgress(getUsedStorageInMB().toInt())
+//        pbStorageUsed.setProgress(getUsedStorageInMB().toInt())
+        pbStorageUsed.progress = getUsedStorageInMB().toInt()
+//        pbStorageUsed.
+        pbStorageUsed.secondaryProgress = cache
     }
 
 
