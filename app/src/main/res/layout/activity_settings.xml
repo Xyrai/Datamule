@@ -374,7 +374,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="42dp"
         android:layout_marginEnd="32dp"
-        android:progressDrawable="drawable pb"
         android:progressTint="@color/pbColorGreen"
         android:rotation="180"
         app:layout_constraintEnd_toEndOf="parent"
