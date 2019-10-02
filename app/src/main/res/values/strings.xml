@@ -14,14 +14,14 @@
     <string name="settings_title">Settings</string>
     <string name="storage_title">Storage</string>
     <string name="storage_delete_cache">Delete Cache</string>
-    <string name="storage_other_apps">Other Apps</string>
-    <string name="storage_downloads">Downloads</string>
+    <string name="storage_total">Total</string>
+    <string name="storage_used">Used</string>
     <string name="storage_cache">Cache</string>
     <string name="storage_free">Free</string>
     <string name="settings_push_notification">Push Notification</string>
     <string name="settings_change_log">Change Log</string>
     <string name="settings_support">Support</string>
-    <string name="settings_max_storage">storage: %d MB</string>
+    <string name="settings_total_storage">Total storage: %s GB</string>
     <string name="settings_ram">available ram: %d MB</string>
 
     <!--DetailActivity Strings-->

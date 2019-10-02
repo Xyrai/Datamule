@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
@@ -38,31 +38,19 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="150dp"
+            android:layout_marginEnd="94dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|top"
             android:text="@string/settings_change_log"
             android:textAlignment="center"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/sPushs"
+            app:layout_constraintEnd_toStartOf="@+id/tvPushArrow"
             app:layout_constraintStart_toEndOf="@+id/ivlog"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
-
-        <Switch
-            android:id="@+id/sPushs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:theme="@style/SwitchTheme"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/log"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ivlog"
@@ -77,6 +65,23 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/logo_paper" />
 
+        <TextView
+            android:id="@+id/tvPushArrow"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="53dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="@string/font_awesome_arrow2_icon"
+            android:textColor="@color/pbColorGreen"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/log"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,42 +89,39 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
         android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/clStorageFree"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clStorageDownloads"
+        app:layout_constraintTop_toBottomOf="@+id/clStorageUsed"
         app:layout_constraintWidth_percent="0.85">
 
         <TextView
             android:id="@+id/cac"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="82dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|top"
             android:text="@string/storage_cache"
             android:textAlignment="center"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tvCache"
-            app:layout_constraintStart_toEndOf="@id/ivOrange"
+            app:layout_constraintStart_toEndOf="@+id/ivOrange"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvCache"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="62dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|center_vertical"
@@ -129,16 +131,14 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cac"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ivOrange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cac"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle_color_orange" />
@@ -150,13 +150,11 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="41dp"
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
         android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnDeleteCache"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clStorageCache"
@@ -166,26 +164,25 @@
             android:id="@+id/free"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="97dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|top"
             android:text="@string/storage_free"
             android:textAlignment="center"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tvFree"
-            app:layout_constraintStart_toEndOf="@id/imageViewgdfgerg4"
+            app:layout_constraintStart_toEndOf="@+id/imageViewgdfgerg4"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvFree"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="62dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|center_vertical"
@@ -195,16 +192,14 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/free"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageViewgdfgerg4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/free"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle_color_black" />
@@ -212,121 +207,43 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clStorageDownloads"
+        android:id="@+id/clStorageUsed"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="130dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
         android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/clStorageCache"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clStorageOtherApps"
+        app:layout_constraintTop_toBottomOf="@+id/include4"
         app:layout_constraintWidth_percent="0.85">
 
         <TextView
-            android:id="@+id/down"
+            android:id="@+id/used"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="45dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|top"
-            android:text="@string/storage_downloads"
+            android:text="@string/storage_used"
             android:textAlignment="center"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tvDownloads"
             app:layout_constraintStart_toEndOf="@+id/ivBlue"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvDownloads"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="62dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/rubik"
-            android:gravity="center|center_vertical"
-            android:text="TextView"
-            android:textColor="@color/pbColorBlue"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/down"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivBlue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/down"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/circle_color_blue" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <include
-            layout="@layout/logo_overlay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clStorageOtherApps"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:background="@drawable/rectangle_color_white"
-        android:elevation="6dp"
-        android:padding="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/clStorageDownloads"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.475"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pbStorage"
-        app:layout_constraintWidth_percent="0.85">
-
-        <TextView
-            android:id="@+id/apps"
+            android:id="@+id/tvUsed"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="42dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/rubik"
-            android:gravity="center|top"
-            android:text="@string/storage_other_apps"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tvOtherApps"
-            app:layout_constraintStart_toEndOf="@id/ivGreen"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvOtherApps"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="62dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|center_vertical"
@@ -336,28 +253,35 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/apps"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ivGreen"
+            android:id="@+id/ivBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/apps"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/circle_color_green" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include
+        android:id="@+id/include4"
+        layout="@layout/logo_overlay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clPushNotification"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rectangle_color_white"
         android:elevation="6dp"
@@ -372,15 +296,16 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="136dp"
+            android:layout_marginEnd="52dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/rubik"
             android:gravity="center|top"
             android:text="@string/settings_push_notification"
             android:textAlignment="center"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvPushArrow"
+            app:layout_constraintEnd_toStartOf="@+id/sPushs"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
@@ -398,16 +323,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/logo_bell" />
 
-        <TextView
-            android:id="@+id/tvPushArrow"
+        <Switch
+            android:id="@+id/sPushs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:text="@string/font_awesome_arrow2_icon"
-            android:textColor="@color/pbColorGreen"
-            android:textSize="24sp"
+            android:theme="@style/SwitchTheme"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/push"
@@ -415,42 +339,44 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/tvStorage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="19dp"
-        android:text="@string/settings_max_storage"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/btnDeleteCache"
-        app:layout_constraintEnd_toStartOf="@+id/tvRam"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clStorageFree" />
-
-    <TextView
-        android:id="@+id/tvRam"
-        android:layout_width="188dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="9dp"
-        android:text="@string/settings_ram"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/btnDeleteCache"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvStorage"
-        app:layout_constraintTop_toBottomOf="@+id/clStorageFree" />
-
     <ProgressBar
-        android:id="@+id/pbStorage"
+        android:id="@+id/pbStorageCache"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="42dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/clStorageOtherApps"
+        android:progressTint="@color/pbColorOrange"
+        android:rotation="180"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ProgressBar
+        android:id="@+id/pbStorageFree"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="32dp"
+        android:progressTint="@color/pbColorBlack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <ProgressBar
+        android:id="@+id/pbStorageUsed"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="32dp"
+        android:progressDrawable="drawable pb"
+        android:progressTint="@color/pbColorGreen"
+        android:rotation="180"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -464,33 +390,30 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="29dp"
-            android:text="@string/storage_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintBottom_toTopOf="@+id/pbStorage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include2" />
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/storage_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
 
     <Button
         android:id="@+id/btnDeleteCache"
         android:layout_width="0dp"
-        android:layout_height="46dp"
+        android:layout_height="36dp"
         android:layout_marginStart="100dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginBottom="17dp"
         android:background="@drawable/button_custom_delete_cache"
         android:fontFamily="@font/rubik"
         android:text="@string/storage_delete_cache"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clStorageFree" />
 
@@ -498,11 +421,91 @@
         android:id="@+id/divider2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="32dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/clPushNotification"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDeleteCache" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clSupport"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rectangle_color_white"
+        android:elevation="6dp"
+        android:padding="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clChangeLog"
+        app:layout_constraintWidth_percent="0.85">
+
+        <TextView
+            android:id="@+id/support"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/rubik"
+            android:gravity="center|top"
+            android:text="@string/settings_support"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvPushArrowInfo"
+            app:layout_constraintStart_toEndOf="@+id/ivSupport"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/ivSupport"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/support"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_info" />
+
+        <TextView
+            android:id="@+id/tvPushArrowInfo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="78dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="@string/font_awesome_arrow2_icon"
+            android:textColor="@color/pbColorGreen"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/support"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvTotalStorage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rubik"
+        android:text="@string/settings_total_storage"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/pbStorageFree"
+        app:layout_constraintEnd_toEndOf="@+id/pbStorageFree"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/pbStorageFree" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
