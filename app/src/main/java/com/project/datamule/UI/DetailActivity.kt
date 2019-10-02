@@ -45,16 +45,26 @@ class DetailActivity : AppCompatActivity() {
         dialog.show()
 
         dialog.btnCancelTransfer.setOnClickListener {
-            dialog.hide()
+            dialog.cancel()
         }
 
         dialog.btnConfirmTransfer.setOnClickListener {
-            dialog.hide()
+            dialog.cancel()
+            buildTransferDialog()
         }
 
 //        val builder = android.app.AlertDialog.Builder(this)
 //        builder.setView(layoutInflater.inflate(R.layout.dialog_transfer_question, null))
 //        builder.create().show()
+    }
+
+    private fun buildTransferDialog() {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_transfer)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
     }
 
     private fun onClickBack() {
