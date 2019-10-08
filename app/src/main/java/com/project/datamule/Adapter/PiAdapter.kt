@@ -26,7 +26,7 @@ class PiAdapter (private val pi_s: List<Pi>, val clickListener: (Pi) -> Unit) : 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(pi: Pi, clickListener: (Pi) -> Unit) {
             itemView.tvName.text = pi.name
-            itemView.setOnClickListener { clickListener(pi)}
+            itemView.setOnClickListener { clickListener(pi) }
         }
     }
 }

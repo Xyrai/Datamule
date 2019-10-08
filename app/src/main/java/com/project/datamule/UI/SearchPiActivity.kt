@@ -57,6 +57,8 @@ class SearchPiActivity : AppCompatActivity() {
 //        val intent = Intent(this, DetailActivity::class.java)
 //        intent.putExtra(PI_EXTRA, clickedPi)
 //        startActivity(intent)
+
+
     }
 
     private fun onClickBack() {

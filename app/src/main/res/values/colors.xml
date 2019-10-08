@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#63B20B</color>
     <color name="colorAccent">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="light_grey">#f2f2f2</color>
 
     <!--Button default colors-->
     <color name="colorPressedPrimary">#9af10e</color>
