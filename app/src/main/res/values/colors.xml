@@ -22,6 +22,8 @@
     <color name="deleteCacheColorDarkGreyPrimary">#595959</color>
     <color name="deleteCacheColorGreyPressed">#8c8c8c</color>
     <color name="deleteCacheColorDarkGreyPressed">#808080</color>
+    <!-- Scrollbar ChangeLog -->
+    <color name="scrollbarChangeLogGrey">#707070</color>
 
     <!-- Button delete -->
     <color name="deletePrimary">#ff1a1a</color>

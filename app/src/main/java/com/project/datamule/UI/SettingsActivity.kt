@@ -1,12 +1,19 @@
 package com.project.datamule.UI
 
+import android.animation.AnimatorInflater
+import android.app.Dialog
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.os.StatFs
 import kotlinx.android.synthetic.main.activity_settings.*
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
+import android.text.method.ScrollingMovementMethod
 import com.project.datamule.R
+import kotlinx.android.synthetic.main.dialog_change_log.*
+import kotlinx.android.synthetic.main.dialog_transfer_question.*
 import java.io.File
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -26,8 +33,27 @@ class SettingsActivity : AppCompatActivity() {
         tvPushArrow.setTypeface(fontAwesomeFont)
         tvPushArrowInfo.setTypeface(fontAwesomeFont)
         ivBack.setOnClickListener { onClickBack() }
+        clChangeLog.setOnClickListener { buildChangeLogDialog() }
         createCacheFile()
         setStorage()
+    }
+
+    private fun buildChangeLogDialog() {
+        var dialog = Dialog(this@SettingsActivity)
+        dialog.setContentView(R.layout.dialog_change_log)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.tvChangeLog.text = assets.open("1mbOfText.txt").bufferedReader().use {
+            it.readText().substring(0,700)
+        }
+
+        dialog.tvChangeLog.movementMethod = ScrollingMovementMethod()
+
+        dialog.ivClose.setOnClickListener {
+            dialog.cancel()
+        }
+
+        dialog.show()
     }
 
     private fun createCacheFile() {
