@@ -1,10 +1,15 @@
 package com.project.datamule.UI
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.datamule.Adapter.PiAdapter
@@ -14,11 +19,13 @@ import kotlinx.android.synthetic.main.activity_search_pi.*
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.content_home.*
+import kotlinx.android.synthetic.main.item_pi.view.*
+import java.util.*
 
 class SearchPiActivity : AppCompatActivity() {
 
     private var pi_s = arrayListOf<Pi>()
-    private var piAdapter = PiAdapter(pi_s, {clickedPi: Pi -> onPiClicked(clickedPi)})
+    private lateinit var piAdapter: PiAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +44,8 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun onClickOpenPiList() {
+        piAdapter = PiAdapter(pi_s, {clickedPi: Pi -> onPiClicked(clickedPi)})
+
         //Hide elements of Search Pi screen
         clRectangle.visibility = View.INVISIBLE
         btnSearchPi.visibility = View.INVISIBLE
@@ -53,12 +62,25 @@ class SearchPiActivity : AppCompatActivity() {
         piAdapter.notifyDataSetChanged()
     }
 
+    @SuppressLint("NewApi", "ResourceAsColor")
     private fun onPiClicked(clickedPi: Pi) {
-//        val intent = Intent(this, DetailActivity::class.java)
-//        intent.putExtra(PI_EXTRA, clickedPi)
-//        startActivity(intent)
+        var position = pi_s.indexOf(clickedPi)
+        var clickedPiItem = rvSearchPi.get(position)
 
 
+        var tcUsed = clickedPiItem.tvName.currentTextColor
+        var tcWhite = getColor(R.color.white)
+        var tcBlack = getColor(R.color.colorAccent)
+
+        if (tcUsed == tcWhite) {
+            clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
+            clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
+            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
+        } else if (tcUsed == tcBlack) {
+            clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
+            clickedPiItem.tvName.setTextColor(getColor(R.color.white))
+            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
+        }
     }
 
     private fun onClickBack() {
