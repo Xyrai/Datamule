@@ -24,6 +24,10 @@
     <string name="settings_push_notification">Push Notification</string>
     <string name="settings_change_log">Change Log</string>
     <string name="settings_support">Support</string>
+    <string name="settings_support_phone">Copy phone number</string>
+    <string name="settings_support_email">Copy E-mail</string>
+    <string name="settings_support_email_val">datamule@atos.com</string>
+    <string name="settings_support_phone_val">+31612345678</string>
     <string name="settings_total_storage">Total storage: %s GB</string>
     <string name="settings_ram">available ram: %d MB</string>
 
@@ -56,4 +60,6 @@
     <string name="font_awesome_cog_icon">&#xf013;</string>
     <string name="font_awesome_arrow_icon">&#xf060;</string>
     <string name="font_awesome_arrow2_icon">&#xf0da;</string>
+    <string name="font_awesome_phone_icon">&#xf095;</string>
+    <string name="font_awesome_email_icon">&#xf0e0;</string>
 </resources>

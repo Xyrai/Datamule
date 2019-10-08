@@ -44,7 +44,6 @@
         android:scrollbarThumbVertical="@drawable/rectangle_color_grey_rounded"
         android:scrollbars="vertical"
         android:textColor="@android:color/black"
-        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
