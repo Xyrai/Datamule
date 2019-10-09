@@ -1,7 +1,7 @@
 package com.project.datamule.UI
 
+import android.Manifest
 import android.app.Dialog
-import android.content.ClipData
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,15 +11,18 @@ import kotlinx.android.synthetic.main.activity_settings.*
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.text.method.ScrollingMovementMethod
-import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_settings.tvPushArrowInfo
 import kotlinx.android.synthetic.main.dialog_change_log.*
 import kotlinx.android.synthetic.main.dialog_change_log.ivClose
 import kotlinx.android.synthetic.main.dialog_support.*
+import android.content.Intent
+import android.net.Uri
+import com.project.datamule.Constants
+import com.project.datamule.R
 import java.io.File
-import android.content.ClipboardManager
-import android.content.Context
-import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
 private const val BYTE_TO_MB_DIVIDER = 1048576.0
@@ -42,6 +45,10 @@ class SettingsActivity : AppCompatActivity() {
         ivBack.setOnClickListener { onClickBack() }
         clChangeLog.setOnClickListener { buildChangeLogDialog() }
         clSupport.setOnClickListener { buildSupportDialog() }
+        clPushNotification.setOnClickListener {
+            if(sPushNotification.isChecked) sPushNotification.setChecked(false)
+            else sPushNotification.setChecked(true)
+        }
         createCacheFile()
         setStorage()
     }
@@ -52,7 +59,7 @@ class SettingsActivity : AppCompatActivity() {
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialog.tvChangeLog.text = assets.open("1mbOfText.txt").bufferedReader().use {
-            it.readText().substring(0,700)
+            it.readText().substring(0, 700)
         }
 
         dialog.tvChangeLog.movementMethod = ScrollingMovementMethod()
@@ -72,24 +79,48 @@ class SettingsActivity : AppCompatActivity() {
 
 
         dialog.clPhone.setOnClickListener {
-            copyToClipboard(getString(R.string.settings_support_phone_val))
-            Toast.makeText(this, "Copied phone number!", Toast.LENGTH_SHORT).show()
+            if (ContextCompat.checkSelfPermission(
+                    this@SettingsActivity,
+                    Manifest.permission.CALL_PHONE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this@SettingsActivity,
+                    arrayOf(Manifest.permission.CALL_PHONE),
+                    Constants.REQUEST_PHONE_CALL
+                )
+            } else openPhoneApp()
+
         }
 
         dialog.clEmail.setOnClickListener {
-            copyToClipboard(getString(R.string.settings_support_email_val))
-            Toast.makeText(this, "Copied E-mail!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + Constants.DATAMULE_EMAIL))
+            startActivity(intent)
         }
 
         dialog.ivClose.setOnClickListener { dialog.cancel() }
         dialog.show()
     }
 
-    private fun copyToClipboard(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("DataMule", text)
-        clipboard.setPrimaryClip(clip)
+    private fun openPhoneApp() {
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + Constants.DATAMULE_PHONE_NUMBER))
+        startActivity(intent)
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            Constants.REQUEST_PHONE_CALL -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) openPhoneApp()
+                return
+            }
+        }
+    }
+
+//    private fun copyToClipboard(text: String) {
+//        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+//        val clip = ClipData.newPlainText("DataMule", text)
+//        clipboard.setPrimaryClip(clip)
+//    }
 
     private fun createCacheFile() {
         //temporary create file for cache demo purposes
@@ -120,7 +151,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setStorage() {
-        tvTotalStorage.text = getString(R.string.settings_total_storage, doubleMBToStringGB(getTotalStorageInMB()))
+        tvTotalStorage.text =
+            getString(R.string.settings_total_storage, doubleMBToStringGB(getTotalStorageInMB()))
         tvUsed.text = doubleMBToStringGB(getUsedStorageInMB()) + " GB"
         tvFree.text = doubleMBToStringGB(getFreeStorageInMB()) + " GB"
         //display in MB instead of GB
@@ -165,8 +197,6 @@ class SettingsActivity : AppCompatActivity() {
         val cache = getCacheStorageInMB().toInt() + getUsedStorageInMB().toInt()
         pbStorage.secondaryProgress = cache
     }
-
-
 
 
 }
