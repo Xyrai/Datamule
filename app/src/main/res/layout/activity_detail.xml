@@ -95,6 +95,7 @@
             android:layout_height="35dp"
             android:layout_marginStart="25dp"
             android:layout_marginTop="25dp"
+            android:background="@drawable/ripple_effect"
             android:clickable="true"
             android:src="@drawable/logo_arrow"
             app:layout_constraintStart_toStartOf="parent"

@@ -20,6 +20,7 @@
             android:layout_height="35dp"
             android:layout_gravity="top|end"
             android:layout_margin="@dimen/top_button"
+            android:background="@drawable/ripple_effect"
             android:clickable="true"
             app:srcCompat="@drawable/logo_cog" />
 
