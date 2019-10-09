@@ -1,5 +1,11 @@
 package com.project.datamule.UI
 
+import android.os.Bundle
+import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
 import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
@@ -9,11 +15,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.view.animation.AnimationUtils
-import android.widget.Toast
+import android.annotation.SuppressLint
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +40,7 @@ class SearchPiActivity : AppCompatActivity() {
 
     private var pi_s = arrayListOf<Pi>()
     private lateinit var piAdapter: PiAdapter
-    private var selected_pi: Pi? = null
+    private var selectedPi: Pi? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,11 +102,14 @@ class SearchPiActivity : AppCompatActivity() {
 //        tvBack.setTypeface(fontAwesomeFont)
         ivBack.setOnClickListener { onClickBack() }
         btnSearchPi.setOnClickListener { onClickOpenPiList() }
-        
+    }
+
+    private fun updateUI() {
+        tvNearbyPiTitle.text = getString(R.string.nearby_pi_title, pi_s.size)
     }
 
     private fun onClickOpenPiList() {
-        piAdapter = PiAdapter(pi_s, {clickedPi: Pi -> onPiClicked(clickedPi)})
+        piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi)}
 
         //Hide elements of Search Pi screen
         clRectangle.visibility = View.INVISIBLE
@@ -118,6 +123,7 @@ class SearchPiActivity : AppCompatActivity() {
 
         addPairedDeviceList()
         piAdapter.notifyDataSetChanged()
+        updateUI()
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -125,16 +131,16 @@ class SearchPiActivity : AppCompatActivity() {
         var position = pi_s.indexOf(clickedPi)
         var clickedPiItem = rvSearchPi.get(position)
 
-        when (selected_pi) {
+        when (selectedPi) {
             null -> { //select pi
-                selected_pi = clickedPi
+                selectedPi = clickedPi
                 clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
                 clickedPiItem.tvName.setTextColor(getColor(R.color.white))
                 clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
                 btnAddPi.visibility = View.VISIBLE
             } // deselect pi
             clickedPi -> {
-                selected_pi = null
+                selectedPi = null
                 clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
                 clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
                 clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
