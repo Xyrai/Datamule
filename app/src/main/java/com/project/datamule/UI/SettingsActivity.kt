@@ -3,6 +3,7 @@ package com.project.datamule.UI
 import android.Manifest
 import android.app.Dialog
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
@@ -76,31 +77,38 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setPushNotification(allowPushNotification: Boolean) {
+        val notificationID = allowPushNotification.toInt()
+
+        if(allowPushNotification)
+            makeNotification("Push notifications", "Push notifications are now turned on.", notificationID)
+        else
+            makeNotification("Push notifications", "Push notifications are now turned off.", notificationID)
+    }
+
+    private fun makeNotification(title: String, content: String, notificationID: Int) {
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         var builder = NotificationCompat.Builder(this, Constants.CHANNEL_ID)
             .setSmallIcon(R.drawable.logo_no_text)
-            .setContentTitle("Wassup")
-            .setContentText("kech")
+            .setContentTitle(title)
+            .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSound(defaultSoundUri)
+            .setAutoCancel(true)
 
-//        with(NotificationManagerCompat.from(this)) {
-//            // notificationId is a unique int for each notification that you must define
-//            notify(1, builder.build())
-//        }
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(Constants.CHANNEL_NAME, Constants.CHANNEL_ID, importance).apply {
+                description = "channel"
+            }
+            // Register the channel with the system
+            notificationManager.createNotificationChannel(channel)
+        }
 
-        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-
-//        val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-////        val notificationBuilder = NotificationCompat.Builder(this)
-////            .setSmallIcon(R.drawable.logo_no_text)
-////            .setContentTitle("title")
-////        .setContentText("message")
-////            .setAutoCancel(true)
-////            .setSound(defaultSoundUri)
-
-        notificationManager.notify(6, builder.build())
-
+        notificationManager.notify(notificationID, builder.build())
     }
 
     private fun buildChangeLogDialog() {
@@ -116,6 +124,8 @@ class SettingsActivity : AppCompatActivity() {
         dialog.ivClose.setOnClickListener { dialog.cancel() }
         dialog.show()
     }
+
+    private fun Boolean.toInt() = if (this) 1 else 0
 
     private fun buildSupportDialog() {
         var dialog = Dialog(this@SettingsActivity)
