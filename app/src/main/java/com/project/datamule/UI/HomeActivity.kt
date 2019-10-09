@@ -1,7 +1,12 @@
 package com.project.datamule.UI
 
+import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,28 +21,65 @@ class HomeActivity : AppCompatActivity() {
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s, {clickedPi: Pi -> onPiClicked(clickedPi)})
 
+    var bluetoothAdapter: BluetoothAdapter? = null
+    lateinit var pairedDevices: Set<BluetoothDevice>
+
     override fun onCreate(savedInstanceState: Bundle?) {
-//        isBluetoothAvailable()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, R.string.error_no_bluetooth, Toast.LENGTH_SHORT).show()
+            finish()
+        }
+        if (!bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth(bluetoothAdapter!!)
+        }
 
         initViews()
     }
 
     fun initViews() {
+        clNoPiFound.visibility = View.INVISIBLE
+
         //Initialize Buttons
         ivSettings.setOnClickListener { onClickOpenSettings() }
-
         btnNewPi.setOnClickListener { onClickOpenSearchPi() }
 
         //Initialize RecyclerView
         rvPiList.layoutManager = LinearLayoutManager(this@HomeActivity, RecyclerView.VERTICAL, false)
         rvPiList.adapter = piAdapter
 
-        for (i in Pi.PI_S.indices) {
-            pi_s.add(Pi(Pi.PI_S[i]))
-        }
+        pairedDeviceList()
+
         piAdapter.notifyDataSetChanged()
+    }
+
+    private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
+//        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.bluetooth_alert_title)
+            .setMessage(R.string.bluetooth_alert_text)
+            .setCancelable(false)
+            .setPositiveButton(R.string.bluetooth_alert_positive_button
+            ) { dialog, id ->
+                // Button for going to wifi settings
+                bluetoothAdapter.enable()
+//                val enableBtIntent = Intent()
+//                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            }
+            .setNegativeButton(R.string.bluetooth_alert_negative_button
+            ) { dialog, which ->
+                // Cancel button, brings you back to main activity
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.addCategory(Intent.CATEGORY_HOME)
+                startActivity(intent)
+            }
+        val alert = builder.create()
+        alert.show()
     }
 
     fun onClickOpenSearchPi() {
@@ -54,6 +96,18 @@ class HomeActivity : AppCompatActivity() {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(PI_EXTRA, clickedPi)
         startActivity(intent)
+    }
+
+    private fun pairedDeviceList() {
+        pairedDevices = bluetoothAdapter!!.bondedDevices
+
+        if (pairedDevices.isNotEmpty()) {
+            for (device: BluetoothDevice in pairedDevices) {
+                pi_s.add(Pi(device.name))
+            }
+        } else {
+            clNoPiFound.visibility = View.VISIBLE
+        }
     }
 
 

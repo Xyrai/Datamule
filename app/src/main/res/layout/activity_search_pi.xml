@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".UI.SearchPiActivity">
 
+    <include
+            android:id="@+id/clRectangle"
+            layout="@layout/no_pi_found_overlay"
+            android:layout_width="294dp"
+            android:layout_height="278dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnSearchPi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include" />
+
     <ImageView
         android:id="@+id/ivBack"
         android:layout_width="35dp"
@@ -18,13 +28,13 @@
         app:srcCompat="@drawable/logo_arrow" />
 
     <include
-        android:id="@+id/include"
-        layout="@layout/logo_overlay"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/include"
+            layout="@layout/logo_overlay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnSearchPi"
@@ -79,66 +89,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvNearbyPiDesc" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clRectangle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSearchPi"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include">
-
-        <View
-            android:id="@+id/vNoPiRectangle"
-            android:layout_width="294dp"
-            android:layout_height="278dp"
-            android:background="@drawable/rectangle_color_gray"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.49"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivNotFound"
-            android:layout_width="110dp"
-            android:layout_height="116dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/logo_not_found"
-            app:layout_constraintEnd_toEndOf="@+id/vNoPiRectangle"
-            app:layout_constraintStart_toStartOf="@+id/vNoPiRectangle"
-            app:layout_constraintTop_toTopOf="@+id/vNoPiRectangle" />
-
-        <TextView
-            android:id="@+id/tvNoPi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/rubik"
-            android:text="@string/add_pi_title"
-            android:textSize="26sp"
-            app:layout_constraintEnd_toEndOf="@+id/clRectangle"
-            app:layout_constraintStart_toStartOf="@+id/clRectangle"
-            app:layout_constraintTop_toBottomOf="@+id/ivNotFound" />
-
-        <TextView
-            android:id="@+id/tvNoPiDesc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/rubik"
-            android:gravity="center"
-            android:text="@string/add_pi_desc"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/vNoPiRectangle"
-            app:layout_constraintStart_toStartOf="@+id/vNoPiRectangle"
-            app:layout_constraintTop_toBottomOf="@+id/tvNoPi" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

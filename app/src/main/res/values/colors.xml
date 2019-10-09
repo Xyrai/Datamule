@@ -25,7 +25,7 @@
     <color name="deleteCacheColorDarkGreyPressed">#808080</color>
 
     <!-- Button delete -->
-    <color name="deletePrimary">#ff1a1a</color>
+    <color name="deletePrimary">#FF1A1A</color>
     <color name="deleteSecondary">#ff4d4d</color>
     <color name="deletePrimaryPressed">#ff3333</color>
     <color name="deleteSecondaryPressed">#ff6666</color>
