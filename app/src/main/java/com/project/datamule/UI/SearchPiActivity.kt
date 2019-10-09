@@ -26,6 +26,9 @@ class SearchPiActivity : AppCompatActivity() {
 
     private var pi_s = arrayListOf<Pi>()
     private lateinit var piAdapter: PiAdapter
+    private var selected_pi: Pi? = null
+    private var previous_selected_pi : Pi? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,21 +69,39 @@ class SearchPiActivity : AppCompatActivity() {
     private fun onPiClicked(clickedPi: Pi) {
         var position = pi_s.indexOf(clickedPi)
         var clickedPiItem = rvSearchPi.get(position)
-
-
         var tcUsed = clickedPiItem.tvName.currentTextColor
         var tcWhite = getColor(R.color.white)
         var tcBlack = getColor(R.color.colorAccent)
 
-        if (tcUsed == tcWhite) {
-            clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
-            clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
-            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
-        } else if (tcUsed == tcBlack) {
+        if (selected_pi == null) {
+            selected_pi = clickedPi
             clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
             clickedPiItem.tvName.setTextColor(getColor(R.color.white))
             clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
+            btnAddPi.visibility = View.VISIBLE
+        } else if (selected_pi == clickedPi) {
+            selected_pi = null
+            clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
+            clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
+            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
+            btnAddPi.visibility = View.INVISIBLE
+        } else {
+            //warning/shake message
         }
+
+//        if (tcUsed == tcWhite) {
+//            //Background white
+//            clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
+//            clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
+//            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
+//            pi_s[position].selected = false
+//        } else if (tcUsed == tcBlack) {
+//            //Background green
+//            clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
+//            clickedPiItem.tvName.setTextColor(getColor(R.color.white))
+//            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
+//            pi_s[position].selected = true
+//        }
     }
 
     private fun onClickBack() {
