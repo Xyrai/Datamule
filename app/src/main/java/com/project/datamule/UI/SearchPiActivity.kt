@@ -12,6 +12,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +38,7 @@ class SearchPiActivity : AppCompatActivity() {
 
     private var pi_s = arrayListOf<Pi>()
     private lateinit var piAdapter: PiAdapter
+    private var selected_pi: Pi? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,8 +100,7 @@ class SearchPiActivity : AppCompatActivity() {
 //        tvBack.setTypeface(fontAwesomeFont)
         ivBack.setOnClickListener { onClickBack() }
         btnSearchPi.setOnClickListener { onClickOpenPiList() }
-
-
+        
     }
 
     private fun onClickOpenPiList() {
@@ -124,19 +125,23 @@ class SearchPiActivity : AppCompatActivity() {
         var position = pi_s.indexOf(clickedPi)
         var clickedPiItem = rvSearchPi.get(position)
 
-
-        var tcUsed = clickedPiItem.tvName.currentTextColor
-        var tcWhite = getColor(R.color.white)
-        var tcBlack = getColor(R.color.colorAccent)
-
-        if (tcUsed == tcWhite) {
-            clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
-            clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
-            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
-        } else if (tcUsed == tcBlack) {
-            clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
-            clickedPiItem.tvName.setTextColor(getColor(R.color.white))
-            clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
+        when (selected_pi) {
+            null -> { //select pi
+                selected_pi = clickedPi
+                clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
+                clickedPiItem.tvName.setTextColor(getColor(R.color.white))
+                clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
+                btnAddPi.visibility = View.VISIBLE
+            } // deselect pi
+            clickedPi -> {
+                selected_pi = null
+                clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
+                clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
+                clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
+                btnAddPi.visibility = View.INVISIBLE
+            }
+            else -> //warning/shake animation
+                clickedPiItem.startAnimation(AnimationUtils.loadAnimation(this,R.anim.button_shaker))
         }
     }
 

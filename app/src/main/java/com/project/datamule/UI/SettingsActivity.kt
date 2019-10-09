@@ -1,33 +1,94 @@
 package com.project.datamule.UI
 
+import android.app.Dialog
+import android.content.ClipData
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.os.StatFs
 import kotlinx.android.synthetic.main.activity_settings.*
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
+import android.text.method.ScrollingMovementMethod
 import com.project.datamule.R
+import kotlinx.android.synthetic.main.activity_settings.tvPushArrowInfo
+import kotlinx.android.synthetic.main.dialog_change_log.*
+import kotlinx.android.synthetic.main.dialog_change_log.ivClose
+import kotlinx.android.synthetic.main.dialog_support.*
 import java.io.File
+import android.content.ClipboardManager
+import android.content.Context
+import android.widget.Toast
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
 private const val BYTE_TO_MB_DIVIDER = 1048576.0
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var fontAwesomeFont: Typeface
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
         initView()
     }
 
     private fun initView() {
-        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
         tvPushArrow.setTypeface(fontAwesomeFont)
         tvPushArrowInfo.setTypeface(fontAwesomeFont)
         ivBack.setOnClickListener { onClickBack() }
+        clChangeLog.setOnClickListener { buildChangeLogDialog() }
+        clSupport.setOnClickListener { buildSupportDialog() }
         createCacheFile()
         setStorage()
+    }
+
+    private fun buildChangeLogDialog() {
+        var dialog = Dialog(this@SettingsActivity)
+        dialog.setContentView(R.layout.dialog_change_log)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.tvChangeLog.text = assets.open("1mbOfText.txt").bufferedReader().use {
+            it.readText().substring(0,700)
+        }
+
+        dialog.tvChangeLog.movementMethod = ScrollingMovementMethod()
+        dialog.ivClose.setOnClickListener { dialog.cancel() }
+        dialog.show()
+    }
+
+    private fun buildSupportDialog() {
+        var dialog = Dialog(this@SettingsActivity)
+        dialog.setContentView(R.layout.dialog_support)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.tvPhoneIcon.setTypeface(fontAwesomeFont)
+        dialog.tvEmailIcon.setTypeface(fontAwesomeFont)
+        dialog.tvPushArrowInfo.setTypeface(fontAwesomeFont)
+        dialog.tvPushArrowInfo2.setTypeface(fontAwesomeFont)
+
+
+        dialog.clPhone.setOnClickListener {
+            copyToClipboard(getString(R.string.settings_support_phone_val))
+            Toast.makeText(this, "Copied phone number!", Toast.LENGTH_SHORT).show()
+        }
+
+        dialog.clEmail.setOnClickListener {
+            copyToClipboard(getString(R.string.settings_support_email_val))
+            Toast.makeText(this, "Copied E-mail!", Toast.LENGTH_SHORT).show()
+        }
+
+        dialog.ivClose.setOnClickListener { dialog.cancel() }
+        dialog.show()
+    }
+
+    private fun copyToClipboard(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("DataMule", text)
+        clipboard.setPrimaryClip(clip)
     }
 
     private fun createCacheFile() {
@@ -62,8 +123,8 @@ class SettingsActivity : AppCompatActivity() {
         tvTotalStorage.text = getString(R.string.settings_total_storage, doubleMBToStringGB(getTotalStorageInMB()))
         tvUsed.text = doubleMBToStringGB(getUsedStorageInMB()) + " GB"
         tvFree.text = doubleMBToStringGB(getFreeStorageInMB()) + " GB"
-        tvCache.text = doubleMBToStringGB(getCacheStorageInMB()) + " GB"
-
+        //display in MB instead of GB
+        tvCache.text = (Math.round(getCacheStorageInMB() * 100.0) / 100.0).toString() + " MB"
         setProgressBar()
     }
 
