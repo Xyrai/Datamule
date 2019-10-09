@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.dialog_support.*
 import android.content.Intent
 import android.net.Uri
 import com.project.datamule.Constants
-import com.project.datamule.R
 import java.io.File
 import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
@@ -30,6 +29,11 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import com.project.datamule.R
+
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
 private const val BYTE_TO_MB_DIVIDER = 1048576.0
@@ -45,6 +49,11 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
         initView()
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
     private fun initView() {

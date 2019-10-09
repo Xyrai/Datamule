@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Bundle
+import android.transition.Transition
 import android.view.View
+import android.view.animation.Animation
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,11 +87,13 @@ class HomeActivity : AppCompatActivity() {
     fun onClickOpenSearchPi() {
         val intent = Intent(this, SearchPiActivity::class.java)
         startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top);
     }
 
     fun onClickOpenSettings() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     fun onPiClicked(clickedPi: Pi) {

@@ -15,10 +15,10 @@
             layout="@layout/no_pi_found_overlay"
             android:layout_width="294dp"
             android:layout_height="278dp"
-            app:layout_constraintBottom_toBottomOf="@+id/rvPiList"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include2" />
+            app:layout_constraintStart_toStartOf="@+id/rvPiList"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <include
             android:id="@+id/include2"
