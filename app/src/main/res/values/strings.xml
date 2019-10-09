@@ -7,11 +7,8 @@
 
     <!--HomeActivity Strings-->
     <string name="menu_button_title">Settings</string>
+    <string name="home_no_paired_devices">No paired and/or \nconnected devices found!</string>
     <string name="add_new_pi_button">Add a new Pi</string>
-
-    <string name="bluetooth_alert_title">Bluetooth is turned off</string>
-    <string name="bluetooth_alert_text">Your bluetooth is turned off. Please turn on your bluetooth to continue.</string>
-    <string name="bluetooth_alert_positive_button">Turn on</string>
 
     <!--SettingsActivity Strings-->
     <string name="settings_title">Settings</string>
@@ -52,6 +49,13 @@
     <string name="nearby_pi_title">%d Raspberry Pi\'s Nearby</string>
     <string name="nearby_pi_desc">Select to add</string>
     <string name="search_button">Search</string>
+    <string name="add_this_pi_button">Add this Pi</string>
+
+    <string name="error_no_bluetooth">This device doesn\'t support bluetooth!</string>
+    <string name="bluetooth_alert_title">Bluetooth is turned off</string>
+    <string name="bluetooth_alert_text">Your bluetooth is turned off. Please turn on your bluetooth to continue.</string>
+    <string name="bluetooth_alert_positive_button">Turn on</string>
+    <string name="bluetooth_alert_negative_button">Go Back</string>
 
     <!--FontAwesome5 Strings-->
     <!--remove from x till ; -->
