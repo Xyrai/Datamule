@@ -44,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun initViews() {
-        clNoPiFound.visibility = View.INVISIBLE
+        clRectangle.visibility = View.INVISIBLE
 
         //Initialize Buttons
         ivSettings.setOnClickListener { onClickOpenSettings() }
@@ -110,7 +110,7 @@ class HomeActivity : AppCompatActivity() {
                 pi_s.add(Pi(device.name))
             }
         } else {
-            clNoPiFound.visibility = View.VISIBLE
+            clRectangle.visibility = View.VISIBLE
         }
     }
 

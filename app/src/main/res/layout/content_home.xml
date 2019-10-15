@@ -11,7 +11,7 @@
 
 
     <include
-            android:id="@+id/clNoPiFound"
+            android:id="@+id/clRectangle"
             layout="@layout/no_pi_found_overlay"
             android:layout_width="294dp"
             android:layout_height="278dp"

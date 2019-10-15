@@ -19,6 +19,7 @@
         <activity android:name=".UI.SearchPiActivity" />
         <activity android:name=".UI.SettingsActivity" />
         <activity android:name=".UI.HomeActivity" />
+        <activity android:name=".UI.NewUserActivity"/>
         <activity android:name=".UI.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

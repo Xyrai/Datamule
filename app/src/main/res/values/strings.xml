@@ -6,6 +6,10 @@
     <string name="cancel">Cancel</string>
 
     <!--HomeActivity Strings-->
+    <string name="new_user_hey_title">Hey,</string>
+    <string name="new_user_title">you\'re new to the app!</string>
+
+    <!--HomeActivity Strings-->
     <string name="menu_button_title">Settings</string>
     <string name="home_no_paired_devices">No paired and/or \nconnected devices found!</string>
     <string name="add_new_pi_button">Add a new Pi</string>
