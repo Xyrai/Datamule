@@ -8,9 +8,6 @@ import android.os.Handler
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_splash.*
 import android.content.SharedPreferences
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 class SplashActivity : AppCompatActivity() {
 
@@ -21,10 +18,9 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
-        prefs!!.getBoolean("firstrun",true)
 
         if (prefs!!.getBoolean("firstrun", true)) {
-            // Do first run stuff here then set 'firstrun' as false
+            //Running app for the first time
             var animatorSet = AnimatorInflater.loadAnimator(this@SplashActivity, R.animator.loading_animator)
             animatorSet.setTarget(ivLoader)
             animatorSet.start()
@@ -38,7 +34,7 @@ class SplashActivity : AppCompatActivity() {
                 )
                 finish()
             }, 1000)
-            // using the following line to edit/commit prefs
+            //Edit/commit prefs
             prefs!!.edit().putBoolean("firstrun", false).commit();
         } else {
             var animatorSet = AnimatorInflater.loadAnimator(this@SplashActivity, R.animator.loading_animator)
@@ -56,40 +52,4 @@ class SplashActivity : AppCompatActivity() {
             }, 1000)
         }
     }
-//    override fun onResume() {
-//        super.onResume();
-//
-//        if (prefs!!.getBoolean("firstrun", true)) {
-//            // Do first run stuff here then set 'firstrun' as false
-//            var animatorSet = AnimatorInflater.loadAnimator(this@SplashActivity, R.animator.loading_animator)
-//            animatorSet.setTarget(ivLoader)
-//            animatorSet.start()
-//
-//            Handler().postDelayed({
-//                startActivity(
-//                    Intent(
-//                        this@SplashActivity,
-//                        NewUserActivity::class.java
-//                    )
-//                )
-//                finish()
-//            }, 1000)
-//            // using the following line to edit/commit prefs
-//            prefs!!.edit().putBoolean("firstrun", false).commit();
-//        } else {
-//            var animatorSet = AnimatorInflater.loadAnimator(this@SplashActivity, R.animator.loading_animator)
-//            animatorSet.setTarget(ivLoader)
-//            animatorSet.start()
-//
-//            Handler().postDelayed({
-//                startActivity(
-//                    Intent(
-//                        this@SplashActivity,
-//                        HomeActivity::class.java
-//                    )
-//                )
-//                finish()
-//            }, 1000)
-//        }
-//    }
 }
