@@ -30,24 +30,19 @@ import kotlinx.android.synthetic.main.item_pi.view.*
 class SearchPiActivity : AppCompatActivity() {
 
     companion object {
-        var bluetoothSocket: BluetoothSocket? = null
-//        lateinit var progress: ProgressDialog
-        lateinit var bluetoothAdapter: BluetoothAdapter
-        var isConnected: Boolean = false
+        var bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     }
 
-    var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var pairedDevices: Set<BluetoothDevice>
 
     private var pi_s = arrayListOf<Pi>()
-    private lateinit var piAdapter: PiAdapter
+    private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi)}
     private var selectedPi: Pi? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_pi)
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_no_bluetooth, Toast.LENGTH_SHORT).show()
             finish()
@@ -64,36 +59,6 @@ class SearchPiActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
 
-    private fun sendCommand(input: String) {
-
-    }
-
-    private fun disconnect() {
-
-    }
-
-    private class ConnectToDevice(c: Context): AsyncTask<Void, Void, String>() {
-        private var connectSucces: Boolean = true
-        private val context: Context
-
-        init {
-            context = c
-        }
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-        }
-
-        override fun doInBackground(vararg params: Void?): String {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-        }
-
-    }
-
     private fun addPairedDeviceList() {
         pairedDevices = bluetoothAdapter!!.bondedDevices
         if (pairedDevices.isNotEmpty()) {
@@ -104,21 +69,24 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-//        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
-//        tvBack.setTypeface(fontAwesomeFont)
         ivBack.setOnClickListener { onClickBack() }
         btnSearchPi.setOnClickListener { onClickOpenPiList() }
+
+        //Initialize RecyclerView
+        rvSearchPi.layoutManager = LinearLayoutManager(this@SearchPiActivity, RecyclerView.VERTICAL, false)
+        rvSearchPi.adapter = piAdapter
     }
 
-    private fun updateUI() {
+    private fun updateRecyclerView() {
         if (pi_s.size == ONE_NEARBY_PI) {
             tvNearbyPiTitle.text = getString(R.string.one_nearby_pi_title, pi_s.size)
         } else {
             tvNearbyPiTitle.text = getString(R.string.nearby_pi_title, pi_s.size)
-        }    }
+        }
+        piAdapter.notifyDataSetChanged()
+    }
 
     private fun onClickOpenPiList() {
-        piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi)}
 
         //Hide elements of Search Pi screen
         clRectangle.visibility = View.INVISIBLE
@@ -126,13 +94,8 @@ class SearchPiActivity : AppCompatActivity() {
         tvNearbyPiTitle.visibility = View.VISIBLE
         tvNearbyPiDesc.visibility = View.VISIBLE
 
-        //Initialize RecyclerView
-        rvSearchPi.layoutManager = LinearLayoutManager(this@SearchPiActivity, RecyclerView.VERTICAL, false)
-        rvSearchPi.adapter = piAdapter
-
         addPairedDeviceList()
-        piAdapter.notifyDataSetChanged()
-        updateUI()
+        updateRecyclerView()
     }
 
     @TargetApi(Build.VERSION_CODES.M)
