@@ -7,19 +7,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 import android.annotation.TargetApi
-import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
+import android.content.IntentFilter
 import android.os.Build
-import android.annotation.SuppressLint
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.datamule.Adapter.PiAdapter
+import com.project.datamule.Constants
 import com.project.datamule.Constants.Companion.ONE_NEARBY_PI
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
@@ -27,45 +28,76 @@ import kotlinx.android.synthetic.main.activity_search_pi.*
 import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.item_pi.view.*
 
+
+
 class SearchPiActivity : AppCompatActivity() {
 
     companion object {
         var bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     }
 
-    lateinit var pairedDevices: Set<BluetoothDevice>
-
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi)}
     private var selectedPi: Pi? = null
 
+    val broadCastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(contxt: Context?, intent: Intent?) {
+
+            when (intent?.action) {
+                BluetoothDevice.ACTION_FOUND -> {
+                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    if (device.name != null) {
+                        pi_s.add(Pi(device.name))
+                        updateRecyclerView()
+                    }
+                }
+            }
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_pi)
+        rvSearchPi.visibility = View.INVISIBLE
+
+        checkLocationPermission()
 
         if (bluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_no_bluetooth, Toast.LENGTH_SHORT).show()
             finish()
         }
         if (!bluetoothAdapter!!.isEnabled) {
-            buildAlertMessageNoBluetooth(bluetoothAdapter!!)
+//            buildAlertMessageNoBluetooth(bluetoothAdapter!!)
         }
+
+        var discoveryIntentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(broadCastReceiver, discoveryIntentFilter)
 
         initView()
     }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
+    private fun checkLocationPermission(): Boolean {
+        var permissionCheck = ContextCompat.checkSelfPermission(this@SearchPiActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        permissionCheck += ContextCompat.checkSelfPermission(this@SearchPiActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (permissionCheck != 0) {
+
+            ActivityCompat.requestPermissions(this@SearchPiActivity,
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ), Constants.REQUEST_ACCESS_LOCATION
+            )
+            return false
+        } else {
+            return true
+        }
     }
 
-    private fun addPairedDeviceList() {
-        pairedDevices = bluetoothAdapter!!.bondedDevices
-        if (pairedDevices.isNotEmpty()) {
-            for (device: BluetoothDevice in pairedDevices) {
-                pi_s.add(Pi(device.name))
-            }
-        }
+    override fun finish() {
+        unregisterReceiver(broadCastReceiver)
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
 
     private fun initView() {
@@ -93,8 +125,9 @@ class SearchPiActivity : AppCompatActivity() {
         btnSearchPi.visibility = View.INVISIBLE
         tvNearbyPiTitle.visibility = View.VISIBLE
         tvNearbyPiDesc.visibility = View.VISIBLE
+        rvSearchPi.visibility = View.VISIBLE
 
-        addPairedDeviceList()
+        bluetoothAdapter.startDiscovery()
         updateRecyclerView()
     }
 
@@ -121,46 +154,6 @@ class SearchPiActivity : AppCompatActivity() {
             else -> //warning/shake animation
                 clickedPiItem.startAnimation(AnimationUtils.loadAnimation(this,R.anim.button_shaker))
         }
-    }
-
-//        private fun isBluetoothAvailable() {
-//        var manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-//        var mBluetoothAdapter = manager.adapter
-//
-//            mBluetoothAdapter.startDiscovery()
-//            mBluetoothAdapter.
-//
-//        if (mBluetoothAdapter.isEnabled) {
-////            Toast.makeText(this, "wel bluetooth!!!", Toast.LENGTH_LONG).show()
-//        } else {
-////            Toast.makeText(this, "NOOOO bluetooth!!!", Toast.LENGTH_LONG).show()
-////            buildAlertMessageNoBluetooth(mBluetoothAdapter)
-//        }
-//    }
-
-    private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
-//        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.bluetooth_alert_title)
-            .setMessage(R.string.bluetooth_alert_text)
-            .setCancelable(false)
-            .setPositiveButton(R.string.bluetooth_alert_positive_button
-            ) { dialog, id ->
-                // Button for going to wifi settings
-                bluetoothAdapter.enable()
-//                val enableBtIntent = Intent()
-//                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            }
-            .setNegativeButton(R.string.bluetooth_alert_negative_button
-            ) { dialog, which ->
-                // Cancel button, brings you back to main activity
-                val intent = Intent(Intent.ACTION_MAIN)
-                intent.addCategory(Intent.CATEGORY_HOME)
-                startActivity(intent)
-            }
-        val alert = builder.create()
-        alert.show()
     }
 
     private fun onClickBack() {

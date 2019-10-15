@@ -4,6 +4,7 @@ class Constants {
     companion object {
         val REQUEST_ENABLE_BT = 9001
         val REQUEST_PHONE_CALL = 9002
+        val REQUEST_ACCESS_LOCATION = 9003
 
         //notifications
         val CHANNEL_ID = "DataMule"
