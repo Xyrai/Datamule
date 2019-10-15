@@ -5,6 +5,9 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
 
+    <!--NewUserActivity Strings-->
+    <string name="skip_this_step">Skip  this step ></string>
+
     <!--HomeActivity Strings-->
     <string name="new_user_hey_title">Hey,</string>
     <string name="new_user_title">you\'re new to the app!</string>

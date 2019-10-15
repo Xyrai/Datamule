@@ -10,13 +10,12 @@
         android:id="@+id/tvNewUserHey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
         android:fontFamily="@font/rubik"
         android:text="@string/new_user_hey_title"
         android:textColor="#2D2D2D"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/clRectangle"
+        app:layout_constraintBottom_toTopOf="@+id/tvNewNearbyPiDesc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include" />
@@ -25,7 +24,7 @@
         android:id="@+id/tvNewUserToApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/rubik"
         android:text="@string/new_user_title"
         android:textSize="24sp"
@@ -39,6 +38,7 @@
         layout="@layout/no_pi_found_overlay"
         android:layout_width="294dp"
         android:layout_height="278dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/btnNewSearchPi"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="68dp"
         android:background="@drawable/button_custom"
         android:drawableStart="@drawable/ic_search_white"
         android:fontFamily="@font/rubik"
@@ -72,6 +72,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clRectangle"
         app:layout_constraintWidth_percent="0.75" />
 
     <TextView
@@ -118,7 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="42dp"
         android:background="@drawable/button_custom"
         android:drawableStart="@drawable/logo_confirm"
         android:fontFamily="@font/rubik"
@@ -130,6 +131,22 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clRectangle" />
+
+    <TextView
+        android:id="@+id/tvSkipStep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/rubik"
+        android:text="@string/skip_this_step"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/rvNewSearchPi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNewSearchPi" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

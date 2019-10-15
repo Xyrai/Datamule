@@ -23,6 +23,8 @@ import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_new_user.*
 import kotlinx.android.synthetic.main.item_pi.view.*
+import android.graphics.Paint
+
 
 class NewUserActivity : AppCompatActivity() {
 
@@ -98,6 +100,8 @@ class NewUserActivity : AppCompatActivity() {
     private fun initView() {
 //        var fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
 //        tvBack.setTypeface(fontAwesomeFont)
+        tvSkipStep.paintFlags = tvSkipStep.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        tvSkipStep.setOnClickListener { onClickSkipToHome()}
         btnNewSearchPi.setOnClickListener { onClickOpenPiList() }
     }
 
@@ -110,13 +114,15 @@ class NewUserActivity : AppCompatActivity() {
     }
 
     private fun onClickOpenPiList() {
-        tvNewUserHey.visibility = View.INVISIBLE
-        tvNewUserToApp.visibility = View.INVISIBLE
         piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi)}
 
         //Hide elements of Search Pi screen
         clRectangle.visibility = View.INVISIBLE
         btnNewSearchPi.visibility = View.INVISIBLE
+        tvNewUserHey.visibility = View.INVISIBLE
+        tvNewUserToApp.visibility = View.INVISIBLE
+
+        //Show elements of Search Pi screen
         tvNewNearbyPiTitle.visibility = View.VISIBLE
         tvNewNearbyPiDesc.visibility = View.VISIBLE
 
@@ -127,6 +133,11 @@ class NewUserActivity : AppCompatActivity() {
         addPairedDeviceList()
         piAdapter.notifyDataSetChanged()
         updateUI()
+    }
+
+    private fun onClickSkipToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
     }
 
     @TargetApi(Build.VERSION_CODES.M)
