@@ -18,6 +18,7 @@ import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.datamule.Adapter.PiAdapter
+import com.project.datamule.Constants.Companion.ONE_NEARBY_PI
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_new_user.*
@@ -101,7 +102,11 @@ class NewUserActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-        tvNewNearbyPiTitle.text = getString(R.string.nearby_pi_title, pi_s.size)
+        if (pi_s.size == ONE_NEARBY_PI) {
+            tvNewNearbyPiTitle.text = getString(R.string.one_nearby_pi_title, pi_s.size)
+        } else {
+            tvNewNearbyPiTitle.text = getString(R.string.nearby_pi_title, pi_s.size)
+        }
     }
 
     private fun onClickOpenPiList() {

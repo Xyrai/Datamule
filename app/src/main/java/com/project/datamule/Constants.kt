@@ -11,5 +11,8 @@ class Constants {
 
         val DATAMULE_PHONE_NUMBER = "+31612345678"
         val DATAMULE_EMAIL = "datamule@atos.com"
+
+        //title
+        val ONE_NEARBY_PI = 1
     }
 }
