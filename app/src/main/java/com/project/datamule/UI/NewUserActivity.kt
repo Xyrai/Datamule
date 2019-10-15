@@ -92,7 +92,7 @@ class NewUserActivity : AppCompatActivity() {
         pairedDevices = bluetoothAdapter!!.bondedDevices
         if (pairedDevices.isNotEmpty()) {
             for (device: BluetoothDevice in pairedDevices) {
-                pi_s.add(Pi(device.name))
+                pi_s.add(Pi(device.name, device))
             }
         }
     }

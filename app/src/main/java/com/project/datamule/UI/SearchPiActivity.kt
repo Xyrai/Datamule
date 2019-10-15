@@ -47,7 +47,7 @@ class SearchPiActivity : AppCompatActivity() {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                     if (device.name != null) {
-                        pi_s.add(Pi(device.name))
+                        pi_s.add(Pi(device.name, device))
                         updateRecyclerView()
                     }
                 }
@@ -103,6 +103,7 @@ class SearchPiActivity : AppCompatActivity() {
     private fun initView() {
         ivBack.setOnClickListener { onClickBack() }
         btnSearchPi.setOnClickListener { onClickOpenPiList() }
+        btnAddPi.setOnClickListener { onClickAddPi() }
 
         //Initialize RecyclerView
         rvSearchPi.layoutManager = LinearLayoutManager(this@SearchPiActivity, RecyclerView.VERTICAL, false)
@@ -129,6 +130,11 @@ class SearchPiActivity : AppCompatActivity() {
 
         bluetoothAdapter.startDiscovery()
         updateRecyclerView()
+    }
+
+    private fun onClickAddPi() {
+        selectedPi!!.device.createBond()
+        finish()
     }
 
     @TargetApi(Build.VERSION_CODES.M)

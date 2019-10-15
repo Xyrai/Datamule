@@ -62,26 +62,26 @@ class HomeActivity : AppCompatActivity() {
     private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
 //        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.bluetooth_alert_title)
-            .setMessage(R.string.bluetooth_alert_text)
-            .setCancelable(false)
-            .setPositiveButton(R.string.bluetooth_alert_positive_button
-            ) { dialog, id ->
-                // Button for going to wifi settings
-                bluetoothAdapter.enable()
-//                val enableBtIntent = Intent()
-//                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            }
-            .setNegativeButton(R.string.bluetooth_alert_negative_button
-            ) { dialog, which ->
-                // Cancel button, brings you back to main activity
-                val intent = Intent(Intent.ACTION_MAIN)
-                intent.addCategory(Intent.CATEGORY_HOME)
-                startActivity(intent)
-            }
-        val alert = builder.create()
-        alert.show()
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle(R.string.bluetooth_alert_title)
+//            .setMessage(R.string.bluetooth_alert_text)
+//            .setCancelable(false)
+//            .setPositiveButton(R.string.bluetooth_alert_positive_button
+//            ) { dialog, id ->
+//                // Button for going to wifi settings
+//                bluetoothAdapter.enable()
+////                val enableBtIntent = Intent()
+////                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+//            }
+//            .setNegativeButton(R.string.bluetooth_alert_negative_button
+//            ) { dialog, which ->
+//                // Cancel button, brings you back to main activity
+//                val intent = Intent(Intent.ACTION_MAIN)
+//                intent.addCategory(Intent.CATEGORY_HOME)
+//                startActivity(intent)
+//            }
+//        val alert = builder.create()
+//        alert.show()
     }
 
     fun onClickOpenSearchPi() {
@@ -107,7 +107,7 @@ class HomeActivity : AppCompatActivity() {
 
         if (pairedDevices.isNotEmpty()) {
             for (device: BluetoothDevice in pairedDevices) {
-                pi_s.add(Pi(device.name))
+                pi_s.add(Pi(device.name, device))
             }
         } else {
             clRectangle.visibility = View.VISIBLE
