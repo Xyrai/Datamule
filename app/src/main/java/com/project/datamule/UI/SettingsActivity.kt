@@ -1,7 +1,6 @@
 package com.project.datamule.UI
 
 import android.Manifest
-import android.animation.AnimatorInflater
 import android.app.*
 import android.content.Context
 import android.graphics.Color
@@ -21,20 +20,12 @@ import com.project.datamule.Constants
 import java.io.File
 import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.*
-import android.provider.Settings
 import androidx.core.content.ContextCompat.getColor
-import androidx.core.text.HtmlCompat
 import com.project.datamule.R
-import kotlinx.android.synthetic.main.activity_splash.*
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
