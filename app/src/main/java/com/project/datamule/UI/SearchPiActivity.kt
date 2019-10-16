@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.item_pi.view.*
 import android.os.Handler
 
-
 class SearchPiActivity : AppCompatActivity() {
 
     companion object {
