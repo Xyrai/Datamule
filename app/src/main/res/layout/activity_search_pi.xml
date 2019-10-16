@@ -6,55 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".UI.SearchPiActivity">
 
-    <include
-            android:id="@+id/clRectangle"
-            layout="@layout/no_pi_found_overlay"
-            android:layout_width="294dp"
-            android:layout_height="278dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnSearchPi"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include" />
-
-    <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/ripple_effect"
-            android:clickable="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo_arrow" />
-
-    <include
-            android:id="@+id/include"
-            layout="@layout/logo_overlay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnSearchPi"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="128dp"
-        android:background="@drawable/button_custom"
-        android:drawableStart="@drawable/ic_search_white"
-        android:fontFamily="@font/rubik"
-        android:padding="10dp"
-        android:text="@string/search_button"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.75" />
-
     <TextView
         android:id="@+id/tvNearbyPiTitle"
         android:layout_width="wrap_content"
@@ -82,33 +33,109 @@
         app:layout_constraintTop_toBottomOf="@+id/tvNearbyPiTitle" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSearchPi"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNearbyPiDesc" />
+            android:id="@+id/rvSearchPi"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnAddPi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvNearbyPiDesc"
+            tools:visibility="visible" />
 
     <Button
-        android:id="@+id/btnAddPi"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/button_custom"
-        android:drawableStart="@drawable/logo_confirm"
-        android:fontFamily="@font/rubik"
-        android:padding="10dp"
-        android:text="@string/add_this_pi_button"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            android:id="@+id/btnAddPi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_custom"
+            android:drawableStart="@drawable/logo_confirm"
+            android:fontFamily="@font/rubik"
+            android:padding="10dp"
+            android:text="@string/add_this_pi_button"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+            android:id="@+id/btnSearchPi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/button_custom"
+            android:drawableStart="@drawable/logo_search_drawable"
+            android:fontFamily="@font/rubik"
+            android:padding="10dp"
+            android:text="@string/search_button"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/clRectangle"
+            app:layout_constraintWidth_percent="0.75"
+            tools:visibility="invisible" />
+
+    <include
+            android:id="@+id/clRectangle"
+            layout="@layout/no_pi_found_overlay"
+            android:layout_width="294dp"
+            android:layout_height="278dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible" />
+
+    <include
+            android:id="@+id/include"
+            layout="@layout/logo_overlay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/ripple_effect"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_arrow" />
+
+    <ImageView
+            android:id="@+id/ivLoader2"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo_spinner_of_dots" />
+
+    <ImageView
+            android:id="@+id/ivRerunSearch"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/ripple_effect"
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_refresh_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

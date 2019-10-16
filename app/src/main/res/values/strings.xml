@@ -55,6 +55,7 @@
         \n\'Search\'</string>
     <string name="nearby_pi_title">%d Raspberry Pi\'s Nearby</string>
     <string name="one_nearby_pi_title">%d Raspberry Pi Nearby</string>
+    <string name="searching_title">Searching…</string>
     <string name="nearby_pi_desc">Select to add</string>
     <string name="search_button">Search</string>
     <string name="add_this_pi_button">Add this Pi</string>

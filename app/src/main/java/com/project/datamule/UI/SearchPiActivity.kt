@@ -1,5 +1,6 @@
 package com.project.datamule.UI
 
+import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -27,7 +28,7 @@ import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_search_pi.*
 import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.item_pi.view.*
-
+import android.os.Handler
 
 
 class SearchPiActivity : AppCompatActivity() {
@@ -59,7 +60,6 @@ class SearchPiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_pi)
-        rvSearchPi.visibility = View.INVISIBLE
 
         checkLocationPermission()
 
@@ -96,40 +96,101 @@ class SearchPiActivity : AppCompatActivity() {
 
     override fun finish() {
         unregisterReceiver(broadCastReceiver)
+        bluetoothAdapter.cancelDiscovery()
         super.finish()
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
 
     private fun initView() {
-        ivBack.setOnClickListener { onClickBack() }
-        btnSearchPi.setOnClickListener { onClickOpenPiList() }
-        btnAddPi.setOnClickListener { onClickAddPi() }
+        startSearch()
 
-        //Initialize RecyclerView
+        // Set the views visible/invisible
+        tvNearbyPiTitle.visibility = View.VISIBLE
+        tvNearbyPiDesc.visibility = View.INVISIBLE
+        ivLoader2.visibility = View.VISIBLE
+        ivRerunSearch.visibility = View.INVISIBLE
+        clRectangle.visibility = View.INVISIBLE
+        btnSearchPi.visibility = View.INVISIBLE
+        rvSearchPi.visibility = View.VISIBLE
+        btnAddPi.visibility = View.VISIBLE
+        btnAddPi.isEnabled = false
+
+        // Set onClick listeners
+        ivBack.setOnClickListener { onClickBack() }
+        btnSearchPi.setOnClickListener { onClickSearchPi() }
+        btnAddPi.setOnClickListener { onClickAddPi() }
+        ivRerunSearch.setOnClickListener { startSearch() }
+
+        // Initialize RecyclerView
         rvSearchPi.layoutManager = LinearLayoutManager(this@SearchPiActivity, RecyclerView.VERTICAL, false)
         rvSearchPi.adapter = piAdapter
     }
 
+    private fun startSearch() {
+        // Run the discovery
+        bluetoothAdapter.startDiscovery()
+        ivLoader2.visibility = View.VISIBLE
+        ivRerunSearch.visibility = View.INVISIBLE
+        updateRecyclerView()
+
+        var animatorSet = AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
+        animatorSet.setTarget(ivLoader2)
+        animatorSet.start()
+
+        // After 10 seconds stop the search
+        Handler().postDelayed(
+            Runnable {
+                if (pi_s.size == 0) {
+                    stopSearch()
+                } else {
+                    bluetoothAdapter.cancelDiscovery()
+                    animatorSet.pause()
+                    ivLoader2.visibility = View.INVISIBLE
+                    ivRerunSearch.visibility = View.VISIBLE
+                }
+            },
+            10000 // 10 seconds
+        )
+    }
+
+    private fun stopSearch() {
+        // Stop the discovery
+        bluetoothAdapter.cancelDiscovery()
+
+        // Hide elements of Search Pi screen
+        clRectangle.visibility = View.VISIBLE
+        btnSearchPi.visibility = View.VISIBLE
+        btnAddPi.visibility = View.INVISIBLE
+        tvNearbyPiTitle.visibility = View.INVISIBLE
+        tvNearbyPiDesc.visibility = View.INVISIBLE
+        rvSearchPi.visibility = View.INVISIBLE
+        ivLoader2.visibility = View.INVISIBLE
+        ivRerunSearch.visibility = View.INVISIBLE
+    }
+
     private fun updateRecyclerView() {
-        if (pi_s.size == ONE_NEARBY_PI) {
+        if (pi_s.size < ONE_NEARBY_PI) {
+            tvNearbyPiTitle.text = getString(R.string.searching_title)
+            tvNearbyPiDesc.visibility = View.INVISIBLE
+        } else if (pi_s.size == ONE_NEARBY_PI) {
             tvNearbyPiTitle.text = getString(R.string.one_nearby_pi_title, pi_s.size)
+            tvNearbyPiDesc.visibility = View.VISIBLE
         } else {
             tvNearbyPiTitle.text = getString(R.string.nearby_pi_title, pi_s.size)
+            tvNearbyPiDesc.visibility = View.VISIBLE
         }
         piAdapter.notifyDataSetChanged()
     }
 
-    private fun onClickOpenPiList() {
-
-        //Hide elements of Search Pi screen
+    private fun onClickSearchPi() {
+        // Hide elements of Search Pi screen
         clRectangle.visibility = View.INVISIBLE
         btnSearchPi.visibility = View.INVISIBLE
         tvNearbyPiTitle.visibility = View.VISIBLE
         tvNearbyPiDesc.visibility = View.VISIBLE
         rvSearchPi.visibility = View.VISIBLE
 
-        bluetoothAdapter.startDiscovery()
-        updateRecyclerView()
+        startSearch()
     }
 
     private fun onClickAddPi() {
@@ -143,21 +204,21 @@ class SearchPiActivity : AppCompatActivity() {
         var clickedPiItem = rvSearchPi.get(position)
 
         when (selectedPi) {
-            null -> { //select pi
+            null -> { // select pi
                 selectedPi = clickedPi
                 clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
                 clickedPiItem.tvName.setTextColor(getColor(R.color.white))
                 clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
-                btnAddPi.visibility = View.VISIBLE
+                btnAddPi.isEnabled = true
             } // deselect pi
             clickedPi -> {
                 selectedPi = null
                 clickedPiItem.background = getDrawable(R.drawable.button_rectangle_custom)
                 clickedPiItem.tvName.setTextColor(getColor(R.color.colorAccent))
                 clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
-                btnAddPi.visibility = View.INVISIBLE
+                btnAddPi.isEnabled = false
             }
-            else -> //warning/shake animation
+            else -> // warning/shake animation
                 clickedPiItem.startAnimation(AnimationUtils.loadAnimation(this,R.anim.button_shaker))
         }
     }
