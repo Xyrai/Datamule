@@ -8,7 +8,7 @@ class Constants {
 
         //notifications
         val CHANNEL_ID = "DataMule"
-        val CHANNEL_NAME = "DATAMULE_CHANNEL"
+        val CHANNEL_NAME = "data transport"
 
         val DATAMULE_PHONE_NUMBER = "+31612345678"
         val DATAMULE_EMAIL = "datamule@atos.com"

@@ -1,16 +1,11 @@
 package com.project.datamule.UI
 
 import android.Manifest
-import android.app.Dialog
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.animation.AnimatorInflater
+import android.app.*
 import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Environment
-import android.os.StatFs
 import kotlinx.android.synthetic.main.activity_settings.*
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -20,20 +15,26 @@ import kotlinx.android.synthetic.main.dialog_change_log.*
 import kotlinx.android.synthetic.main.dialog_change_log.ivClose
 import kotlinx.android.synthetic.main.dialog_support.*
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import com.project.datamule.Constants
 import java.io.File
 import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.media.RingtoneManager
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.*
+import android.provider.Settings
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.text.HtmlCompat
 import com.project.datamule.R
+import kotlinx.android.synthetic.main.activity_splash.*
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -43,6 +44,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var fontAwesomeFont: Typeface
 
+    private var prefs: SharedPreferences? = null
 
     //TODO set setttingsactivity scrollable
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,11 +60,15 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
+
         tvPushArrow.setTypeface(fontAwesomeFont)
         tvPushArrowInfo.setTypeface(fontAwesomeFont)
         ivBack.setOnClickListener { onClickBack() }
         clChangeLog.setOnClickListener { buildChangeLogDialog() }
         clSupport.setOnClickListener { buildSupportDialog() }
+        sPushNotification.setChecked(prefs!!.getBoolean("notifications", true))
+
         clPushNotification.setOnClickListener {
             if(sPushNotification.isChecked) {
                 sPushNotification.setChecked(false)
@@ -72,36 +78,54 @@ class SettingsActivity : AppCompatActivity() {
                 setPushNotification(true)
             }
         }
+        sPushNotification.setOnClickListener {
+            if(sPushNotification.isChecked) setPushNotification(true)
+            else setPushNotification(false)
+        }
         createCacheFile()
         setStorage()
     }
 
     private fun setPushNotification(allowPushNotification: Boolean) {
-        val notificationID = allowPushNotification.toInt()
+        if(allowPushNotification) makeNotification("Push notifications", "Push notifications are now turned on.", 0)
+        else makeNotification("Push notifications", "Push notifications are now turned off.", 0)
+        setNotificationPreference(allowPushNotification)
+    }
 
-        if(allowPushNotification)
-            makeNotification("Push notifications", "Push notifications are now turned on.", notificationID)
-        else
-            makeNotification("Push notifications", "Push notifications are now turned off.", notificationID)
+    private fun setNotificationPreference(allowPushNotification: Boolean) {
+        prefs!!.edit().putBoolean("notifications", allowPushNotification).apply()
     }
 
     private fun makeNotification(title: String, content: String, notificationID: Int) {
         val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
+
+        //todo fix de floating notifications
+
+        val notificationIntent = Intent(this, HomeActivity::class.java)
+
+        // Create the TaskStackBuilder
+        val pendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
+            // Add the intent, which inflates the back stack
+            addNextIntentWithParentStack(notificationIntent)
+            // Get the PendingIntent containing the entire back stack
+            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
         var builder = NotificationCompat.Builder(this, Constants.CHANNEL_ID)
             .setSmallIcon(R.drawable.logo_no_text)
+            .setColor(getColor(this, R.color.colorPrimary))
             .setContentTitle(title)
             .setContentText(content)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setSound(defaultSoundUri)
-            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setContentIntent(pendingIntent)
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(Constants.CHANNEL_NAME, Constants.CHANNEL_ID, importance).apply {
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(Constants.CHANNEL_ID, Constants.CHANNEL_NAME, importance).apply {
                 description = "channel"
             }
             // Register the channel with the system
