@@ -29,10 +29,7 @@ import android.graphics.Paint
 class NewUserActivity : AppCompatActivity() {
 
     companion object {
-        var bluetoothSocket: BluetoothSocket? = null
-        //        lateinit var progress: ProgressDialog
-        lateinit var bluetoothAdapter: BluetoothAdapter
-        var isConnected: Boolean = false
+        var bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     }
 
     var bluetoothAdapter: BluetoothAdapter? = null
@@ -56,36 +53,6 @@ class NewUserActivity : AppCompatActivity() {
         }
 
         initView()
-    }
-
-    private fun sendCommand(input: String) {
-
-    }
-
-    private fun disconnect() {
-
-    }
-
-    private class ConnectToDevice(c: Context): AsyncTask<Void, Void, String>() {
-        private var connectSucces: Boolean = true
-        private val context: Context
-
-        init {
-            context = c
-        }
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-        }
-
-        override fun doInBackground(vararg params: Void?): String {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-        }
-
     }
 
     private fun addPairedDeviceList() {
