@@ -37,7 +37,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private var prefs: SharedPreferences? = null
 
-    //TODO set setttingsactivity scrollable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -90,9 +89,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun makeNotification(title: String, content: String, notificationID: Int) {
         val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-
-        //todo fix de floating notifications
 
         val notificationIntent = Intent(this, HomeActivity::class.java)
 
