@@ -124,7 +124,7 @@
             android:layout_marginEnd="25dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo_spinner_of_dots" />
+            app:srcCompat="@drawable/logo_spinner_of_dots_black" />
 
     <ImageView
             android:id="@+id/ivRerunSearch"

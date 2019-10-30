@@ -8,12 +8,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 import android.annotation.TargetApi
+import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -29,6 +32,7 @@ import kotlinx.android.synthetic.main.activity_search_pi.*
 import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.item_pi.view.*
 import android.os.Handler
+import kotlinx.android.synthetic.main.dialog_connecting.*
 
 class SearchPiActivity : AppCompatActivity() {
 
@@ -142,14 +146,17 @@ class SearchPiActivity : AppCompatActivity() {
                 if (pi_s.size == 0) {
                     stopSearch()
                 } else {
-                    bluetoothAdapter.cancelDiscovery()
-                    animatorSet.pause()
-                    ivLoader2.visibility = View.INVISIBLE
-                    ivRerunSearch.visibility = View.VISIBLE
+                    pauseSearch()
                 }
             },
             10000 // 10 seconds
         )
+    }
+
+    private fun pauseSearch() {
+        bluetoothAdapter.cancelDiscovery()
+        ivLoader2.visibility = View.INVISIBLE
+        ivRerunSearch.visibility = View.VISIBLE
     }
 
     private fun stopSearch() {
@@ -193,9 +200,46 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun onClickAddPi() {
+        pauseSearch()
         selectedPi!!.device.createBond()
-        finish()
+
+        var dialog = Dialog(this@SearchPiActivity)
+        dialog.setContentView(R.layout.dialog_connecting)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        var animatorSet = AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
+        animatorSet.setTarget(dialog.ivConnectingLoader)
+        animatorSet.start()
+
+        dialog.show()
+        tvNearbyPiDesc.text = selectedPi!!.device.bondState.toString()
+
+
+        Handler().postDelayed({
+//            dialog.cancel()
+            tvNearbyPiDesc.text = selectedPi!!.device.bondState.toString()
+
+            when (selectedPi!!.device.bondState) {
+                BluetoothDevice.BOND_NONE -> {
+                    dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
+                    animatorSet.cancel()
+                    dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_error_outline_black))
+                }
+                BluetoothDevice.BOND_BONDED -> {
+                    dialog.tvDialogTitle.text = getString(R.string.dialog_connected)
+                    animatorSet.cancel()
+                    dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_check_black))
+                }
+            }
+
+        }, 8000)
+
+
+//        if (selectedPi!!.device.bondState ) {
+//            finish()
+//        }
     }
+
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun onPiClicked(clickedPi: Pi) {

@@ -60,6 +60,10 @@
     <string name="search_button">Search</string>
     <string name="add_this_pi_button">Add this Pi</string>
 
+    <string name="dialog_connecting">Connecting…</string>
+    <string name="dialog_could_not_connect">Couldn\'t connect</string>
+    <string name="dialog_connected">Successfully connected</string>
+
     <string name="error_no_bluetooth">This device doesn\'t support bluetooth!</string>
     <string name="bluetooth_alert_title">Bluetooth is turned off</string>
     <string name="bluetooth_alert_text">Your bluetooth is turned off. Please turn on your bluetooth to continue.</string>
