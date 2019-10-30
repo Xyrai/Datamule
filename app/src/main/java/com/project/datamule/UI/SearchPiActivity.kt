@@ -226,7 +226,7 @@ class SearchPiActivity : AppCompatActivity() {
 
         dialog.show()
 
-        for (i in 0 .. 10) {
+        for (i in 0 .. 15) {
             if (device.bondState == BluetoothDevice.BOND_NONE) {
                 dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
                 dialog.tvSubMessage.text = getString(R.string.dialog_sub_3)
@@ -251,6 +251,14 @@ class SearchPiActivity : AppCompatActivity() {
 
             delay(TimeUnit.SECONDS.toMillis(1))
         }
+
+        dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
+        dialog.tvSubMessage.text = getString(R.string.dialog_sub_3)
+        animatorSet.end()
+        dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_error_outline_black))
+
+        delay(TimeUnit.SECONDS.toMillis(2))
+        dialog.cancel()
     }
 
 
