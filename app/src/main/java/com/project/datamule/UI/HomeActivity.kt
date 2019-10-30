@@ -28,18 +28,17 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        pairedDeviceList()
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        //removes all the notifications, useful when user enters the app by clicking on the notifications
+        notificationManager.cancelAll()
 
+        pairedDeviceList()
         piAdapter.notifyDataSetChanged()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
-        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        //removes all the notifications, useful when user enters the app by clicking on the notifications
-        notificationManager.cancelAll()
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
