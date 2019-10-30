@@ -33,6 +33,9 @@ import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.item_pi.view.*
 import android.os.Handler
 import kotlinx.android.synthetic.main.dialog_connecting.*
+import kotlinx.coroutines.*
+import java.lang.Runnable
+import java.util.concurrent.TimeUnit
 
 class SearchPiActivity : AppCompatActivity() {
 
@@ -43,6 +46,7 @@ class SearchPiActivity : AppCompatActivity() {
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi)}
     private var selectedPi: Pi? = null
+    private val mainScope = CoroutineScope(Dispatchers.IO)
 
     val broadCastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
@@ -121,7 +125,7 @@ class SearchPiActivity : AppCompatActivity() {
         // Set onClick listeners
         ivBack.setOnClickListener { onClickBack() }
         btnSearchPi.setOnClickListener { onClickSearchPi() }
-        btnAddPi.setOnClickListener { onClickAddPi() }
+        btnAddPi.setOnClickListener { mainScope.launch{ withContext(Dispatchers.Main) { onClickAddPi() } } }
         ivRerunSearch.setOnClickListener { startSearch() }
 
         // Initialize RecyclerView
@@ -130,6 +134,9 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun startSearch() {
+        // Clear the bluetooth devices list
+        pi_s.clear()
+
         // Run the discovery
         bluetoothAdapter.startDiscovery()
         ivLoader2.visibility = View.VISIBLE
@@ -157,6 +164,7 @@ class SearchPiActivity : AppCompatActivity() {
         bluetoothAdapter.cancelDiscovery()
         ivLoader2.visibility = View.INVISIBLE
         ivRerunSearch.visibility = View.VISIBLE
+
     }
 
     private fun stopSearch() {
@@ -199,9 +207,10 @@ class SearchPiActivity : AppCompatActivity() {
         startSearch()
     }
 
-    private fun onClickAddPi() {
+    private suspend fun onClickAddPi() {
         pauseSearch()
-        selectedPi!!.device.createBond()
+        var device = selectedPi!!.device
+        device.createBond()
 
         var dialog = Dialog(this@SearchPiActivity)
         dialog.setContentView(R.layout.dialog_connecting)
@@ -212,32 +221,30 @@ class SearchPiActivity : AppCompatActivity() {
         animatorSet.start()
 
         dialog.show()
-        tvNearbyPiDesc.text = selectedPi!!.device.bondState.toString()
 
+        for (i in 0 .. 10) {
+            if (device.bondState == BluetoothDevice.BOND_NONE) {
+                dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
+                animatorSet.end()
+                dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_error_outline_black))
 
-        Handler().postDelayed({
-//            dialog.cancel()
-            tvNearbyPiDesc.text = selectedPi!!.device.bondState.toString()
+                delay(TimeUnit.SECONDS.toMillis(2))
+                dialog.cancel()
+                break
+            }
+            if (device.bondState == BluetoothDevice.BOND_BONDED) {
+                dialog.tvDialogTitle.text = getString(R.string.dialog_connected)
+                animatorSet.end()
+                dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_check_black))
 
-            when (selectedPi!!.device.bondState) {
-                BluetoothDevice.BOND_NONE -> {
-                    dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
-                    animatorSet.cancel()
-                    dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_error_outline_black))
-                }
-                BluetoothDevice.BOND_BONDED -> {
-                    dialog.tvDialogTitle.text = getString(R.string.dialog_connected)
-                    animatorSet.cancel()
-                    dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_check_black))
-                }
+                delay(TimeUnit.SECONDS.toMillis(2))
+                dialog.cancel()
+                finish()
+                break
             }
 
-        }, 8000)
-
-
-//        if (selectedPi!!.device.bondState ) {
-//            finish()
-//        }
+            delay(TimeUnit.SECONDS.toMillis(1))
+        }
     }
 
 
