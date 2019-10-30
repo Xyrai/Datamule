@@ -25,6 +25,14 @@ class HomeActivity : AppCompatActivity() {
     var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var pairedDevices: Set<BluetoothDevice>
 
+    override fun onResume() {
+        super.onResume()
+
+        pairedDeviceList()
+
+        piAdapter.notifyDataSetChanged()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -105,6 +113,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun pairedDeviceList() {
+        pi_s.clear()
         pairedDevices = bluetoothAdapter!!.bondedDevices
 
         if (pairedDevices.isNotEmpty()) {

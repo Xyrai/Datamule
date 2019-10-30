@@ -141,7 +141,7 @@ class SearchPiActivity : AppCompatActivity() {
         bluetoothAdapter.startDiscovery()
         ivLoader2.visibility = View.VISIBLE
         ivRerunSearch.visibility = View.INVISIBLE
-        btnAddPi.visibility = View.INVISIBLE
+        btnAddPi.visibility = View.VISIBLE
         updateRecyclerView()
 
         var animatorSet = AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
