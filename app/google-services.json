@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "737767973912",
+    "firebase_url": "https://datamule.firebaseio.com",
+    "project_id": "datamule",
+    "storage_bucket": "datamule.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737767973912:android:908ea055ac93e2d0ce0f6d",
+        "android_client_info": {
+          "package_name": "com.project.datamule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737767973912-qjmednh5fiq0lf9brh3r2jqecn2u0oit.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.datamule",
+            "certificate_hash": "e6d82c52c029382a7631bf1bed1ecedb526f1c0d"
+          }
+        },
+        {
+          "client_id": "737767973912-e0mekj88bcvisf9ogc3ih0m561nllrv6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.datamule",
+            "certificate_hash": "ba622be72df685dcb852a3fe223711a6729faeca"
+          }
+        },
+        {
+          "client_id": "737767973912-s7ctt2jm022sbjjch403it8r4t1t936h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoi5wpck_u-MhOrcuUyKEveUqoEldUukI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737767973912-s7ctt2jm022sbjjch403it8r4t1t936h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
