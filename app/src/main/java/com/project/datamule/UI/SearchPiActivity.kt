@@ -141,6 +141,7 @@ class SearchPiActivity : AppCompatActivity() {
         bluetoothAdapter.startDiscovery()
         ivLoader2.visibility = View.VISIBLE
         ivRerunSearch.visibility = View.INVISIBLE
+        btnAddPi.visibility = View.INVISIBLE
         updateRecyclerView()
 
         var animatorSet = AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
@@ -220,11 +221,15 @@ class SearchPiActivity : AppCompatActivity() {
         animatorSet.setTarget(dialog.ivConnectingLoader)
         animatorSet.start()
 
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+
         dialog.show()
 
         for (i in 0 .. 10) {
             if (device.bondState == BluetoothDevice.BOND_NONE) {
                 dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
+                dialog.tvSubMessage.text = getString(R.string.dialog_sub_3)
                 animatorSet.end()
                 dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_error_outline_black))
 
@@ -234,6 +239,7 @@ class SearchPiActivity : AppCompatActivity() {
             }
             if (device.bondState == BluetoothDevice.BOND_BONDED) {
                 dialog.tvDialogTitle.text = getString(R.string.dialog_connected)
+                dialog.tvSubMessage.text = getString(R.string.dialog_sub_2)
                 animatorSet.end()
                 dialog.ivConnectingLoader.setImageDrawable(getDrawable(R.drawable.ic_check_black))
 
@@ -268,8 +274,25 @@ class SearchPiActivity : AppCompatActivity() {
                 clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
                 btnAddPi.isEnabled = false
             }
-            else -> // warning/shake animation
-                clickedPiItem.startAnimation(AnimationUtils.loadAnimation(this,R.anim.button_shaker))
+            else -> {// selecting other pi
+                var selectedPiItem: View? = null
+                if (selectedPi != null) {
+                    var positionSelected = pi_s.indexOf(selectedPi!!)
+                    selectedPiItem = rvSearchPi.get(positionSelected)
+                }
+                
+                // Deselect the already selected
+                selectedPiItem!!.background = getDrawable(R.drawable.button_rectangle_custom)
+                selectedPiItem!!.tvName.setTextColor(getColor(R.color.colorAccent))
+                selectedPiItem!!.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
+
+                // Select the newely clicked
+                selectedPi = clickedPi
+                clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
+                clickedPiItem.tvName.setTextColor(getColor(R.color.white))
+                clickedPiItem.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi_white))
+                btnAddPi.isEnabled = true
+            }
         }
     }
 
