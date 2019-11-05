@@ -17,11 +17,7 @@ import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.*
 import java.io.File
-import com.google.firebase.internal.FirebaseAppHelper.getUid
 import com.google.firebase.auth.FirebaseUser
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 
 const val PI_EXTRA = "PI_EXTRA"
@@ -76,7 +72,7 @@ class DetailActivity : AppCompatActivity() {
 //        updateUI(currentUser)
 //    }
 
-    fun initViews() {
+    private fun initViews() {
         // Initialize Buttons
         ivBack.setOnClickListener { onClickBack() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }

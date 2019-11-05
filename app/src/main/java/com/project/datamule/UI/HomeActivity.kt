@@ -5,6 +5,9 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -20,7 +23,7 @@ import kotlinx.android.synthetic.main.content_home.*
 class HomeActivity : AppCompatActivity() {
 
     private var pi_s = arrayListOf<Pi>()
-    private var piAdapter = PiAdapter(pi_s, {clickedPi: Pi -> onPiClicked(clickedPi)})
+    private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
 
     var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var pairedDevices: Set<BluetoothDevice>
@@ -28,7 +31,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //removes all the notifications, useful when user enters the app by clicking on the notifications
         notificationManager.cancelAll()
 
@@ -49,10 +53,18 @@ class HomeActivity : AppCompatActivity() {
             buildAlertMessageNoBluetooth(bluetoothAdapter!!)
         }
 
+        val networkResult = getConnectionType(this)
+
+        if (networkResult) {
+            Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show()
+        }
+
         initViews()
     }
 
-    fun initViews() {
+    private fun initViews() {
         clRectangle.visibility = View.INVISIBLE
 
         //Initialize Buttons
@@ -60,7 +72,8 @@ class HomeActivity : AppCompatActivity() {
         btnNewPi.setOnClickListener { onClickOpenSearchPi() }
 
         //Initialize RecyclerView
-        rvPiList.layoutManager = LinearLayoutManager(this@HomeActivity, RecyclerView.VERTICAL, false)
+        rvPiList.layoutManager =
+            LinearLayoutManager(this@HomeActivity, RecyclerView.VERTICAL, false)
         rvPiList.adapter = piAdapter
 
         pairedDeviceList()
@@ -93,19 +106,19 @@ class HomeActivity : AppCompatActivity() {
 //        alert.show()
     }
 
-    fun onClickOpenSearchPi() {
+    private fun onClickOpenSearchPi() {
         val intent = Intent(this, SearchPiActivity::class.java)
         startActivity(intent)
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top);
     }
 
-    fun onClickOpenSettings() {
+    private fun onClickOpenSettings() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
-    fun onPiClicked(clickedPi: Pi) {
+    private fun onPiClicked(clickedPi: Pi) {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(PI_EXTRA, clickedPi)
         startActivity(intent)
@@ -186,5 +199,26 @@ class HomeActivity : AppCompatActivity() {
 //        alert.show()
 //    }
 
-
+    private fun getConnectionType(context: Context): Boolean {
+        var result = false
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cm?.run {
+                cm.getNetworkCapabilities(cm.activeNetwork)?.run {
+                    if (hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                        result = true
+                    }
+                }
+            }
+        } else {
+            cm?.run {
+                cm.activeNetworkInfo?.run {
+                    if (type == ConnectivityManager.TYPE_WIFI) {
+                        result = true
+                    }
+                }
+            }
+        }
+        return result
+    }
 }
