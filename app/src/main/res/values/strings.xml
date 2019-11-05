@@ -25,9 +25,11 @@
     <string name="storage_used">Used</string>
     <string name="storage_cache">Cache</string>
     <string name="storage_free">Free</string>
-    <string name="settings_push_notification">Push Notification</string>
+    <string name="settings_push_notifications">Push Notifications</string>
     <string name="settings_change_log">Change Log</string>
     <string name="settings_support">Support</string>
+    <string name="settings_auto_transfer">Auto Transfer</string>
+    <string name="settings_slider_seconds">Choose the delay of seconds before transferring the data.</string>
     <string name="settings_support_phone">Call us</string>
     <string name="settings_support_email">E-mail us</string>
     <string name="settings_total_storage">Total storage: %s GB</string>

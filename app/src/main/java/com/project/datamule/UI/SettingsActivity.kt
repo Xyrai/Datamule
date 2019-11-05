@@ -26,6 +26,8 @@ import androidx.core.content.ContextCompat
 import android.os.*
 import androidx.core.content.ContextCompat.getColor
 import com.project.datamule.R
+import android.animation.ValueAnimator
+import androidx.constraintlayout.widget.ConstraintLayout
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -57,6 +59,15 @@ class SettingsActivity : AppCompatActivity() {
         ivBack.setOnClickListener { onClickBack() }
         clChangeLog.setOnClickListener { buildChangeLogDialog() }
         clSupport.setOnClickListener { buildSupportDialog() }
+
+        pushNotificationSwitch()
+        autoTransferSwitch()
+
+        createCacheFile()
+        setStorage()
+    }
+
+    private fun pushNotificationSwitch() {
         sPushNotification.setChecked(prefs!!.getBoolean("notifications", true))
 
         clPushNotification.setOnClickListener {
@@ -72,8 +83,58 @@ class SettingsActivity : AppCompatActivity() {
             if(sPushNotification.isChecked) setPushNotification(true)
             else setPushNotification(false)
         }
-        createCacheFile()
-        setStorage()
+    }
+
+    private fun autoTransferSwitch() {
+        // 140dp -> 385
+        // 50dp -> 138
+        val largeHeight = 385
+        val smallHeight = 138
+
+        //init of the constraintlayout
+        val startVal = prefs!!.getBoolean("auto_transfer", true)
+        if(startVal) valueAnimator(clAutoTransfer, smallHeight, largeHeight)
+        else valueAnimator(clAutoTransfer, largeHeight, smallHeight)
+        sAutoTransfer.setChecked(startVal)
+
+        clAutoTransfer.setOnClickListener {
+            if(sAutoTransfer.isChecked) {
+                sAutoTransfer.setChecked(false)
+                setAutoTransferPreference(false)
+                //change height to small
+                valueAnimator(clAutoTransfer, largeHeight, smallHeight)
+            } else {
+                sAutoTransfer.setChecked(true)
+                setAutoTransferPreference(true)
+                //set height larger
+                valueAnimator(clAutoTransfer, smallHeight, largeHeight)
+            }
+        }
+
+        sAutoTransfer.setOnClickListener {
+            if(sAutoTransfer.isChecked) {
+                //set height larger
+                valueAnimator(clAutoTransfer, smallHeight, largeHeight)
+                setAutoTransferPreference(true)
+            } else {
+                //change height to small
+                valueAnimator(clAutoTransfer, largeHeight, smallHeight)
+                setAutoTransferPreference(false)
+
+
+            }
+        }
+    }
+
+    private fun valueAnimator(cl: ConstraintLayout, startValue: Int, endValue: Int) {
+        val va = ValueAnimator.ofInt(startValue, endValue)
+        va.duration = 400
+        va.addUpdateListener { animation ->
+            val value = animation.animatedValue as Int
+            cl.getLayoutParams().height = value
+            cl.requestLayout()
+        }
+        va.start()
     }
 
     private fun setPushNotification(allowPushNotification: Boolean) {
@@ -84,6 +145,10 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setNotificationPreference(allowPushNotification: Boolean) {
         prefs!!.edit().putBoolean("notifications", allowPushNotification).apply()
+    }
+
+    private fun setAutoTransferPreference(autoTransfer: Boolean) {
+        prefs!!.edit().putBoolean("auto_transfer", autoTransfer).apply()
     }
 
     private fun makeNotification(title: String, content: String, notificationID: Int) {
