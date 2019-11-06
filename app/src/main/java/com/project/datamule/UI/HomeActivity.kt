@@ -1,5 +1,6 @@
 package com.project.datamule.UI
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -10,9 +11,13 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.project.datamule.Adapter.PiAdapter
+import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_home.*
@@ -41,6 +47,8 @@ class HomeActivity : AppCompatActivity() {
     //TAG for Logs
     private val TAG = "HomeActivity"
     private lateinit var auth: FirebaseAuth
+    private var PROGRESS_MAX = 100
+    private var PROGRESS_CURRENT = 0
 
     var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var pairedDevices: Set<BluetoothDevice>
@@ -131,13 +139,13 @@ class HomeActivity : AppCompatActivity() {
     private fun onClickOpenSearchPi() {
         val intent = Intent(this, SearchPiActivity::class.java)
         startActivity(intent)
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_top)
     }
 
     private fun onClickOpenSettings() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
     private fun onPiClicked(clickedPi: Pi) {
@@ -281,28 +289,99 @@ class HomeActivity : AppCompatActivity() {
         if (networkResult) {
             Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
             //TODO: DO NOT DELETE THIS CODE! Puts file into the storage
-//            fileRef.putFile(fileUri!!)
-//                .addOnSuccessListener { taskSnapshot ->
-//                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
-//                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
-//                    Toast.makeText(this, "File Uploaded ", Toast.LENGTH_LONG).show()
-//                    // Uri: taskSnapshot.downloadUrl
-//                    // Name: taskSnapshot.metadata!!.name
-//                    // Path: taskSnapshot.metadata!!.path
-//                    // Size: taskSnapshot.metadata!!.sizeBytes
-//                }
-//                .addOnFailureListener { exception ->
-//                    // Handle unsuccessful uploads
-//                }
-//                .addOnProgressListener { taskSnapshot ->
-//                    // taskSnapshot.bytesTransferred
-//                    // taskSnapshot.totalByteCount
-//                }
-//                .addOnPausedListener { taskSnapshot ->
-//                    // Upload is paused
-//                }
+            fileRef.putFile(fileUri!!)
+                .addOnSuccessListener { taskSnapshot ->
+                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
+                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
+                    uploadFinishedNotification()
+                    // Uri: taskSnapshot.downloadUrl
+                    // Name: taskSnapshot.metadata!!.name
+                    // Path: taskSnapshot.metadata!!.path
+                    // Size: taskSnapshot.metadata!!.sizeBytes
+                }
+                .addOnFailureListener { exception ->
+                    // Handle unsuccessful uploads
+                }
+                .addOnProgressListener { taskSnapshot ->
+                    PROGRESS_MAX = taskSnapshot.totalByteCount.toInt() / 1000
+                    PROGRESS_CURRENT = taskSnapshot.bytesTransferred.toInt() / 1000
+                    makeNotification("Uploading file", "$PROGRESS_CURRENT KB / $PROGRESS_MAX KB", 0)
+                }
+                .addOnPausedListener { taskSnapshot ->
+                    // Upload is paused
+                }
         } else {
             Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun makeNotification(title: String, content: String, notificationID: Int) {
+        val notificationManager =
+            this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        var builder = NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+            .setSmallIcon(R.drawable.logo_no_text)
+            .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            .setContentTitle(title)
+            .setContentText(content)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setAutoCancel(true)
+
+        NotificationManagerCompat.from(this).apply {
+            // Issue the initial notification with zero progress
+            builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false)
+            notify(0, builder.build())
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val channel = NotificationChannel(
+                    Constants.CHANNEL_ID,
+                    Constants.CHANNEL_NAME,
+                    importance
+                ).apply {
+                    description = "channel"
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            notificationManager.notify(notificationID, builder.build())
+        }
+
+    }
+
+    private fun uploadFinishedNotification() {
+        val notificationManager =
+            this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        var builder = NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+            .setSmallIcon(R.drawable.logo_no_text)
+            .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
+            .setContentTitle(title)
+            .setContentText("Done.")
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setAutoCancel(true)
+
+        NotificationManagerCompat.from(this).apply {
+
+            builder.setContentText("Upload completed successfully")
+                .setProgress(0, 0, false)
+            notify(0, builder.build())
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val channel = NotificationChannel(
+                    Constants.CHANNEL_ID,
+                    Constants.CHANNEL_NAME,
+                    importance
+                ).apply {
+                    description = "channel"
+                }
+                // Register the channel with the system
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            notificationManager.notify(0, builder.build())
+        }
+
     }
 }
