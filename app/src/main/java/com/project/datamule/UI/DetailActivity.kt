@@ -49,6 +49,7 @@ class DetailActivity : AppCompatActivity() {
             val autoTransferSeconds = prefs!!.getInt("auto_transfer_delay",  5)
             val autoTransferMillis: Long = (autoTransferSeconds * 1000).toLong()
             tvAutoTransfer.text = getString(R.string.detail_auto_transfer, autoTransferSeconds)
+            ivUpdateAuto.setBackgroundResource(R.drawable.ic_autoupdate_black)
 
             Handler().postDelayed(
                 Runnable {
@@ -58,6 +59,7 @@ class DetailActivity : AppCompatActivity() {
             )
         } else {
             tvAutoTransfer.text = getString(R.string.detail_no_auto_transfer)
+            ivUpdateAuto.setBackgroundResource(R.drawable.ic_do_not_disturb_black)
         }
     }
 
