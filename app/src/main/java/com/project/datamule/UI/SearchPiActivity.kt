@@ -3,10 +3,8 @@ package com.project.datamule.UI
 import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
