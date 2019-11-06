@@ -27,7 +27,10 @@ import android.os.*
 import androidx.core.content.ContextCompat.getColor
 import com.project.datamule.R
 import android.animation.ValueAnimator
+import android.util.DisplayMetrics
 import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -61,7 +64,7 @@ class SettingsActivity : AppCompatActivity() {
         clSupport.setOnClickListener { buildSupportDialog() }
 
         pushNotificationSwitch()
-        autoTransferSwitch()
+        autoTransfer()
 
         createCacheFile()
         setStorage()
@@ -85,7 +88,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun autoTransferSwitch() {
+    private fun autoTransfer() {
         // 140dp -> 385
         // 50dp -> 138
         val largeHeight = 385
@@ -96,6 +99,25 @@ class SettingsActivity : AppCompatActivity() {
         if(startVal) valueAnimator(clAutoTransfer, smallHeight, largeHeight)
         else valueAnimator(clAutoTransfer, largeHeight, smallHeight)
         sAutoTransfer.setChecked(startVal)
+
+        //seekbar delay
+        sbDelay.incrementProgressBy(1)
+        val delay = prefs!!.getInt("auto_transfer_delay", 5)
+        sbDelay.setProgress(delay)
+        tvDelay.text = getString(R.string.settings_delay_sec, delay)
+
+        sbDelay.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                tvDelay.text = getString(R.string.settings_delay_sec, progress)
+                prefs!!.edit().putInt("auto_transfer_delay", progress).apply()
+
+            }
+        })
 
         clAutoTransfer.setOnClickListener {
             if(sAutoTransfer.isChecked) {
@@ -125,6 +147,11 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
     }
+
+//    public fun convertDpToPx(dp: Int){
+//	    val px = dp * (this.resources.displayMetrics.densityDpi / 160f)
+//	    return Math.round(px.toDouble())
+//    }
 
     private fun valueAnimator(cl: ConstraintLayout, startValue: Int, endValue: Int) {
         val va = ValueAnimator.ofInt(startValue, endValue)

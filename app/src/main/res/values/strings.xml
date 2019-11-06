@@ -30,6 +30,7 @@
     <string name="settings_support">Support</string>
     <string name="settings_auto_transfer">Auto Transfer</string>
     <string name="settings_slider_seconds">Choose the delay of seconds before transferring the data.</string>
+    <string name="settings_delay_sec">%d sec.</string>
     <string name="settings_support_phone">Call us</string>
     <string name="settings_support_email">E-mail us</string>
     <string name="settings_total_storage">Total storage: %s GB</string>
