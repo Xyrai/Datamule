@@ -2,27 +2,21 @@ package com.project.datamule.UI
 
 import android.animation.AnimatorInflater
 import android.app.Dialog
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import android.os.Handler
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.*
-import java.io.File
-import com.google.firebase.auth.FirebaseUser
-
 
 const val PI_EXTRA = "PI_EXTRA"
 
 class DetailActivity : AppCompatActivity() {
+    private var prefs: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +26,12 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        // Initialize shared preferences
+        prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
+
+        // Check for auto transfer
+        autoTransfer()
+
         // Initialize Buttons
         ivBack.setOnClickListener { onClickBack() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }
@@ -39,6 +39,25 @@ class DetailActivity : AppCompatActivity() {
         val pi = intent.getParcelableExtra<Pi>(PI_EXTRA)
         if (pi != null) {
             tvPiName.text = pi.name
+        }
+    }
+
+    private fun autoTransfer() {
+        val autoTransfer = prefs!!.getBoolean("auto_transfer", true)
+
+        if (autoTransfer) {
+            val autoTransferSeconds = prefs!!.getInt("auto_transfer_delay",  5)
+            val autoTransferMillis: Long = (autoTransferSeconds * 1000).toLong()
+            tvAutoTransfer.text = getString(R.string.detail_auto_transfer, autoTransferSeconds)
+
+            Handler().postDelayed(
+                Runnable {
+                    buildTransferDialog()
+                },
+                autoTransferMillis // seconds x 1000 = milliseconds
+            )
+        } else {
+            tvAutoTransfer.text = getString(R.string.detail_no_auto_transfer)
         }
     }
 

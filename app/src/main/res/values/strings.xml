@@ -42,6 +42,8 @@
     <string name="detail_text_distance_3">Get closer for DataTransfer</string>
     <string name="detail_no_data">No data available to be synced</string>
     <string name="detail_no_data_mb">0 MB</string>
+    <string name="detail_auto_transfer">Auto Transfer is turned on\nafter %d seconds</string>
+    <string name="detail_no_auto_transfer">Auto Transfer is\nturned off</string>
     <string name="detail_data">Data available</string>
     <string name="detail_data_mb">%d MB</string>
     <string name="detail_data_button">Transfer Data</string>

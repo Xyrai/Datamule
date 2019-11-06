@@ -255,4 +255,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+            android:id="@+id/tvAutoTransfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/rubik"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPiName" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
