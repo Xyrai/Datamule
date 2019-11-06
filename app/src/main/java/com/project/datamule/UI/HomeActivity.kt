@@ -7,23 +7,41 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.project.datamule.Adapter.PiAdapter
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
+import java.io.File
 
 class HomeActivity : AppCompatActivity() {
 
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
+    // Create a storage reference from our app
+    private val storageRef = FirebaseStorage.getInstance().reference
+    //TODO: Do not make this hardcoded
+    private val fileUri: Uri? =
+        Uri.fromFile(File("/data/user/0/com.project.datamule/cache/PI-data.json"))
+    //TODO: Change this to where you want to safe it
+    //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
+    private var fileRef: StorageReference = storageRef.child("test2.txt")
+    //TAG for Logs
+    private val TAG = "DetailActivity"
+    private lateinit var auth: FirebaseAuth
 
     var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var pairedDevices: Set<BluetoothDevice>
@@ -53,10 +71,53 @@ class HomeActivity : AppCompatActivity() {
             buildAlertMessageNoBluetooth(bluetoothAdapter!!)
         }
 
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
+
+        //TODO: Anonymous authentication to Firebase, maybe change this later on?
+        auth.signInAnonymously()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(
+                        baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    updateUI(null)
+                }
+
+                // ...
+            }
+
         val networkResult = getConnectionType(this)
 
         if (networkResult) {
             Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
+            //TODO: DO NOT DELETE THIS CODE! Puts file into the storage
+            fileRef.putFile(fileUri!!)
+                .addOnSuccessListener { taskSnapshot ->
+                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
+                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
+                    Toast.makeText(this, "File Uploaded ", Toast.LENGTH_LONG).show()
+                    // Uri: taskSnapshot.downloadUrl
+                    // Name: taskSnapshot.metadata!!.name
+                    // Path: taskSnapshot.metadata!!.path
+                    // Size: taskSnapshot.metadata!!.sizeBytes
+                }
+                .addOnFailureListener { exception ->
+                    // Handle unsuccessful uploads
+                }
+                .addOnProgressListener { taskSnapshot ->
+                    // taskSnapshot.bytesTransferred
+                    // taskSnapshot.totalByteCount
+                }
+                .addOnPausedListener { taskSnapshot ->
+                    // Upload is paused
+                }
         } else {
             Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show()
         }
@@ -105,6 +166,13 @@ class HomeActivity : AppCompatActivity() {
 //        val alert = builder.create()
 //        alert.show()
     }
+
+    //    public override fun onStart() {
+//        super.onStart()
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        val currentUser = auth.currentUser
+//        updateUI(currentUser)
+//    }
 
     private fun onClickOpenSearchPi() {
         val intent = Intent(this, SearchPiActivity::class.java)
@@ -220,5 +288,13 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return result
+    }
+
+    private fun updateUI(user: FirebaseUser?) {
+        //TODO: do something if the user is authenticated || not
+        if (user != null) {
+        } else {
+            //TODO: do something if the user isn't authenticated
+        }
     }
 }
