@@ -44,7 +44,7 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private var pi_s = arrayListOf<Pi>()
-    private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi)}
+    private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
     private var selectedPi: Pi? = null
     private val mainScope = CoroutineScope(Dispatchers.IO)
 
@@ -53,7 +53,8 @@ class SearchPiActivity : AppCompatActivity() {
 
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    val device =
+                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                     if (device.name != null) {
                         pi_s.add(Pi(device.name, device))
                         updateRecyclerView()
@@ -85,11 +86,18 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun checkLocationPermission(): Boolean {
-        var permissionCheck = ContextCompat.checkSelfPermission(this@SearchPiActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-        permissionCheck += ContextCompat.checkSelfPermission(this@SearchPiActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        var permissionCheck = ContextCompat.checkSelfPermission(
+            this@SearchPiActivity,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        permissionCheck += ContextCompat.checkSelfPermission(
+            this@SearchPiActivity,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
+        )
         if (permissionCheck != 0) {
 
-            ActivityCompat.requestPermissions(this@SearchPiActivity,
+            ActivityCompat.requestPermissions(
+                this@SearchPiActivity,
                 arrayOf(
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION
@@ -125,11 +133,12 @@ class SearchPiActivity : AppCompatActivity() {
         // Set onClick listeners
         ivBack.setOnClickListener { onClickBack() }
         btnSearchPi.setOnClickListener { onClickSearchPi() }
-        btnAddPi.setOnClickListener { mainScope.launch{ withContext(Dispatchers.Main) { onClickAddPi() } } }
+        btnAddPi.setOnClickListener { mainScope.launch { withContext(Dispatchers.Main) { onClickAddPi() } } }
         ivRerunSearch.setOnClickListener { startSearch() }
 
         // Initialize RecyclerView
-        rvSearchPi.layoutManager = LinearLayoutManager(this@SearchPiActivity, RecyclerView.VERTICAL, false)
+        rvSearchPi.layoutManager =
+            LinearLayoutManager(this@SearchPiActivity, RecyclerView.VERTICAL, false)
         rvSearchPi.adapter = piAdapter
     }
 
@@ -144,7 +153,8 @@ class SearchPiActivity : AppCompatActivity() {
         btnAddPi.visibility = View.VISIBLE
         updateRecyclerView()
 
-        var animatorSet = AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
+        var animatorSet =
+            AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
         animatorSet.setTarget(ivLoader2)
         animatorSet.start()
 
@@ -217,7 +227,8 @@ class SearchPiActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_connecting)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        var animatorSet = AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
+        var animatorSet =
+            AnimatorInflater.loadAnimator(this@SearchPiActivity, R.animator.loading_animator)
         animatorSet.setTarget(dialog.ivConnectingLoader)
         animatorSet.start()
 
@@ -226,7 +237,7 @@ class SearchPiActivity : AppCompatActivity() {
 
         dialog.show()
 
-        for (i in 0 .. 15) {
+        for (i in 0..15) {
             if (device.bondState == BluetoothDevice.BOND_NONE) {
                 dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
                 dialog.tvSubMessage.text = getString(R.string.dialog_sub_3)
@@ -288,7 +299,7 @@ class SearchPiActivity : AppCompatActivity() {
                     var positionSelected = pi_s.indexOf(selectedPi!!)
                     selectedPiItem = rvSearchPi.get(positionSelected)
                 }
-                
+
                 // Deselect the already selected
                 selectedPiItem!!.background = getDrawable(R.drawable.button_rectangle_custom)
                 selectedPiItem!!.tvName.setTextColor(getColor(R.color.colorAccent))
