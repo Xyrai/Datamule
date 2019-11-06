@@ -40,7 +40,7 @@ class HomeActivity : AppCompatActivity() {
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
     private var fileRef: StorageReference = storageRef.child("test2.txt")
     //TAG for Logs
-    private val TAG = "DetailActivity"
+    private val TAG = "HomeActivity"
     private lateinit var auth: FirebaseAuth
 
     var bluetoothAdapter: BluetoothAdapter? = null
@@ -72,55 +72,10 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
+        initFirebase()
 
-        //TODO: Anonymous authentication to Firebase, maybe change this later on?
-        auth.signInAnonymously()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(
-                        baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    updateUI(null)
-                }
-
-                // ...
-            }
-
-        val networkResult = getConnectionType(this)
-
-        if (networkResult) {
-            Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
-            //TODO: DO NOT DELETE THIS CODE! Puts file into the storage
-//            fileRef.putFile(fileUri!!)
-//                .addOnSuccessListener { taskSnapshot ->
-//                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
-//                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
-//                    Toast.makeText(this, "File Uploaded ", Toast.LENGTH_LONG).show()
-//                    // Uri: taskSnapshot.downloadUrl
-//                    // Name: taskSnapshot.metadata!!.name
-//                    // Path: taskSnapshot.metadata!!.path
-//                    // Size: taskSnapshot.metadata!!.sizeBytes
-//                }
-//                .addOnFailureListener { exception ->
-//                    // Handle unsuccessful uploads
-//                }
-//                .addOnProgressListener { taskSnapshot ->
-//                    // taskSnapshot.bytesTransferred
-//                    // taskSnapshot.totalByteCount
-//                }
-//                .addOnPausedListener { taskSnapshot ->
-//                    // Upload is paused
-//                }
-        } else {
-            Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show()
-        }
+        //Upload file when connected to wifi
+        uploadFile()
 
         initViews()
     }
@@ -295,6 +250,60 @@ class HomeActivity : AppCompatActivity() {
         if (user != null) {
         } else {
             //TODO: do something if the user isn't authenticated
+        }
+    }
+
+    private fun initFirebase() {
+        auth = FirebaseAuth.getInstance()
+
+        //TODO: Anonymous authentication to Firebase, maybe change this later on?
+        auth.signInAnonymously()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(
+                        baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    updateUI(null)
+                }
+
+                // ...
+            }
+    }
+
+    private fun uploadFile() {
+        val networkResult = getConnectionType(this)
+
+        if (networkResult) {
+            Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
+            //TODO: DO NOT DELETE THIS CODE! Puts file into the storage
+//            fileRef.putFile(fileUri!!)
+//                .addOnSuccessListener { taskSnapshot ->
+//                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
+//                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
+//                    Toast.makeText(this, "File Uploaded ", Toast.LENGTH_LONG).show()
+//                    // Uri: taskSnapshot.downloadUrl
+//                    // Name: taskSnapshot.metadata!!.name
+//                    // Path: taskSnapshot.metadata!!.path
+//                    // Size: taskSnapshot.metadata!!.sizeBytes
+//                }
+//                .addOnFailureListener { exception ->
+//                    // Handle unsuccessful uploads
+//                }
+//                .addOnProgressListener { taskSnapshot ->
+//                    // taskSnapshot.bytesTransferred
+//                    // taskSnapshot.totalByteCount
+//                }
+//                .addOnPausedListener { taskSnapshot ->
+//                    // Upload is paused
+//                }
+        } else {
+            Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show()
         }
     }
 }

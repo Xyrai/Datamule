@@ -31,7 +31,6 @@ class DetailActivity : AppCompatActivity() {
         initViews()
     }
 
-
     private fun initViews() {
         // Initialize Buttons
         ivBack.setOnClickListener { onClickBack() }
