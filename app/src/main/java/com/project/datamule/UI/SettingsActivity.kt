@@ -97,7 +97,6 @@ class SettingsActivity : AppCompatActivity() {
         //init of the constraintlayout
         val startVal = prefs!!.getBoolean("auto_transfer", true)
         if(startVal) valueAnimator(clAutoTransfer, smallHeight, largeHeight)
-        else valueAnimator(clAutoTransfer, largeHeight, smallHeight)
         sAutoTransfer.setChecked(startVal)
 
         //seekbar delay
