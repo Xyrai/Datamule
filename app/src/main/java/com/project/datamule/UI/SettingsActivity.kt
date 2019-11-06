@@ -27,7 +27,6 @@ import android.os.*
 import androidx.core.content.ContextCompat.getColor
 import com.project.datamule.R
 import android.animation.ValueAnimator
-import android.util.DisplayMetrics
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -89,8 +88,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun autoTransfer() {
-        // 140dp -> 385
-        // 50dp -> 138
         val largeHeight = dpToPx(140)
         val smallHeight = dpToPx(40)
 
