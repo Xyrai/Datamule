@@ -91,8 +91,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun autoTransfer() {
         // 140dp -> 385
         // 50dp -> 138
-        val largeHeight = 385
-        val smallHeight = 138
+        val largeHeight = dpToPx(140)
+        val smallHeight = dpToPx(50)
 
         //init of the constraintlayout
         val startVal = prefs!!.getBoolean("auto_transfer", true)
@@ -148,10 +148,10 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-//    public fun convertDpToPx(dp: Int){
-//	    val px = dp * (this.resources.displayMetrics.densityDpi / 160f)
-//	    return Math.round(px.toDouble())
-//    }
+    private fun dpToPx(dp: Int): Int {
+    val density: Float = this.resources.displayMetrics.density
+    return Math.round(dp * density)
+}
 
     private fun valueAnimator(cl: ConstraintLayout, startValue: Int, endValue: Int) {
         val va = ValueAnimator.ofInt(startValue, endValue)
