@@ -98,26 +98,26 @@ class HomeActivity : AppCompatActivity() {
         if (networkResult) {
             Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
             //TODO: DO NOT DELETE THIS CODE! Puts file into the storage
-            fileRef.putFile(fileUri!!)
-                .addOnSuccessListener { taskSnapshot ->
-                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
-                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
-                    Toast.makeText(this, "File Uploaded ", Toast.LENGTH_LONG).show()
-                    // Uri: taskSnapshot.downloadUrl
-                    // Name: taskSnapshot.metadata!!.name
-                    // Path: taskSnapshot.metadata!!.path
-                    // Size: taskSnapshot.metadata!!.sizeBytes
-                }
-                .addOnFailureListener { exception ->
-                    // Handle unsuccessful uploads
-                }
-                .addOnProgressListener { taskSnapshot ->
-                    // taskSnapshot.bytesTransferred
-                    // taskSnapshot.totalByteCount
-                }
-                .addOnPausedListener { taskSnapshot ->
-                    // Upload is paused
-                }
+//            fileRef.putFile(fileUri!!)
+//                .addOnSuccessListener { taskSnapshot ->
+//                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
+//                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
+//                    Toast.makeText(this, "File Uploaded ", Toast.LENGTH_LONG).show()
+//                    // Uri: taskSnapshot.downloadUrl
+//                    // Name: taskSnapshot.metadata!!.name
+//                    // Path: taskSnapshot.metadata!!.path
+//                    // Size: taskSnapshot.metadata!!.sizeBytes
+//                }
+//                .addOnFailureListener { exception ->
+//                    // Handle unsuccessful uploads
+//                }
+//                .addOnProgressListener { taskSnapshot ->
+//                    // taskSnapshot.bytesTransferred
+//                    // taskSnapshot.totalByteCount
+//                }
+//                .addOnPausedListener { taskSnapshot ->
+//                    // Upload is paused
+//                }
         } else {
             Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show()
         }
