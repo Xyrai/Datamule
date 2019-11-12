@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toFile
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -286,10 +287,13 @@ class HomeActivity : AppCompatActivity() {
     private fun uploadFile() {
         val networkResult = getConnectionType(this)
 
-        if (networkResult) {
+        if(!fileUri?.toFile()!!.exists()) {
+            Toast.makeText(this, "No file found", Toast.LENGTH_LONG).show()
+            return
+        } else if (networkResult) {
             Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
             //TODO: DO NOT DELETE THIS CODE! Puts file into the storage
-            fileRef.putFile(fileUri!!)
+            fileRef.putFile(fileUri)
                 .addOnSuccessListener { taskSnapshot ->
                     Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
                     Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
