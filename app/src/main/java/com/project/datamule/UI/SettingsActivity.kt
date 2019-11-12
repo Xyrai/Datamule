@@ -30,6 +30,8 @@ import android.animation.ValueAnimator
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.Toast
+import androidx.core.net.toFile
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -61,6 +63,7 @@ class SettingsActivity : AppCompatActivity() {
         ivBack.setOnClickListener { onClickBack() }
         clChangeLog.setOnClickListener { buildChangeLogDialog() }
         clSupport.setOnClickListener { buildSupportDialog() }
+        btnDeleteCache.setOnClickListener { deleteCache() }
 
         pushNotificationSwitch()
         autoTransfer()
@@ -357,5 +360,16 @@ class SettingsActivity : AppCompatActivity() {
         pbStorage.secondaryProgress = cache
     }
 
+    /**
+     * Clear cache example for demo on 12th of November.
+     */
+    private fun deleteCache() {
+        val fileUri: Uri? = Uri.fromFile(File("/data/user/0/com.project.datamule/cache/PI-data.json"))
 
+        if(fileUri?.toFile()!!.exists()) {
+            fileUri.toFile().delete()
+            tvCache.text = (Math.round(getCacheStorageInMB() * 100.0) / 100.0).toString() + " MB"
+            Toast.makeText(this, "Cache cleared", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
