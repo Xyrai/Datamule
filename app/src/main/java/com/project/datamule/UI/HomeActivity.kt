@@ -288,7 +288,7 @@ class HomeActivity : AppCompatActivity() {
         val networkResult = getConnectionType(this)
 
         if(!fileUri?.toFile()!!.exists()) {
-            Toast.makeText(this, "No file found", Toast.LENGTH_LONG).show()
+//            Toast.makeText(this, "No file found", Toast.LENGTH_LONG).show()
             return
         } else if (networkResult) {
             Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
@@ -297,7 +297,7 @@ class HomeActivity : AppCompatActivity() {
                 .addOnSuccessListener { taskSnapshot ->
                     Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
                     Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
-                    uploadFinishedNotification()
+                    uploadFinishedNotification(fileUri.toFile().name)
                     // Uri: taskSnapshot.downloadUrl
                     // Name: taskSnapshot.metadata!!.name
                     // Path: taskSnapshot.metadata!!.path
@@ -353,21 +353,21 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    private fun uploadFinishedNotification() {
+    private fun uploadFinishedNotification(fileName : String) {
         val notificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         var builder = NotificationCompat.Builder(this, Constants.CHANNEL_ID)
             .setSmallIcon(R.drawable.logo_no_text)
             .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
-            .setContentTitle(title)
+            .setContentTitle("File uploaded")
             .setContentText("Done.")
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
 
         NotificationManagerCompat.from(this).apply {
 
-            builder.setContentText("Upload completed successfully")
+            builder.setContentText(fileName)
                 .setProgress(0, 0, false)
             notify(0, builder.build())
 
