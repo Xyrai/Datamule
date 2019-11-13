@@ -364,7 +364,9 @@ class SettingsActivity : AppCompatActivity() {
      * Clear cache example for demo on 12th of November.
      */
     private fun deleteCache() {
-        val fileUri: Uri? = Uri.fromFile(File("/data/user/0/com.project.datamule/cache/PI-data.json"))
+        var basePath = this.cacheDir.toString()
+        var fileName = "/PI-data.json"
+        val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
         if(fileUri?.toFile()!!.exists()) {
             fileUri.toFile().delete()

@@ -192,15 +192,19 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun updateRecyclerView() {
-        if (pi_s.size < ONE_NEARBY_PI) {
-            tvNearbyPiTitle.text = getString(R.string.searching_title)
-            tvNearbyPiDesc.visibility = View.INVISIBLE
-        } else if (pi_s.size == ONE_NEARBY_PI) {
-            tvNearbyPiTitle.text = getString(R.string.one_nearby_pi_title, pi_s.size)
-            tvNearbyPiDesc.visibility = View.VISIBLE
-        } else {
-            tvNearbyPiTitle.text = getString(R.string.nearby_pi_title, pi_s.size)
-            tvNearbyPiDesc.visibility = View.VISIBLE
+        when {
+            pi_s.size < ONE_NEARBY_PI -> {
+                tvNearbyPiTitle.text = getString(R.string.searching_title)
+                tvNearbyPiDesc.visibility = View.INVISIBLE
+            }
+            pi_s.size == ONE_NEARBY_PI -> {
+                tvNearbyPiTitle.text = getString(R.string.one_nearby_pi_title, pi_s.size)
+                tvNearbyPiDesc.visibility = View.VISIBLE
+            }
+            else -> {
+                tvNearbyPiTitle.text = getString(R.string.nearby_pi_title, pi_s.size)
+                tvNearbyPiDesc.visibility = View.VISIBLE
+            }
         }
         piAdapter.notifyDataSetChanged()
     }

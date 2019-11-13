@@ -39,9 +39,6 @@ class HomeActivity : AppCompatActivity() {
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
     // Create a storage reference from our app
     private val storageRef = FirebaseStorage.getInstance().reference
-    //TODO: Do not make this hardcoded
-    private val fileUri: Uri? =
-        Uri.fromFile(File("/data/user/0/com.project.datamule/cache/PI-data.json"))
     //TODO: Change this to where you want to safe it
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
     private var fileRef: StorageReference = storageRef.child("test2.txt")
@@ -286,6 +283,9 @@ class HomeActivity : AppCompatActivity() {
 
     private fun uploadFile() {
         val networkResult = getConnectionType(this)
+        var basePath = this.cacheDir.toString()
+        var fileName = "/PI-data.json"
+        val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
         if(!fileUri?.toFile()!!.exists()) {
 //            Toast.makeText(this, "No file found", Toast.LENGTH_LONG).show()
