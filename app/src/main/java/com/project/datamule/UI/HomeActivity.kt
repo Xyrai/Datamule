@@ -41,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
     private val storageRef = FirebaseStorage.getInstance().reference
     //TODO: Change this to where you want to safe it
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
-    private var fileRef: StorageReference = storageRef.child("test2.txt")
+    private var fileRef: StorageReference = storageRef.child("testmouradisbaas.json")
     //TAG for Logs
     private val TAG = "HomeActivity"
     private lateinit var auth: FirebaseAuth
@@ -284,7 +284,7 @@ class HomeActivity : AppCompatActivity() {
     private fun uploadFile() {
         val networkResult = getConnectionType(this)
         var basePath = this.cacheDir.toString()
-        var fileName = "/PI-data.json"
+        var fileName = "/PI-dataTESTTTMOURADISBAAS.json"
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
         if(!fileUri?.toFile()!!.exists()) {
