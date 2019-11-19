@@ -4,11 +4,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -41,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
     private val storageRef = FirebaseStorage.getInstance().reference
     //TODO: Change this to where you want to safe it
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
-    private var fileRef: StorageReference = storageRef.child("testmouradisbaas.json")
+    private var fileRef: StorageReference = storageRef.child("DoesItWork.json")
     //TAG for Logs
     private val TAG = "HomeActivity"
     private lateinit var auth: FirebaseAuth
@@ -50,6 +53,23 @@ class HomeActivity : AppCompatActivity() {
 
     var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var pairedDevices: Set<BluetoothDevice>
+
+    private val wifiStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            var wifiStateExtra =
+                intent?.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
+
+            when (wifiStateExtra) {
+                WifiManager.WIFI_STATE_ENABLED -> {
+                    Toast.makeText(context, "Wifi connection", Toast.LENGTH_LONG).show()
+                    uploadFile()
+                }
+                WifiManager.WIFI_STATE_DISABLED -> {
+                    Toast.makeText(context, "No wifi connection", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -127,12 +147,20 @@ class HomeActivity : AppCompatActivity() {
 //        alert.show()
     }
 
-    //    public override fun onStart() {
-//        super.onStart()
-//        // Check if user is signed in (non-null) and update UI accordingly.
+    public override fun onStart() {
+        super.onStart()
+        var intentFilter = IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION)
+        registerReceiver(wifiStateReceiver, intentFilter)
+        // Check if user is signed in (non-null) and update UI accordingly.
 //        val currentUser = auth.currentUser
 //        updateUI(currentUser)
-//    }
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        unregisterReceiver(wifiStateReceiver)
+    }
+
 
     private fun onClickOpenSearchPi() {
         val intent = Intent(this, SearchPiActivity::class.java)
@@ -227,28 +255,28 @@ class HomeActivity : AppCompatActivity() {
 //        alert.show()
 //    }
 
-    private fun getConnectionType(context: Context): Boolean {
-        var result = false
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            cm?.run {
-                cm.getNetworkCapabilities(cm.activeNetwork)?.run {
-                    if (hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                        result = true
-                    }
-                }
-            }
-        } else {
-            cm?.run {
-                cm.activeNetworkInfo?.run {
-                    if (type == ConnectivityManager.TYPE_WIFI) {
-                        result = true
-                    }
-                }
-            }
-        }
-        return result
-    }
+//    private fun getConnectionType(context: Context): Boolean {
+//        var result = false
+//        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            cm?.run {
+//                cm.getNetworkCapabilities(cm.activeNetwork)?.run {
+//                    if (hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+//                        result = true
+//                    }
+//                }
+//            }
+//        } else {
+//            cm?.run {
+//                cm.activeNetworkInfo?.run {
+//                    if (type == ConnectivityManager.TYPE_WIFI) {
+//                        result = true
+//                    }
+//                }
+//            }
+//        }
+//        return result
+//    }
 
     private fun updateUI(user: FirebaseUser?) {
         //TODO: do something if the user is authenticated || not
@@ -282,42 +310,38 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun uploadFile() {
-        val networkResult = getConnectionType(this)
+//        val networkResult = getConnectionType(this)
         var basePath = this.cacheDir.toString()
-        var fileName = "/PI-dataTESTTTMOURADISBAAS.json"
+        var fileName = "/PI-data.json"
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
-        if(!fileUri?.toFile()!!.exists()) {
-//            Toast.makeText(this, "No file found", Toast.LENGTH_LONG).show()
+        if (!fileUri?.toFile()!!.exists()) {
+            Toast.makeText(this, "No file found", Toast.LENGTH_LONG).show()
             return
-        } else if (networkResult) {
-            Toast.makeText(this, "Connected to wifi", Toast.LENGTH_LONG).show()
-            //TODO: DO NOT DELETE THIS CODE! Puts file into the storage
-            fileRef.putFile(fileUri)
-                .addOnSuccessListener { taskSnapshot ->
-                    Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
-                    Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
-                    uploadFinishedNotification(fileUri.toFile().name)
-                    // Uri: taskSnapshot.downloadUrl
-                    // Name: taskSnapshot.metadata!!.name
-                    // Path: taskSnapshot.metadata!!.path
-                    // Size: taskSnapshot.metadata!!.sizeBytes
-                }
-                .addOnFailureListener { exception ->
-                    // Handle unsuccessful uploads
-                }
-                .addOnProgressListener { taskSnapshot ->
-                    PROGRESS_MAX = taskSnapshot.totalByteCount.toInt() / 1000
-                    PROGRESS_CURRENT = taskSnapshot.bytesTransferred.toInt() / 1000
-                    makeNotification("Uploading file", "$PROGRESS_CURRENT KB / $PROGRESS_MAX KB", 0)
-                }
-                .addOnPausedListener { taskSnapshot ->
-                    // Upload is paused
-                }
-        } else {
-            Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show()
         }
+        fileRef.putFile(fileUri)
+            .addOnSuccessListener { taskSnapshot ->
+                Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
+                Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
+                uploadFinishedNotification(fileUri.toFile().name)
+                // Uri: taskSnapshot.downloadUrl
+                // Name: taskSnapshot.metadata!!.name
+                // Path: taskSnapshot.metadata!!.path
+                // Size: taskSnapshot.metadata!!.sizeBytes
+            }
+            .addOnFailureListener { exception ->
+                // Handle unsuccessful uploads
+            }
+            .addOnProgressListener { taskSnapshot ->
+                PROGRESS_MAX = taskSnapshot.totalByteCount.toInt() / 1000
+                PROGRESS_CURRENT = taskSnapshot.bytesTransferred.toInt() / 1000
+                makeNotification("Uploading file", "$PROGRESS_CURRENT KB / $PROGRESS_MAX KB", 0)
+            }
+            .addOnPausedListener { taskSnapshot ->
+                // Upload is paused
+            }
     }
+
 
     private fun makeNotification(title: String, content: String, notificationID: Int) {
         val notificationManager =
@@ -353,7 +377,7 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    private fun uploadFinishedNotification(fileName : String) {
+    private fun uploadFinishedNotification(fileName: String) {
         val notificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
