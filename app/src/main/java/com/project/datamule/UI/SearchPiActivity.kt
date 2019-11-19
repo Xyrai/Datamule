@@ -53,7 +53,8 @@ class SearchPiActivity : AppCompatActivity() {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device =
                         intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    if (device.name != null) {
+                    if (device.name != null && device.name.startsWith(Constants.PI_PREFIX_NAME)
+                    ) {
                         pi_s.add(Pi(device.name, device))
                         updateRecyclerView()
                     }

@@ -186,7 +186,7 @@ class HomeActivity : AppCompatActivity() {
 
         if (pairedDevices.isNotEmpty()) {
             for (device: BluetoothDevice in pairedDevices) {
-                pi_s.add(Pi(device.name, device))
+                if(device.name.startsWith(Constants.PI_PREFIX_NAME)) pi_s.add(Pi(device.name, device))
             }
         } else {
             clRectangle.visibility = View.VISIBLE
