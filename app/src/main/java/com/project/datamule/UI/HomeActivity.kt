@@ -100,7 +100,7 @@ class HomeActivity : AppCompatActivity() {
         initFirebase()
 
         //Upload file when connected to wifi
-        uploadFile()
+//        uploadFile()
 
         initViews()
     }
