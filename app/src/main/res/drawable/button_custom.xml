@@ -3,6 +3,7 @@
 
     <item
         android:state_pressed="true"
+        android:state_enabled="true"
         android:drawable="@drawable/button_pressed"
         />
 

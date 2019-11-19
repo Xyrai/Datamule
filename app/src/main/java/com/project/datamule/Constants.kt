@@ -1,5 +1,7 @@
 package com.project.datamule
 
+import java.util.*
+
 class Constants {
     companion object {
         val REQUEST_ENABLE_BT = 9001
@@ -22,6 +24,8 @@ class Constants {
         val DEVICE_STILL_CONNECTING = 0
 
         val PI_PREFIX_NAME = "dean"
+
+        val PI_UUID = UUID.fromString("4b0164aa-1820-444e-83d4-3c702cfec373")
 
     }
 }
