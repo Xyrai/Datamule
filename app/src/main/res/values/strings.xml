@@ -4,6 +4,7 @@
     <!--General Strings -->
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="data_file_prefix">Pi_Data_%s.json</string>
 
     <!--NewUserActivity Strings-->
     <string name="skip_this_step">Skip  this step ></string>

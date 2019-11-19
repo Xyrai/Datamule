@@ -13,8 +13,14 @@ import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
+import java.text.SimpleDateFormat
+
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -22,6 +28,8 @@ private const val TAG = "MY_APP_DEBUG_TAG"
 class DetailActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
     val uuid = UUID.fromString("4b0164aa-1820-444e-83d4-3c702cfec373")
+    private val mainScope = CoroutineScope(Dispatchers.IO)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +53,10 @@ class DetailActivity : AppCompatActivity() {
         }
 
         // Check for auto transfer
-        autoTransfer(pi)
+        autoTransfer()
     }
 
-    private fun autoTransfer(pi: Pi) {
+    private fun autoTransfer() {
         val autoTransfer = prefs!!.getBoolean("auto_transfer", true)
 
         if (autoTransfer) {
@@ -58,30 +66,8 @@ class DetailActivity : AppCompatActivity() {
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_autoupdate_black))
 
             Handler().postDelayed(
-                Runnable {
+                {
                     buildTransferDialog()
-                    var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
-                    btSocket.connect()
-                    Log.d(TAG, "TEEEST MOURAD() 1: " + btSocket.isConnected)
-                    Log.d(TAG, "TEEEST MOURAD() 3: " + btSocket.inputStream)
-                    Log.d(TAG, "TEEEST MOURAD() Available 1: " + btSocket.inputStream.available())
-                    Log.d(TAG, "TEEEST MOURAD() 4 - 1: " + btSocket.inputStream.read())
-                    Log.d(TAG, "TEEEST MOURAD() 4 - 2: " + btSocket.inputStream.read())
-                    Log.d(TAG, "TEEEST MOURAD() 4 - 3: " + btSocket.inputStream.read())
-                    Log.d(TAG, "TEEEST MOURAD() 4 - 4: " + btSocket.inputStream.read())
-                    Log.d(TAG, "TEEEST MOURAD() Available 2: " + btSocket.inputStream.available())
-                    var woordje = ""
-                    var woordje2: ByteArray = ByteArray(btSocket.inputStream.available())
-                    var bt = byteArrayOf()
-                    for (x in 0 until btSocket.inputStream.available()) {
-//                    woordje = woordje + mmSocket.inputStream.read() + " "
-                        woordje2[x] = btSocket.inputStream.read().toByte()
-                    }
-                    Log.d(TAG, "TEEEST MOURAD() Available 3: " + btSocket.inputStream.available())
-//                Log.d(TAG, "TEEEST MOURAD() woordje: " + woordje)
-                    Log.d(TAG, "TEEEST MOURAD() woordje string?: " + String(woordje2))
-                    createCacheFile(String(woordje2))
-
                 },
                 autoTransferMillis // seconds x 1000 = milliseconds
             )
@@ -125,7 +111,31 @@ class DetailActivity : AppCompatActivity() {
         animatorSet.setTarget(dialog.ivTransferLoader)
         animatorSet.start()
 
+        transferData()
+
         dialog.show()
+    }
+
+    private fun transferData() {
+        val pi = intent.getParcelableExtra<Pi>(PI_EXTRA)
+
+        mainScope.launch {
+            withContext(Dispatchers.Main) {
+                var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
+                btSocket.connect()
+                Log.d(TAG, "Test transferData() isConnected?: " + btSocket.isConnected)
+                var byte = btSocket.inputStream.read().toByte()
+                Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
+                var data = ByteArray(btSocket.inputStream.available() + 1)
+                data[0] = byte
+                for (x in 0 until btSocket.inputStream.available()) {
+                    data[x + 1] = btSocket.inputStream.read().toByte()
+                }
+                Log.d(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
+                Log.d(TAG, "Test transferData() data string?: " + String(data))
+                createCacheFile(String(data))
+            }
+        }
     }
 
     private fun onClickBack() {
@@ -133,13 +143,20 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun createCacheFile(jsonText: String) {
+        var dateFromString = jsonText.substringBefore('{')
+        var formattedDate = getSuffixFromDateString(dateFromString)
+
         //temporary create file for cache demo purposes
-        val fileName = "PI-dataTESTTTMOURADISBAAS.json"
+        val fileName = getString(R.string.data_file_prefix, formattedDate)
         val file = File(cacheDir, fileName)
 
         file.writeText(jsonText, Charsets.UTF_8)
 
         //for reading from json file
 //        println(file.readText(Charsets.UTF_8))
+    }
+
+    private fun getSuffixFromDateString(date: String): String {
+        return date.replace("/", "").replace(":", "").replace(" ", "")
     }
 }
