@@ -20,5 +20,8 @@ class Constants {
         val DEVICE_CONNECTED = 1
         val DEVICE_COULD_NOT_CONNECT = -1
         val DEVICE_STILL_CONNECTING = 0
+
+        val PI_PREFIX_NAME = "dean"
+
     }
 }
