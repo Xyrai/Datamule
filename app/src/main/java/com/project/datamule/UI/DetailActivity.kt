@@ -15,8 +15,9 @@ import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.dialog_transfer_data_failed.*
+import kotlinx.android.synthetic.main.dialog_transfer.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.*
+import kotlinx.android.synthetic.main.dialog_transfer_question.ivTransferLoader
 import kotlinx.android.synthetic.main.dialog_transfer_question.tvDialogTitle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +28,6 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
-
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -73,15 +73,15 @@ class DetailActivity : AppCompatActivity() {
 
         mainScope.launch {
 
-            try {
-                btSocket.connect()
-            } catch (e: InterruptedException) {
-                failed = true
-            } catch (e: IOException) {
-                failed = true
-            } finally {
-                btSocket.close()
-            }
+//            try {
+//                btSocket.connect()
+//            } catch (e: InterruptedException) {
+//                failed = true
+//            } catch (e: IOException) {
+//                failed = true
+//            } finally {
+//                btSocket.close()
+//            }
 
             withContext(Dispatchers.Main) {
                 println("DATTE2 " + failed)
@@ -164,6 +164,11 @@ class DetailActivity : AppCompatActivity() {
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
 
+        var maxSize = humanReadableByteCount(0, true)
+        var zeroData = humanReadableByteCount(0, true)
+
+        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
+
         var animatorSet = AnimatorInflater.loadAnimator(
             this@DetailActivity,
             R.animator.loading_animator
@@ -188,8 +193,25 @@ class DetailActivity : AppCompatActivity() {
                 Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
                 var data = ByteArray(btSocket.inputStream.available() + 1)
                 data[0] = byte
+
+
+                var maxSize = humanReadableByteCount(data.size.toLong(), true)
+                var zeroData = humanReadableByteCount(0, true)
+
+                withContext(Dispatchers.Main) {
+                    dialog.progressBar.max = data.size
+                    dialog.progressBar.progress = 0
+                    dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
+                }
+
                 for (x in 0 until btSocket.inputStream.available()) {
                     data[x + 1] = btSocket.inputStream.read().toByte()
+                    var transferredData = humanReadableByteCount((x + 1).toLong(), true)
+
+                    withContext(Dispatchers.Main) {
+                        dialog.progressBar.progress = x + 1
+                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
+                    }
                 }
                 Log.d(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
                 Log.d(TAG, "Test transferData() data string?: " + String(data))
@@ -197,11 +219,10 @@ class DetailActivity : AppCompatActivity() {
 
             } catch (e: IOException) {
                 Log.d(TAG, e.message)
-                withContext(Dispatchers.Main) {
-                    dialog.cancel()
-                    buildFailedTransfer() }
+                withContext(Dispatchers.Main) { buildFailedTransfer() }
             } finally {
                 btSocket.close()
+                dialog.cancel()
             }
 
         }
@@ -227,5 +248,13 @@ class DetailActivity : AppCompatActivity() {
 
     private fun getSuffixFromDateString(date: String): String {
         return date.replace("/", "").replace(":", "").replace(" ", "")
+    }
+
+    private fun humanReadableByteCount(bytes: Long, si: Boolean): String {
+        val unit = if (si) 1000 else 1024
+        if (bytes < unit) return "$bytes B"
+        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
+        return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
     }
 }

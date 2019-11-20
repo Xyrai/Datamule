@@ -52,6 +52,7 @@
 
     <string name="detail_dialog_question">Are you sure you want to\n start the Data Transfer?</string>
     <string name="detail_dialog">Transferring data…</string>
+    <string name="detail_dialog_bytes">%s / %s</string>
     <string name="detail_dialog_small">The transferred data will be uploaded to
         \n the cloud when the wifi is connected</string>
 
