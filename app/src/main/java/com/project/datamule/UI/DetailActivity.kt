@@ -40,12 +40,14 @@ class DetailActivity : AppCompatActivity() {
     private val mainScope = CoroutineScope(Dispatchers.IO)
     val uuid = UUID.fromString("4b0164aa-1820-444e-83d4-3c702cfec373")
     private lateinit var pi: Pi
+    private lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
         pi = intent.getParcelableExtra<Pi>(PI_EXTRA)
+        handler = Handler()
 
         initViews()
     }
@@ -109,7 +111,7 @@ class DetailActivity : AppCompatActivity() {
             tvAutoTransfer.text = getString(R.string.detail_auto_transfer, autoTransferSeconds)
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_autoupdate_black))
 
-            Handler().postDelayed(
+            handler.postDelayed(
                 {
                     transferData()
                 },
@@ -258,6 +260,11 @@ class DetailActivity : AppCompatActivity() {
 
     private fun onClickBack() {
         finish()
+    }
+
+    override fun finish() {
+        super.finish()
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun createCacheFile(jsonText: String) {
