@@ -5,11 +5,14 @@ import android.app.Dialog
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
@@ -64,44 +67,36 @@ class DetailActivity : AppCompatActivity() {
         isValidPi()
     }
 
-    private fun isValidPi(): Boolean {
-        var valid = false
-        val errorMessage = "Invalid Pi. No data transfer available."
-        var failed = false
-
+    private fun isValidPi() {
+        var valid = true
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         mainScope.launch {
-
+////            TODO uncomment when PI resets connections
 //            try {
 //                btSocket.connect()
 //            } catch (e: InterruptedException) {
-//                failed = true
+//                valid = false
 //            } catch (e: IOException) {
-//                failed = true
+//                valid = false
 //            } finally {
 //                btSocket.close()
 //            }
 
             withContext(Dispatchers.Main) {
-                println("DATTE2 " + failed)
+                println("DATTE2 " + valid)
 
-                if (failed) {
-                    clDataAvailable.isVisible = false
-                    clNoDataAvailable.isVisible = true
-                    Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
-                    valid = false
-                } else {
+                if (valid) {
                     autoTransfer()
                     btnTransferData.isEnabled = true
-                    println("IK HOK HIER")
-
-                    valid = true
                     println("VALIDDE " + valid)
+                    Toast.makeText(applicationContext, "Ready for data transfer.", Toast.LENGTH_LONG).show()
+                } else {
+                    clDataAvailable.isVisible = false
+                    clNoDataAvailable.isVisible = true
+                    Toast.makeText(applicationContext, "Invalid Pi. No data transfer available.", Toast.LENGTH_LONG).show()
                 }
             }}
-        println("DATTE " + valid)
-        return valid
     }
 
     private fun autoTransfer() {
@@ -125,16 +120,6 @@ class DetailActivity : AppCompatActivity() {
             tvAutoTransfer.text = getString(R.string.detail_no_auto_transfer)
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_do_not_disturb_black))
         }
-    }
-
-    private suspend fun buildFailedTransfer() {
-        var dialog = Dialog(this@DetailActivity)
-        dialog.setContentView(R.layout.dialog_transfer_data_failed)
-        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_failed_transfer, pi.name)
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
-        delay(TimeUnit.SECONDS.toMillis(2))
-        dialog.cancel()
     }
 
     private fun buildDialogTransferQuestion() {
@@ -181,6 +166,47 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
+    private suspend fun buildFailedTransfer() {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_transfer)
+
+        //failed
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_failed_transfer, pi.name)
+        dialog.textView8.text = getString(R.string.detail_dialog_failed_transfer_small)
+        dialog.ivTransferLoader.setImageResource(0)
+        dialog.ivTransferLoader.setBackgroundResource(R.drawable.ic_error_outline_black)
+        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_red_light)
+        dialog.progressBar.visibility = View.GONE
+        dialog.tvProgressText.visibility = View.GONE
+
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
+        delay(TimeUnit.SECONDS.toMillis(2))
+        dialog.cancel()
+    }
+
+    private suspend fun buildSuccessTransfer(packageSize: String) {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_transfer)
+
+        //success
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_success_transfer, packageSize, pi.name)
+        dialog.textView8.text = getString(R.string.detail_dialog_success_transfer_small)
+        dialog.ivSubTextSuccessfull.visibility = View.VISIBLE
+        dialog.ivTransferLoader.setImageResource(R.drawable.logo_success)
+        dialog.progressBar.visibility = View.GONE
+        dialog.tvProgressText.visibility = View.GONE
+
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
+        delay(TimeUnit.SECONDS.toMillis(5))
+        dialog.cancel()
+    }
+
     private fun transferData() {
         var dialog = buildTransferDialog()
         var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
@@ -193,7 +219,6 @@ class DetailActivity : AppCompatActivity() {
                 Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
                 var data = ByteArray(btSocket.inputStream.available() + 1)
                 data[0] = byte
-
 
                 var maxSize = humanReadableByteCount(data.size.toLong(), true)
                 var zeroData = humanReadableByteCount(0, true)
@@ -217,6 +242,9 @@ class DetailActivity : AppCompatActivity() {
                 Log.d(TAG, "Test transferData() data string?: " + String(data))
                 createCacheFile(String(data))
 
+                withContext(Dispatchers.Main) {
+                    buildSuccessTransfer(maxSize)
+                }
             } catch (e: IOException) {
                 Log.d(TAG, e.message)
                 withContext(Dispatchers.Main) { buildFailedTransfer() }

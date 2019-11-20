@@ -56,8 +56,11 @@
     <string name="detail_dialog_small">The transferred data will be uploaded to
         \n the cloud when the wifi is connected</string>
 
-    <string name="detail_dialog_failed_transfer">Failed to transfer data\n from %s</string>
+    <string name="detail_dialog_failed_transfer">Failed to transfer data\nfrom %s</string>
     <string name="detail_dialog_failed_transfer_small">Please try again.</string>
+
+    <string name="detail_dialog_success_transfer">Successfully transferred\n%s of data from\n%s</string>
+    <string name="detail_dialog_success_transfer_small">Connect to Wi-Fi for syncing\nthe saved data with cloud</string>
 
     <!--SearchPiActivity Strings-->
     <string name="add_pi_title">No Pi\'s Found!</string>
