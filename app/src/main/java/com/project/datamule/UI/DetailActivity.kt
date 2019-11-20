@@ -3,7 +3,6 @@ package com.project.datamule.UI
 import android.animation.AnimatorInflater
 import android.app.Dialog
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.opengl.Visibility
@@ -19,7 +18,6 @@ import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.dialog_support.*
 import kotlinx.android.synthetic.main.dialog_transfer.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.ivTransferLoader
@@ -34,7 +32,6 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.bluetooth.BluetoothDevice
-
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -169,6 +166,11 @@ class DetailActivity : AppCompatActivity() {
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
 
+        var maxSize = humanReadableByteCount(0, true)
+        var zeroData = humanReadableByteCount(0, true)
+
+        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
+
         var animatorSet = AnimatorInflater.loadAnimator(
             this@DetailActivity,
             R.animator.loading_animator
@@ -192,13 +194,33 @@ class DetailActivity : AppCompatActivity() {
         dialog.ivTransferLoader.setBackgroundResource(R.drawable.ic_error_outline_black)
         dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_red_light)
         dialog.progressBar.visibility = View.GONE
-        dialog.textView10.visibility = View.GONE
+        dialog.tvProgressText.visibility = View.GONE
 
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
         dialog.show()
         delay(TimeUnit.SECONDS.toMillis(2))
+        dialog.cancel()
+    }
+
+    private suspend fun buildSuccessTransfer(packageSize: String) {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_transfer)
+
+        //success
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_success_transfer, packageSize, pi.name)
+        dialog.textView8.text = getString(R.string.detail_dialog_success_transfer_small)
+        dialog.ivSubTextSuccessfull.visibility = View.VISIBLE
+        dialog.ivTransferLoader.setImageResource(R.drawable.logo_success)
+        dialog.progressBar.visibility = View.GONE
+        dialog.tvProgressText.visibility = View.GONE
+
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
+        delay(TimeUnit.SECONDS.toMillis(5))
         dialog.cancel()
     }
 
@@ -214,20 +236,38 @@ class DetailActivity : AppCompatActivity() {
                 Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
                 var data = ByteArray(btSocket.inputStream.available() + 1)
                 data[0] = byte
+
+                var maxSize = humanReadableByteCount(data.size.toLong(), true)
+                var zeroData = humanReadableByteCount(0, true)
+
+                withContext(Dispatchers.Main) {
+                    dialog.progressBar.max = data.size
+                    dialog.progressBar.progress = 0
+                    dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
+                }
+
                 for (x in 0 until btSocket.inputStream.available()) {
                     data[x + 1] = btSocket.inputStream.read().toByte()
+                    var transferredData = humanReadableByteCount((x + 1).toLong(), true)
+
+                    withContext(Dispatchers.Main) {
+                        dialog.progressBar.progress = x + 1
+                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
+                    }
                 }
                 Log.d(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
                 Log.d(TAG, "Test transferData() data string?: " + String(data))
                 createCacheFile(String(data))
 
+                withContext(Dispatchers.Main) {
+                    buildSuccessTransfer(maxSize)
+                }
             } catch (e: IOException) {
                 Log.d(TAG, e.message)
-                withContext(Dispatchers.Main) {
-                    dialog.cancel()
-                    buildFailedTransfer() }
+                withContext(Dispatchers.Main) { buildFailedTransfer() }
             } finally {
                 btSocket.close()
+                dialog.cancel()
             }
 
         }
@@ -253,5 +293,13 @@ class DetailActivity : AppCompatActivity() {
 
     private fun getSuffixFromDateString(date: String): String {
         return date.replace("/", "").replace(":", "").replace(" ", "")
+    }
+
+    private fun humanReadableByteCount(bytes: Long, si: Boolean): String {
+        val unit = if (si) 1000 else 1024
+        if (bytes < unit) return "$bytes B"
+        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
+        return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
     }
 }

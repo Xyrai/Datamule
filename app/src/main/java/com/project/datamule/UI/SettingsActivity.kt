@@ -2,7 +2,6 @@ package com.project.datamule.UI
 
 import android.Manifest
 import android.app.*
-import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -13,8 +12,6 @@ import kotlinx.android.synthetic.main.activity_settings.tvPushArrowInfo
 import kotlinx.android.synthetic.main.dialog_change_log.*
 import kotlinx.android.synthetic.main.dialog_change_log.ivClose
 import kotlinx.android.synthetic.main.dialog_support.*
-import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import com.project.datamule.Constants
 import java.io.File
@@ -27,11 +24,14 @@ import android.os.*
 import androidx.core.content.ContextCompat.getColor
 import com.project.datamule.R
 import android.animation.ValueAnimator
+import android.content.*
+import android.net.wifi.WifiManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.core.net.toFile
+import com.project.datamule.Utils.WifiStateReceiver
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -40,8 +40,8 @@ private const val BYTE_TO_MB_DIVIDER = 1048576.0
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var fontAwesomeFont: Typeface
-
     private var prefs: SharedPreferences? = null
+    private var wifiStateReceiver : BroadcastReceiver? =  null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +68,28 @@ class SettingsActivity : AppCompatActivity() {
         pushNotificationSwitch()
         autoTransfer()
 
+        configureReceiver()
+
         createCacheFile()
         setStorage()
+    }
+
+    private fun configureReceiver() {
+        val filter = IntentFilter()
+        filter.addAction("com.project.datamule")
+        wifiStateReceiver = WifiStateReceiver()
+        registerReceiver(wifiStateReceiver, filter)
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        val intentFilter = IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION)
+        registerReceiver(wifiStateReceiver, intentFilter)
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        unregisterReceiver(wifiStateReceiver)
     }
 
     private fun pushNotificationSwitch() {
