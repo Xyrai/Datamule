@@ -3,20 +3,26 @@ package com.project.datamule.UI
 import android.animation.AnimatorInflater
 import android.app.Dialog
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.dialog_transfer_data_failed.*
+import kotlinx.android.synthetic.main.dialog_support.*
+import kotlinx.android.synthetic.main.dialog_transfer.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.*
+import kotlinx.android.synthetic.main.dialog_transfer_question.ivTransferLoader
 import kotlinx.android.synthetic.main.dialog_transfer_question.tvDialogTitle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.CoroutineScope
@@ -64,44 +70,36 @@ class DetailActivity : AppCompatActivity() {
         isValidPi()
     }
 
-    private fun isValidPi(): Boolean {
-        var valid = false
-        val errorMessage = "Invalid Pi. No data transfer available."
-        var failed = false
-
+    private fun isValidPi() {
+        var valid = true
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         mainScope.launch {
-
-            try {
-                btSocket.connect()
-            } catch (e: InterruptedException) {
-                failed = true
-            } catch (e: IOException) {
-                failed = true
-            } finally {
-                btSocket.close()
-            }
+////            TODO uncomment when PI resets connections
+//            try {
+//                btSocket.connect()
+//            } catch (e: InterruptedException) {
+//                valid = false
+//            } catch (e: IOException) {
+//                valid = false
+//            } finally {
+//                btSocket.close()
+//            }
 
             withContext(Dispatchers.Main) {
-                println("DATTE2 " + failed)
+                println("DATTE2 " + valid)
 
-                if (failed) {
-                    clDataAvailable.isVisible = false
-                    clNoDataAvailable.isVisible = true
-                    Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
-                    valid = false
-                } else {
+                if (valid) {
                     autoTransfer()
                     btnTransferData.isEnabled = true
-                    println("IK HOK HIER")
-
-                    valid = true
                     println("VALIDDE " + valid)
+                    Toast.makeText(applicationContext, "Ready for data transfer.", Toast.LENGTH_LONG).show()
+                } else {
+                    clDataAvailable.isVisible = false
+                    clNoDataAvailable.isVisible = true
+                    Toast.makeText(applicationContext, "Invalid Pi. No data transfer available.", Toast.LENGTH_LONG).show()
                 }
             }}
-        println("DATTE " + valid)
-        return valid
     }
 
     private fun autoTransfer() {
@@ -125,16 +123,6 @@ class DetailActivity : AppCompatActivity() {
             tvAutoTransfer.text = getString(R.string.detail_no_auto_transfer)
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_do_not_disturb_black))
         }
-    }
-
-    private suspend fun buildFailedTransfer() {
-        var dialog = Dialog(this@DetailActivity)
-        dialog.setContentView(R.layout.dialog_transfer_data_failed)
-        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_failed_transfer, pi.name)
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
-        delay(TimeUnit.SECONDS.toMillis(2))
-        dialog.cancel()
     }
 
     private fun buildDialogTransferQuestion() {
@@ -174,6 +162,27 @@ class DetailActivity : AppCompatActivity() {
         dialog.show()
         return dialog
 
+    }
+
+    private suspend fun buildFailedTransfer() {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_transfer)
+
+        //failed
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_failed_transfer, pi.name)
+        dialog.textView8.text = getString(R.string.detail_dialog_failed_transfer_small)
+        dialog.ivTransferLoader.setImageResource(0)
+        dialog.ivTransferLoader.setBackgroundResource(R.drawable.ic_error_outline_black)
+        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_red_light)
+        dialog.progressBar.visibility = View.GONE
+        dialog.textView10.visibility = View.GONE
+
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
+        delay(TimeUnit.SECONDS.toMillis(2))
+        dialog.cancel()
     }
 
     private fun transferData() {
