@@ -33,6 +33,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
+import android.bluetooth.BluetoothDevice
 
 
 const val PI_EXTRA = "PI_EXTRA"
@@ -62,12 +63,28 @@ class DetailActivity : AppCompatActivity() {
         // Initialize Buttons
         ivBack.setOnClickListener { onClickBack() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }
+        deletePi.setOnClickListener { unpairDevice() }
 
         tvPiName.text = pi.name
 
         // Check for valid pi
         // Auto
         isValidPi()
+    }
+
+    //TODO finish unpair
+    private fun unpairDevice() {
+        println("TESTINGFNFGN")
+        var device = pi.device.type
+//        try {
+//            val m = device.javaClass
+//                .getMethod("removeBond",  null)
+//            m.invoke(device, null as Array<Any>?)
+//        } catch (e: Exception) {
+//            Toast.makeText(this, "Failed to unbond", Toast.LENGTH_LONG)
+//            Log.e(TAG, e.message)
+//        }
+
     }
 
     private fun isValidPi() {
