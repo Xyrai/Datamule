@@ -2,7 +2,6 @@ package com.project.datamule.UI
 
 import android.animation.AnimatorInflater
 import android.app.Dialog
-import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -16,14 +15,19 @@ import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.dialog_transfer_data_failed.*
 import kotlinx.android.synthetic.main.dialog_transfer_question.*
+import kotlinx.android.synthetic.main.dialog_transfer_question.tvDialogTitle
 import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
-import java.lang.Runnable
 import java.util.*
 import java.util.concurrent.TimeUnit
+
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -32,10 +36,13 @@ class DetailActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
     private val mainScope = CoroutineScope(Dispatchers.IO)
     val uuid = UUID.fromString("4b0164aa-1820-444e-83d4-3c702cfec373")
+    private lateinit var pi: Pi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+
+        pi = intent.getParcelableExtra<Pi>(PI_EXTRA)
 
         initViews()
     }
@@ -50,23 +57,22 @@ class DetailActivity : AppCompatActivity() {
         ivBack.setOnClickListener { onClickBack() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }
 
-        val pi = intent.getParcelableExtra<Pi>(PI_EXTRA)
-        if (pi != null) {
-            tvPiName.text = pi.name
-        }
+        tvPiName.text = pi.name
 
-        checkIfValidPi(pi)
-
-
+        // Check for valid pi
+        // Auto
+        isValidPi()
     }
 
-    private fun checkIfValidPi(pi: Pi) {
+    private fun isValidPi(): Boolean {
+        var valid = false
         val errorMessage = "Invalid Pi. No data transfer available."
         var failed = false
 
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
-        mainScope.launch { withContext(Dispatchers.IO) {
+        mainScope.launch {
+
             try {
                 btSocket.connect()
             } catch (e: InterruptedException) {
@@ -76,64 +82,46 @@ class DetailActivity : AppCompatActivity() {
             } finally {
                 btSocket.close()
             }
-        }
+
             withContext(Dispatchers.Main) {
+                println("DATTE2 " + failed)
+
                 if (failed) {
                     clDataAvailable.isVisible = false
                     clNoDataAvailable.isVisible = true
                     Toast.makeText(applicationContext, errorMessage, Toast.LENGTH_LONG).show()
+                    valid = false
                 } else {
+                    autoTransfer()
                     btnTransferData.isEnabled = true
-                    // Check for auto transfer
-                    autoTransfer(pi)
+                    println("IK HOK HIER")
+
+                    valid = true
+                    println("VALIDDE " + valid)
                 }
             }}
+        println("DATTE " + valid)
+        return valid
     }
 
-    private fun autoTransfer(pi: Pi) {
+    private fun autoTransfer() {
         val autoTransfer = prefs!!.getBoolean("auto_transfer", true)
 
         if (autoTransfer) {
+            println("HIERO")
             val autoTransferSeconds = prefs!!.getInt("auto_transfer_delay",  5)
             val autoTransferMillis: Long = (autoTransferSeconds * 1000).toLong()
             tvAutoTransfer.text = getString(R.string.detail_auto_transfer, autoTransferSeconds)
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_autoupdate_black))
 
             Handler().postDelayed(
-                Runnable {
-                    buildTransferDialog()
-                    var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
-                    try {
-                        btSocket.connect()
-                    } catch (e: IOException) {
-                        Log.d(TAG, e.message)
-                        mainScope.launch { withContext(Dispatchers.Main) { buildFailedTransfer() } }
-                    }
-
-//                    Log.d(TAG, "TEEEST MOURAD() 1: " + btSocket.isConnected)
-//                    Log.d(TAG, "TEEEST MOURAD() 3: " + btSocket.inputStream)
-//                    Log.d(TAG, "TEEEST MOURAD() Available 1: " + btSocket.inputStream.available())
-//                    Log.d(TAG, "TEEEST MOURAD() 4 - 1: " + btSocket.inputStream.read())
-//                    Log.d(TAG, "TEEEST MOURAD() 4 - 2: " + btSocket.inputStream.read())
-//                    Log.d(TAG, "TEEEST MOURAD() 4 - 3: " + btSocket.inputStream.read())
-//                    Log.d(TAG, "TEEEST MOURAD() 4 - 4: " + btSocket.inputStream.read())
-//                    Log.d(TAG, "TEEEST MOURAD() Available 2: " + btSocket.inputStream.available())
-//                    var woordje = ""
-//                    var woordje2: ByteArray = ByteArray(btSocket.inputStream.available())
-//                    var bt = byteArrayOf()
-//                    for (x in 0 until btSocket.inputStream.available()) {
-////                    woordje = woordje + mmSocket.inputStream.read() + " "
-//                        woordje2[x] = btSocket.inputStream.read().toByte()
-//                    }
-//                    Log.d(TAG, "TEEEST MOURAD() Available 3: " + btSocket.inputStream.available())
-////                Log.d(TAG, "TEEEST MOURAD() woordje: " + woordje)
-//                    Log.d(TAG, "TEEEST MOURAD() woordje string?: " + String(woordje2))
-//                    createCacheFile(String(woordje2))
-
+                {
+                    transferData()
                 },
                 autoTransferMillis // seconds x 1000 = milliseconds
             )
         } else {
+            println("HIERO2")
             tvAutoTransfer.text = getString(R.string.detail_no_auto_transfer)
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_do_not_disturb_black))
         }
@@ -142,6 +130,7 @@ class DetailActivity : AppCompatActivity() {
     private suspend fun buildFailedTransfer() {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer_data_failed)
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_failed_transfer, pi.name)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
         delay(TimeUnit.SECONDS.toMillis(2))
@@ -159,7 +148,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         dialog.btnConfirmTransfer.setOnClickListener {
-            buildTransferDialog()
+            transferData()
             dialog.cancel()
         }
 
@@ -168,7 +157,7 @@ class DetailActivity : AppCompatActivity() {
 //        builder.create().show()
     }
 
-    private fun buildTransferDialog() {
+    private fun buildTransferDialog(): Dialog {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -183,6 +172,39 @@ class DetailActivity : AppCompatActivity() {
         animatorSet.start()
 
         dialog.show()
+        return dialog
+
+    }
+
+    private fun transferData() {
+        var dialog = buildTransferDialog()
+        var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
+
+        mainScope.launch {
+            try {
+                btSocket.connect()
+                Log.d(TAG, "Test transferData() isConnected?: " + btSocket.isConnected)
+                var byte = btSocket.inputStream.read().toByte()
+                Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
+                var data = ByteArray(btSocket.inputStream.available() + 1)
+                data[0] = byte
+                for (x in 0 until btSocket.inputStream.available()) {
+                    data[x + 1] = btSocket.inputStream.read().toByte()
+                }
+                Log.d(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
+                Log.d(TAG, "Test transferData() data string?: " + String(data))
+                createCacheFile(String(data))
+
+            } catch (e: IOException) {
+                Log.d(TAG, e.message)
+                withContext(Dispatchers.Main) {
+                    dialog.cancel()
+                    buildFailedTransfer() }
+            } finally {
+                btSocket.close()
+            }
+
+        }
     }
 
     private fun onClickBack() {
@@ -190,13 +212,20 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun createCacheFile(jsonText: String) {
+        var dateFromString = jsonText.substringBefore('{')
+        var formattedDate = getSuffixFromDateString(dateFromString)
+
         //temporary create file for cache demo purposes
-        val fileName = "PI-dataTESTTTMOURADISBAAS.json"
+        val fileName = getString(R.string.data_file_prefix, formattedDate)
         val file = File(cacheDir, fileName)
 
         file.writeText(jsonText, Charsets.UTF_8)
 
         //for reading from json file
 //        println(file.readText(Charsets.UTF_8))
+    }
+
+    private fun getSuffixFromDateString(date: String): String {
+        return date.replace("/", "").replace(":", "").replace(" ", "")
     }
 }

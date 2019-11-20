@@ -256,27 +256,27 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-            android:id="@+id/tvAutoTransfer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/rubik"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvPiName" />
+        android:id="@+id/tvAutoTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/rubik"
+        android:text="@string/detail_no_auto_transfer"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPiName" />
 
     <ImageView
-            android:id="@+id/ivUpdateAuto"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvAutoTransfer"
-            app:layout_constraintEnd_toStartOf="@+id/tvAutoTransfer"
-            app:layout_constraintTop_toTopOf="@+id/tvAutoTransfer"
-            app:srcCompat="@drawable/ic_autoupdate_black" />
+        android:id="@+id/ivUpdateAuto"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAutoTransfer"
+        app:layout_constraintEnd_toStartOf="@+id/tvAutoTransfer"
+        app:layout_constraintTop_toTopOf="@+id/tvAutoTransfer"
+        app:srcCompat="@drawable/ic_do_not_disturb_black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

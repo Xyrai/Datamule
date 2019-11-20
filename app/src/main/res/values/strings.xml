@@ -4,6 +4,7 @@
     <!--General Strings -->
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="data_file_prefix">Pi_Data_%s.json</string>
 
     <!--NewUserActivity Strings-->
     <string name="skip_this_step">Skip  this step ></string>
@@ -54,7 +55,7 @@
     <string name="detail_dialog_small">The transferred data will be uploaded to
         \n the cloud when the wifi is connected</string>
 
-    <string name="detail_dialog_failed_transfer">Failed to transfer data from \n %s</string>
+    <string name="detail_dialog_failed_transfer">Failed to transfer data\n from %s</string>
     <string name="detail_dialog_failed_transfer_small">Please try again.</string>
 
     <!--SearchPiActivity Strings-->
