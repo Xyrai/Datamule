@@ -16,7 +16,7 @@
             android:roundIcon="@drawable/logo_no_text"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".UI.DetailActivity"></activity>
+        <activity android:name=".UI.DetailActivity" />
         <activity android:name=".UI.SearchPiActivity" />
         <activity android:name=".UI.SettingsActivity" />
         <activity android:name=".UI.HomeActivity" />
@@ -28,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".Utils.IntentService" />
     </application>
 
 </manifest>

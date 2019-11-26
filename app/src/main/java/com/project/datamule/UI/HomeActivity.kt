@@ -20,6 +20,7 @@ import com.project.datamule.Adapter.PiAdapter
 import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
+import com.project.datamule.Utils.IntentService
 import com.project.datamule.Utils.WifiStateReceiver
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
@@ -49,6 +50,9 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        val intent = Intent(this, IntentService::class.java)
+        startService(intent)
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
