@@ -62,7 +62,7 @@ class DetailActivity : AppCompatActivity() {
         // Initialize Buttons
         ivBack.setOnClickListener { onClickBack() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }
-        deletePi.setOnClickListener { unpairDevice() }
+        deletePi.setOnClickListener { unpairDevice(pi.device) }
 
         tvPiName.text = pi.name
 
@@ -72,18 +72,13 @@ class DetailActivity : AppCompatActivity() {
     }
 
     //TODO finish unpair
-    private fun unpairDevice() {
-        println("TESTINGFNFGN")
-        var device = pi.device.type
-//        try {
-//            val m = device.javaClass
-//                .getMethod("removeBond",  null)
-//            m.invoke(device, null as Array<Any>?)
-//        } catch (e: Exception) {
-//            Toast.makeText(this, "Failed to unbond", Toast.LENGTH_LONG)
-//            Log.e(TAG, e.message)
-//        }
-
+    private fun unpairDevice(device: BluetoothDevice) {
+        Log.e("Clicked", "CLICKED ON DELETE PI")
+        try {
+            device::class.java.getMethod("removeBond").invoke(device)
+        } catch (e: Exception) {
+            Log.e(TAG, "Removing bond has been failed. ${e.message}")
+        }
     }
 
     private fun isValidPi() {
