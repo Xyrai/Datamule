@@ -2,6 +2,7 @@ package com.project.datamule.UI
 
 import android.animation.AnimatorInflater
 import android.app.Dialog
+import android.bluetooth.BluetoothDevice
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -29,7 +30,6 @@ import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
-
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -262,7 +262,7 @@ class DetailActivity : AppCompatActivity() {
                         data = ByteArray(1024)
                         x = 0
                         println("byteArray was vol... is nu weer leeg")
-                        println("AVAILABLE: " + btSocket.inputStream.available() + 1)
+                        println("AVAILABLE: " + (btSocket.inputStream.available() + 1))
                         println("Huidige string: $dataText")
 
                         if ((btSocket.inputStream.available() + 1) > maxBytes) {
@@ -342,6 +342,13 @@ class DetailActivity : AppCompatActivity() {
         val file = File(cacheDir, fileName)
 
         file.writeText(jsonText, Charsets.UTF_8)
+
+
+        // Retrieve & save the Set of cacheFiles
+        val set = prefs!!.getStringSet("cacheFiles", HashSet<String>())
+        set.add(fileName)
+        prefs!!.edit().putStringSet("cacheFiles", set).apply()
+//        println(set.)
 
         //for reading from json file
 //        println(file.readText(Charsets.UTF_8))
