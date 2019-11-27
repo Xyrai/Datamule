@@ -32,6 +32,7 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.bluetooth.BluetoothDevice
+import com.project.datamule.Constants.Companion.TAG_SOCKET
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -161,6 +162,11 @@ class DetailActivity : AppCompatActivity() {
 //        builder.create().show()
     }
 
+    /**
+     * Builds a dialog when executing transferData().
+     *
+     * @return Dialog - Returns a view.
+     */
     private fun buildTransferDialog(): Dialog {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
@@ -185,6 +191,10 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
+
+    /**
+     * Starting a dialog when transfer does fail.
+     */
     private suspend fun buildFailedTransfer() {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
@@ -226,6 +236,10 @@ class DetailActivity : AppCompatActivity() {
         dialog.cancel()
     }
 
+    /**
+     * Transfer data to this device. Checks if the bluetooth socket is connected and if
+     * the inputstream is avaible.
+     */
     private fun transferData() {
         var dialog = buildTransferDialog()
         var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
@@ -269,6 +283,7 @@ class DetailActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) { buildFailedTransfer() }
             } finally {
                 btSocket.close()
+                Log.d(TAG_SOCKET,"Socket successfully closed")
                 dialog.cancel()
             }
 
