@@ -27,5 +27,10 @@ class Constants {
 
         val PI_UUID = UUID.fromString("4b0164aa-1820-444e-83d4-3c702cfec373")
 
+        //Debug TAGS
+        val TAG_SOCKET = "BLUETOOTH_SOCKET"
+
+
+
     }
 }

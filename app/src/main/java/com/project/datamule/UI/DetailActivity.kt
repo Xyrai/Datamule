@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -27,11 +26,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.IOException
+import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import android.bluetooth.BluetoothDevice
+import com.project.datamule.Constants.Companion.TAG_SOCKET
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -191,6 +190,11 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Builds a dialog when executing transferData().
+     *
+     * @return Dialog - Returns a view.
+     */
     private fun buildTransferDialog(): Dialog {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
@@ -215,6 +219,10 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
+
+    /**
+     * Starting a dialog when transfer does fail.
+     */
     private suspend fun buildFailedTransfer() {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
@@ -256,6 +264,10 @@ class DetailActivity : AppCompatActivity() {
         dialog.cancel()
     }
 
+    /**
+     * Transfer data to this device. Checks if the bluetooth socket is connected and if
+     * the inputstream is avaible.
+     */
     private fun transferData() {
         var dialog = buildTransferDialog()
         var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
@@ -266,27 +278,83 @@ class DetailActivity : AppCompatActivity() {
                 Log.d(TAG, "Test transferData() isConnected?: " + btSocket.isConnected)
                 var byte = btSocket.inputStream.read().toByte()
                 Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
-                var data = ByteArray(btSocket.inputStream.available() + 1)
+                println("Hierootest1 " + btSocket.inputStream.available() + 1)
+                println("Hierootest2 " + btSocket.inputStream.available() + 1)
+                var availableBytes = btSocket.inputStream.available() + 1
+                println("Hierootest3 " + availableBytes)
+                var data = ByteArray(1024)
+                var dataText = ""
+
                 data[0] = byte
 
-                var maxSize = humanReadableByteCount(data.size.toLong(), true)
+                var maxBytes = btSocket.inputStream.available() + 1
+                var maxSize = humanReadableByteCount(maxBytes.toLong(), true)
                 var zeroData = humanReadableByteCount(0, true)
 
                 withContext(Dispatchers.Main) {
-                    dialog.progressBar.max = data.size
+                    dialog.progressBar.max = maxBytes
                     dialog.progressBar.progress = 0
                     dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
+                    println("HANSJANKAZAN     SFDJKBHEB ==" + data[12].hashCode() + "== jlsdnfjbwnsdfjk")
+                    println("HANSJANKAZAN     SFDJKBHEB ==" + data[0].hashCode() + "== jlsdnfjbwnsdfjk")
+                    println("HANSJANKAZAN     SFDJKBHEB ==" + data[1023].hashCode() + "== jlsdnfjbwnsdfjk")
                 }
 
-                for (x in 0 until btSocket.inputStream.available()) {
-                    data[x + 1] = btSocket.inputStream.read().toByte()
-                    var transferredData = humanReadableByteCount((x + 1).toLong(), true)
+                var x = 1
+                var y = 1
+                while (btSocket.inputStream.available() != -1) {
+
+                    var transferredData = humanReadableByteCount((y).toLong(), true)
+
+                    if (data[1023].hashCode() != 0) {
+                        dataText += String(data)
+                        data = ByteArray(1024)
+                        x = 0
+                        println("byteArray was vol... is nu weer leeg")
+                        println("AVAILABLE: " + btSocket.inputStream.available() + 1)
+                        println("Huidige string: $dataText")
+
+                        if ((btSocket.inputStream.available() + 1) > maxBytes) {
+                            maxBytes = btSocket.inputStream.available() + 1
+                            maxSize = humanReadableByteCount(maxBytes.toLong(), true)
+
+                            println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
+
+                            withContext(Dispatchers.Main) {
+                                dialog.progressBar.max = maxBytes
+                                dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
+                            }
+                        }
+                    }
+
+                    data[x] = btSocket.inputStream.read().toByte()
+
+//                    println("HIEROOO222 " + )
 
                     withContext(Dispatchers.Main) {
-                        dialog.progressBar.progress = x + 1
+                        dialog.progressBar.progress = y
                         dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
                     }
+
+//                    println("1 byte is afgehandeld")
+                    x++
+                    y++
                 }
+
+                // If the last 1kB byteArray doesn't reach the 1023th index
+                dataText += String(data)
+
+//                for (x in 0 until btSocket.inputStream.available()) {
+//                    data[x + 1] = btSocket.inputStream.read().toByte()
+//                    var transferredData = humanReadableByteCount((x + 1).toLong(), true)
+//
+////                    println("HIEROOO222 " + )
+//
+//                    withContext(Dispatchers.Main) {
+//                        dialog.progressBar.progress = x + 1
+//                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
+//                    }
+//                }
                 Log.d(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
                 Log.d(TAG, "Test transferData() data string?: " + String(data))
                 createCacheFile(String(data))
@@ -299,6 +367,7 @@ class DetailActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) { buildFailedTransfer() }
             } finally {
                 btSocket.close()
+                Log.d(TAG_SOCKET,"Socket successfully closed")
                 dialog.cancel()
             }
 
