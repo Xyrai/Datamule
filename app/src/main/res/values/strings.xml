@@ -3,6 +3,7 @@
 
     <!--General Strings -->
     <string name="confirm">Confirm</string>
+    <string name="unpair">Unpair</string>
     <string name="cancel">Cancel</string>
     <string name="data_file_prefix">Pi_Data_%s.json</string>
 
@@ -51,6 +52,7 @@
     <string name="detail_data_button_disabled">No Data to Transfer</string>
 
     <string name="detail_dialog_question">Are you sure you want to\n start the Data Transfer?</string>
+    <string name="detail_dialog_question_unpair_pi">Are you sure you want to\n unpair %s?</string>
     <string name="detail_dialog">Transferring data…</string>
     <string name="detail_dialog_bytes">%s / %s</string>
     <string name="detail_dialog_small">The transferred data will be uploaded to

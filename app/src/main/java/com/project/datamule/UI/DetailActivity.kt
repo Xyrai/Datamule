@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+import com.project.datamule.Constants.Companion.TAG_SOCKET
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -60,7 +61,7 @@ class DetailActivity : AppCompatActivity() {
         // Initialize Buttons
         ivBack.setOnClickListener { onClickBack() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }
-        deletePi.setOnClickListener { unpairDevice(pi.device) }
+        deletePi.setOnClickListener { buildDialogDeletePiQuestion() }
 
         tvPiName.text = pi.name
 
@@ -69,13 +70,20 @@ class DetailActivity : AppCompatActivity() {
         isValidPi()
     }
 
-    //TODO finish unpair
     private fun unpairDevice(device: BluetoothDevice) {
-        Log.e("Clicked", "CLICKED ON DELETE PI")
-        try {
-            device::class.java.getMethod("removeBond").invoke(device)
-        } catch (e: Exception) {
-            Log.e(TAG, "Removing bond has been failed. ${e.message}")
+        var message = ""
+        mainScope.launch {
+            try {
+                device::class.java.getMethod("removeBond").invoke(device)
+                message = "Succesfully unpaired Pi"
+            } catch (e: Exception) {
+                Log.e(TAG, "Removing bond has been failed. ${e.message}")
+                message = "Failed unpairing"
+            }
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -154,6 +162,39 @@ class DetailActivity : AppCompatActivity() {
 //        builder.create().show()
     }
 
+    private fun buildDialogDeletePiQuestion() {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_transfer_question)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.ivTransferLoader.setImageResource(0)
+        dialog.ivTransferLoader.setBackgroundResource(R.drawable.logo_delete_drawable_large)
+        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_red_light)
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_question_unpair_pi, pi.name)
+        dialog.btnConfirmTransfer.text = getString(R.string.unpair)
+
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+
+        dialog.show()
+
+        dialog.btnCancelTransfer.setOnClickListener {
+            dialog.cancel()
+        }
+
+        dialog.btnConfirmTransfer.setOnClickListener {
+            unpairDevice(pi.device)
+            dialog.cancel()
+            onClickBack()
+
+        }
+    }
+
+    /**
+     * Builds a dialog when executing transferData().
+     *
+     * @return Dialog - Returns a view.
+     */
     private fun buildTransferDialog(): Dialog {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
@@ -178,6 +219,10 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
+
+    /**
+     * Starting a dialog when transfer does fail.
+     */
     private suspend fun buildFailedTransfer() {
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
@@ -219,6 +264,10 @@ class DetailActivity : AppCompatActivity() {
         dialog.cancel()
     }
 
+    /**
+     * Transfer data to this device. Checks if the bluetooth socket is connected and if
+     * the inputstream is avaible.
+     */
     private fun transferData() {
         var dialog = buildTransferDialog()
         var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
@@ -318,6 +367,7 @@ class DetailActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) { buildFailedTransfer() }
             } finally {
                 btSocket.close()
+                Log.d(TAG_SOCKET,"Socket successfully closed")
                 dialog.cancel()
             }
 
