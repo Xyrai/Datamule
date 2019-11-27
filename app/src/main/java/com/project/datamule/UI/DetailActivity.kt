@@ -87,6 +87,12 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks if a Pi is valid for data transfer.
+     * It checks if the Pi has the correct UUID and it checks if it is able to connect to the phone.
+     *
+     */
+
     private fun isValidPi() {
         var valid = true
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
