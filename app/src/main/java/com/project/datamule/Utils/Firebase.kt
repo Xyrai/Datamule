@@ -3,10 +3,12 @@ package com.project.datamule.Utils
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -16,6 +18,7 @@ import com.google.firebase.storage.StorageReference
 import com.project.datamule.Constants
 import com.project.datamule.R
 import java.io.File
+import java.util.HashSet
 
 object Firebase {
     private val storageRef = FirebaseStorage.getInstance().reference
@@ -27,10 +30,27 @@ object Firebase {
     private var PROGRESS_MAX = 100
     private var PROGRESS_CURRENT = 0
 
+    private var prefs: SharedPreferences? = null
+
+
     fun uploadFile(context: Context) {
+        // getSharedPreferences
+        prefs = context.getSharedPreferences("com.project.datamule", AppCompatActivity.MODE_PRIVATE)
+
+        // Retrieve & save the Set of cacheFiles
+        val set = prefs!!.getStringSet("cacheFiles", HashSet<String>())
+        var fileName = ""
+
+        if (!set.isEmpty()) {
+            var sortedSet = set.sorted().toMutableSet()
+            fileName = sortedSet.first()
+            sortedSet.remove(sortedSet.first())
+            prefs!!.edit().putStringSet("cacheFiles", sortedSet).apply()
+        }
+
 //        val networkResult = getConnectionType(this)
         val basePath = context.cacheDir.toString()
-        var fileName = "/PI-data.json"
+//        var fileName = "/PI-data.json"
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
         if (!fileUri?.toFile()!!.exists()) {
