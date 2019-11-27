@@ -62,7 +62,7 @@ class DetailActivity : AppCompatActivity() {
         // Initialize Buttons
         ivBack.setOnClickListener { onClickBack() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }
-        deletePi.setOnClickListener { unpairDevice(pi.device) }
+        deletePi.setOnClickListener { buildDialogDeletePiQuestion() }
 
         tvPiName.text = pi.name
 
@@ -71,13 +71,20 @@ class DetailActivity : AppCompatActivity() {
         isValidPi()
     }
 
-    //TODO finish unpair
     private fun unpairDevice(device: BluetoothDevice) {
-        Log.e("Clicked", "CLICKED ON DELETE PI")
-        try {
-            device::class.java.getMethod("removeBond").invoke(device)
-        } catch (e: Exception) {
-            Log.e(TAG, "Removing bond has been failed. ${e.message}")
+        var message = ""
+        mainScope.launch {
+            try {
+                device::class.java.getMethod("removeBond").invoke(device)
+                message = "Succesfully unpaired Pi"
+            } catch (e: Exception) {
+                Log.e(TAG, "Removing bond has been failed. ${e.message}")
+                message = "Failed unpairing"
+            }
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -154,6 +161,34 @@ class DetailActivity : AppCompatActivity() {
 //        val builder = android.app.AlertDialog.Builder(this)
 //        builder.setView(layoutInflater.inflate(R.layout.dialog_transfer_question, null))
 //        builder.create().show()
+    }
+
+    private fun buildDialogDeletePiQuestion() {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_transfer_question)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialog.ivTransferLoader.setImageResource(0)
+        dialog.ivTransferLoader.setBackgroundResource(R.drawable.logo_delete_drawable_large)
+        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_red_light)
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_question_unpair_pi, pi.name)
+        dialog.btnConfirmTransfer.text = getString(R.string.unpair)
+
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+
+        dialog.show()
+
+        dialog.btnCancelTransfer.setOnClickListener {
+            dialog.cancel()
+        }
+
+        dialog.btnConfirmTransfer.setOnClickListener {
+            unpairDevice(pi.device)
+            dialog.cancel()
+            onClickBack()
+
+        }
     }
 
     private fun buildTransferDialog(): Dialog {
