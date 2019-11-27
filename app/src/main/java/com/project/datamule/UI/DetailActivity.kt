@@ -302,7 +302,7 @@ class DetailActivity : AppCompatActivity() {
 
                 var x = 1
                 var y = 1
-                while (btSocket.inputStream.available() != -1) {
+                while (btSocket.inputStream.available() > 0) {
 
                     var transferredData = humanReadableByteCount((y).toLong(), true)
 
@@ -341,7 +341,7 @@ class DetailActivity : AppCompatActivity() {
                     y++
                 }
 
-                // If the last 1kB byteArray doesn't reach the 1023th index
+//                 If the last 1kB byteArray doesn't reach the 1023th index
                 dataText += String(data)
 
 //                for (x in 0 until btSocket.inputStream.available()) {
