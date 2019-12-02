@@ -286,7 +286,7 @@ class DetailActivity : AppCompatActivity() {
                 // InputStream forces you to read a byte before you can see the available amount,
                 // so we save the first byte
                 var byte = btSocket.inputStream.read().toByte()
-                Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
+                Log.e(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
 
                 // Get the available bytes left plus the one we pulled before
                 var availableBytes = btSocket.inputStream.available() + 1
@@ -346,8 +346,26 @@ class DetailActivity : AppCompatActivity() {
                             println("Huidige string: $dataText")
 
                             // todo dat maxsize gebeuren fixen
+                            // If the available bytes in the inputStream suddenly gets bigger, update the progressbar
                             if ((btSocket.inputStream.available() + 1) > maxBytes) {
                                 maxBytes = btSocket.inputStream.available() + 1
+                                maxSize = humanReadableByteCount(maxBytes.toLong(), true)
+
+                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
+
+                                withContext(Dispatchers.Main) {
+                                    dialog.progressBar.max = maxBytes
+                                    dialog.tvProgressText.text = getString(
+                                        R.string.detail_dialog_bytes,
+                                        transferredData,
+                                        maxSize
+                                    )
+                                }
+                            }
+
+                            // If the bytecount exceeds the earlier counted maxBytes (maxBytes sometimes suddenly grow)
+                            if (y > maxBytes) {
+                                maxBytes =  maxBytes + (btSocket.inputStream.available() + 1)
                                 maxSize = humanReadableByteCount(maxBytes.toLong(), true)
 
                                 println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
@@ -394,8 +412,8 @@ class DetailActivity : AppCompatActivity() {
 //                    }
 //                }
 
-                Log.d(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
-                Log.d(TAG, "Test transferData() data string?: " + String(data))
+                Log.e(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
+                Log.e(TAG, "Test transferData() data string?: " + String(data))
                 createCacheFile(String(data))
 
                 withContext(Dispatchers.Main) {
@@ -432,7 +450,7 @@ class DetailActivity : AppCompatActivity() {
         val fileName = getString(R.string.data_file_prefix, formattedDate)
         val file = File(filesDir, fileName)
 
-        file.writeText(jsonText.substringAfter('{'), Charsets.UTF_8)
+        file.writeText(jsonText.substring(jsonText.indexOf('{')), Charsets.UTF_8)
 
 
         // Retrieve & save the Set of cacheFiles
