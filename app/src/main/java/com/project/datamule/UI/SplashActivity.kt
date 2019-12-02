@@ -9,6 +9,9 @@ import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_splash.*
 import android.content.SharedPreferences
 
+/**
+ * WIP - At this moment turned off.
+ */
 class SplashActivity : AppCompatActivity() {
 
     var prefs: SharedPreferences? = null
@@ -19,7 +22,10 @@ class SplashActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
 
-        if (prefs!!.getBoolean("firstrun", true)) {
+        /**
+         * Set this to true to enable {NewUserActivity} for new users.
+         */
+        if (prefs!!.getBoolean("firstrun", false)) {
             //Running app for the first time
             var animatorSet = AnimatorInflater.loadAnimator(this@SplashActivity, R.animator.loading_animator)
             animatorSet.setTarget(ivLoader)

@@ -98,16 +98,17 @@ class DetailActivity : AppCompatActivity() {
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         mainScope.launch {
-////            TODO uncomment when PI resets connections
-//            try {
-//                btSocket.connect()
-//            } catch (e: InterruptedException) {
-//                valid = false
-//            } catch (e: IOException) {
-//                valid = false
-//            } finally {
-//                btSocket.close()
-//            }
+//            TODO uncomment when PI resets connections
+
+            try {
+                btSocket.connect()
+            } catch (e: InterruptedException) {
+                valid = false
+            } catch (e: IOException) {
+                valid = false
+            } finally {
+                btSocket.close()
+            }
 
             withContext(Dispatchers.Main) {
                 println("DATTE2 " + valid)
@@ -398,15 +399,17 @@ class DetailActivity : AppCompatActivity() {
                 createCacheFile(String(data))
 
                 withContext(Dispatchers.Main) {
+                    dialog.cancel()
                     buildSuccessTransfer(maxSize)
                 }
             } catch (e: IOException) {
                 Log.d(TAG, e.message)
-                withContext(Dispatchers.Main) { buildFailedTransfer() }
+                withContext(Dispatchers.Main) {
+                    dialog.cancel()
+                    buildFailedTransfer() }
             } finally {
                 btSocket.close()
                 Log.d(TAG_SOCKET,"Socket successfully closed")
-                dialog.cancel()
             }
 
         }
