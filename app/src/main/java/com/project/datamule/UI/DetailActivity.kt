@@ -365,7 +365,7 @@ class DetailActivity : AppCompatActivity() {
 
                             // If the bytecount exceeds the earlier counted maxBytes (maxBytes sometimes suddenly grow)
                             if (y > maxBytes) {
-                                maxBytes =  maxBytes + (btSocket.inputStream.available() + 1)
+                                maxBytes += (btSocket.inputStream.available())
                                 maxSize = humanReadableByteCount(maxBytes.toLong(), true)
 
                                 println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
