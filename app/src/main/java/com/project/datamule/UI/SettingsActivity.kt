@@ -70,7 +70,6 @@ class SettingsActivity : AppCompatActivity() {
 
         configureReceiver()
 
-        createCacheFile()
         setStorage()
     }
 
@@ -303,21 +302,6 @@ class SettingsActivity : AppCompatActivity() {
 //        val clip = ClipData.newPlainText("DataMule", text)
 //        clipboard.setPrimaryClip(clip)
 //    }
-
-    private fun createCacheFile() {
-        //temporary create file for cache demo purposes
-        val fileName = "PI-data.json"
-        val file = File(cacheDir, fileName)
-
-        //this is a fake json file put inside the cache of the app
-        val json = assets.open("1mbOfText.txt").bufferedReader().use {
-            it.readText()
-        }
-        file.writeText(json, Charsets.UTF_8)
-
-        //for reading from json file
-//        println(file.readText(Charsets.UTF_8))
-    }
 
     private fun getfolderSizeInMB(directory: File): Double {
         var bytesTotal: Long = 0
