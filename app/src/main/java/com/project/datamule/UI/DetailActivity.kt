@@ -367,15 +367,17 @@ class DetailActivity : AppCompatActivity() {
                 createCacheFile(String(data))
 
                 withContext(Dispatchers.Main) {
+                    dialog.cancel()
                     buildSuccessTransfer(maxSize)
                 }
             } catch (e: IOException) {
                 Log.d(TAG, e.message)
-                withContext(Dispatchers.Main) { buildFailedTransfer() }
+                withContext(Dispatchers.Main) {
+                    dialog.cancel()
+                    buildFailedTransfer() }
             } finally {
                 btSocket.close()
                 Log.d(TAG_SOCKET,"Socket successfully closed")
-                dialog.cancel()
             }
 
         }
