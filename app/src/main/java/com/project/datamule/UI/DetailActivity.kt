@@ -98,16 +98,17 @@ class DetailActivity : AppCompatActivity() {
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         mainScope.launch {
-////            TODO uncomment when PI resets connections
-//            try {
-//                btSocket.connect()
-//            } catch (e: InterruptedException) {
-//                valid = false
-//            } catch (e: IOException) {
-//                valid = false
-//            } finally {
-//                btSocket.close()
-//            }
+//            TODO uncomment when PI resets connections
+
+            try {
+                btSocket.connect()
+            } catch (e: InterruptedException) {
+                valid = false
+            } catch (e: IOException) {
+                valid = false
+            } finally {
+                btSocket.close()
+            }
 
             withContext(Dispatchers.Main) {
                 println("DATTE2 " + valid)
