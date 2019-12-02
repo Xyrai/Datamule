@@ -41,6 +41,8 @@ object Firebase {
         val set = prefs!!.getStringSet("cacheFiles", HashSet<String>())
         var fileName = ""
 
+        print("TESTTTTFIILESS+++" + set.toString())
+
         if (!set.isEmpty()) {
             var sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
@@ -53,7 +55,7 @@ object Firebase {
 //        var fileName = "/PI-data.json"
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
-        if (!fileUri?.toFile()!!.exists()) {
+        if (!fileUri?.toFile()!!.exists() || fileName.isEmpty()) {
             Toast.makeText(context, "No file found", Toast.LENGTH_LONG).show()
             return
         }
