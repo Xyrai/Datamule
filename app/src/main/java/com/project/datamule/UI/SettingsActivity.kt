@@ -26,6 +26,7 @@ import com.project.datamule.R
 import android.animation.ValueAnimator
 import android.content.*
 import android.net.wifi.WifiManager
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -48,6 +49,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
         initView()
+
     }
 
     override fun finish() {

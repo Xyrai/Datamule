@@ -281,73 +281,104 @@ class DetailActivity : AppCompatActivity() {
         mainScope.launch {
             try {
                 btSocket.connect()
-                Log.d(TAG, "Test transferData() isConnected?: " + btSocket.isConnected)
+
+                // InputStream forces you to read a byte before you can see the available amount,
+                // so we save the first byte
                 var byte = btSocket.inputStream.read().toByte()
                 Log.d(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
-                println("Hierootest1 " + btSocket.inputStream.available() + 1)
-                println("Hierootest2 " + btSocket.inputStream.available() + 1)
+
+                // Get the available bytes left plus the one we pulled before
                 var availableBytes = btSocket.inputStream.available() + 1
-                println("Hierootest3 " + availableBytes)
+
+                // Initialize the byteArray with size:1024 equal to 1 kB,
+                // dataText is the string that holds the string in the inputStream
                 var data = ByteArray(1024)
                 var dataText = ""
 
+                // If the availableBytes in the inputStream is less than 1024 bytes (1 kB), reSet the byteArray to the actual size
+                if (availableBytes < 1024) {
+                    data = ByteArray(availableBytes)
+                }
+
+                // Set the byte we pulled before
                 data[0] = byte
 
+
+                // Initialze the progressBar with the full size and zero downloaded size
                 var maxBytes = btSocket.inputStream.available() + 1
                 var maxSize = humanReadableByteCount(maxBytes.toLong(), true)
                 var zeroData = humanReadableByteCount(0, true)
-
                 withContext(Dispatchers.Main) {
                     dialog.progressBar.max = maxBytes
                     dialog.progressBar.progress = 0
                     dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
-                    println("HANSJANKAZAN     SFDJKBHEB ==" + data[12].hashCode() + "== jlsdnfjbwnsdfjk")
-                    println("HANSJANKAZAN     SFDJKBHEB ==" + data[0].hashCode() + "== jlsdnfjbwnsdfjk")
-                    println("HANSJANKAZAN     SFDJKBHEB ==" + data[1023].hashCode() + "== jlsdnfjbwnsdfjk")
                 }
 
+                // 'x' is for counting the bytes
+                // 'y' is for counting the progress
                 var x = 1
                 var y = 1
+
+                // As long as the inputstream still returns a byte, continue..
                 while (btSocket.inputStream.available() > 0) {
 
                     var transferredData = humanReadableByteCount((y).toLong(), true)
 
-                    if (data[1023].hashCode() != 0) {
-                        dataText += String(data)
-                        data = ByteArray(1024)
-                        x = 0
-                        println("byteArray was vol... is nu weer leeg")
-                        println("AVAILABLE: " + (btSocket.inputStream.available() + 1))
-                        println("Huidige string: $dataText")
+                        // if the 1024th byte is initialized...
+                        if (data.size == 1024 && data[1023].hashCode() != 0) {
 
-                        if ((btSocket.inputStream.available() + 1) > maxBytes) {
-                            maxBytes = btSocket.inputStream.available() + 1
-                            maxSize = humanReadableByteCount(maxBytes.toLong(), true)
+                            // put the 1 kB of text to the string and reset the byteArray
+                            dataText += String(data)
+                            data = ByteArray(1024)
 
-                            println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
+                            // Are the available bytes less than 1 kB, set that value
+                            if (availableBytes < 1024) {
+                                data = ByteArray(availableBytes)
+                            }
 
-                            withContext(Dispatchers.Main) {
-                                dialog.progressBar.max = maxBytes
-                                dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
+                            // Reset the byte count
+                            x = 0
+
+                            // todo deze bs printjes verwijderen
+                            println("byteArray was vol... is nu weer leeg")
+                            println("AVAILABLE: " + (btSocket.inputStream.available() + 1))
+                            println("Huidige string: $dataText")
+
+                            // todo dat maxsize gebeuren fixen
+                            if ((btSocket.inputStream.available() + 1) > maxBytes) {
+                                maxBytes = btSocket.inputStream.available() + 1
+                                maxSize = humanReadableByteCount(maxBytes.toLong(), true)
+
+                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
+
+                                withContext(Dispatchers.Main) {
+                                    dialog.progressBar.max = maxBytes
+                                    dialog.tvProgressText.text = getString(
+                                        R.string.detail_dialog_bytes,
+                                        transferredData,
+                                        maxSize
+                                    )
+                                }
                             }
                         }
-                    }
 
+                    // Read and save the byte in the (1 kB or less) byteArray
                     data[x] = btSocket.inputStream.read().toByte()
 
-//                    println("HIEROOO222 " + )
-
+                    // Set the current progress
                     withContext(Dispatchers.Main) {
                         dialog.progressBar.progress = y
                         dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
                     }
 
-//                    println("1 byte is afgehandeld")
+                    // Increment the byte and progress ('x' and 'y') count
+                    // Reset the availableBytes
                     x++
                     y++
+                    availableBytes = btSocket.inputStream.available()
                 }
 
-//                 If the last 1kB byteArray doesn't reach the 1023th index
+                // If the last 1kB byteArray doesn't reach the 1023th index
                 dataText += String(data)
 
 //                for (x in 0 until btSocket.inputStream.available()) {
@@ -361,6 +392,7 @@ class DetailActivity : AppCompatActivity() {
 //                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
 //                    }
 //                }
+
                 Log.d(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
                 Log.d(TAG, "Test transferData() data string?: " + String(data))
                 createCacheFile(String(data))
@@ -395,15 +427,18 @@ class DetailActivity : AppCompatActivity() {
 
         //temporary create file for cache demo purposes
         val fileName = getString(R.string.data_file_prefix, formattedDate)
-        val file = File(cacheDir, fileName)
+        val file = File(filesDir, fileName)
 
-        file.writeText(jsonText, Charsets.UTF_8)
+        file.writeText(jsonText.substringAfter('{'), Charsets.UTF_8)
 
 
         // Retrieve & save the Set of cacheFiles
-        val set = prefs!!.getStringSet("cacheFiles", HashSet<String>())
+        val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
         set.add(fileName)
-        prefs!!.edit().putStringSet("cacheFiles", set).apply()
+        prefs!!.edit().putStringSet("dataFiles", set).apply()
+
+        Log.e("DATAFILES", set.toString())
+
 //        println(set.)
 
         //for reading from json file

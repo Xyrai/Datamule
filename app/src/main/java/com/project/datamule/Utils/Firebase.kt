@@ -38,25 +38,30 @@ object Firebase {
         prefs = context.getSharedPreferences("com.project.datamule", AppCompatActivity.MODE_PRIVATE)
 
         // Retrieve & save the Set of cacheFiles
-        val set = prefs!!.getStringSet("cacheFiles", HashSet<String>())
+        val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
         var fileName = ""
 
-        print("TESTTTTFIILESS+++" + set.toString())
+        Log.e("TESTTTTFIILESS+++", set.toString())
 
         if (!set.isEmpty()) {
             var sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
+            fileRef = storageRef.child(fileName)
             sortedSet.remove(sortedSet.first())
-            prefs!!.edit().putStringSet("cacheFiles", sortedSet).apply()
+            prefs!!.edit().putStringSet("dataFiles", sortedSet).apply()
         }
 
 //        val networkResult = getConnectionType(this)
-        val basePath = context.cacheDir.toString()
+        val basePath = context.filesDir.toString() + "/"
 //        var fileName = "/PI-data.json"
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
+        Log.e("BASEPATH", basePath)
+        Log.e("FILEuRI", fileUri.toString())
+
+
         if (!fileUri?.toFile()!!.exists() || fileName.isEmpty()) {
-            Toast.makeText(context, "No file found", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "No file(s) found", Toast.LENGTH_LONG).show()
             return
         }
         fileRef.putFile(fileUri)
