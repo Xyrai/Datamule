@@ -3,6 +3,7 @@ package com.project.datamule.UI
 import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -200,41 +201,17 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-//
-//    /**
-//     * Sets up the options menu.
-//     * @param menu The options menu.
-//     * @return Boolean.
-//     */
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.menu_activity_home, menu)
-//        return true
-//    }
-//
-//    /**
-//     * Handles a click on the menu option to get a place.
-//     * @param item The menu item to handle.
-//     * @return Boolean.
-//     */
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if (item.getItemId() === R.id.action_settings) {
-//            val intent = Intent(this, SettingsActivity::class.java)
-//            startActivity(intent)
-//        }
-//        return true
-//    }
+    private fun isBluetoothAvailable() {
+        var manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        var mBluetoothAdapter = manager.adapter
 
-//    private fun isBluetoothAvailable() {
-//        var manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-//        var mBluetoothAdapter = manager.adapter
-//
-//        if (mBluetoothAdapter.isEnabled) {
-//            Toast.makeText(this, "wel bluetooth!!!", Toast.LENGTH_LONG).show()
-//        } else {
-//            Toast.makeText(this, "NOOOO bluetooth!!!", Toast.LENGTH_LONG).show()
-////            buildAlertMessageNoBluetooth(mBluetoothAdapter)
-//        }
-//    }
+        if (mBluetoothAdapter.isEnabled) {
+            Toast.makeText(this, "wel bluetooth!!!", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "NOOOO bluetooth!!!", Toast.LENGTH_LONG).show()
+//            buildAlertMessageNoBluetooth(mBluetoothAdapter)
+        }
+    }
 
 //    private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
 ////        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()

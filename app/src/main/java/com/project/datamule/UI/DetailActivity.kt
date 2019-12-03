@@ -446,7 +446,7 @@ class DetailActivity : AppCompatActivity() {
         var formattedDate = getSuffixFromDateString(dateFromString)
 
         //temporary create file for cache demo purposes
-        val fileName = getString(R.string.data_file_prefix, formattedDate)
+        val fileName = getString(R.string.data_file_prefix, pi.name, formattedDate)
         val file = File(filesDir, fileName)
 
         file.writeText(jsonText.substring(jsonText.indexOf('{')), Charsets.UTF_8)
