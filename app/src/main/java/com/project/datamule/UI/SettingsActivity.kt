@@ -369,6 +369,7 @@ class SettingsActivity : AppCompatActivity() {
     /**
      * Clear cache example for demo on 12th of November.
      */
+    //TODO: Loop through filesDir
     private fun deleteCache() {
         var basePath = this.cacheDir.toString()
         var fileName = "/PI-data.json"
