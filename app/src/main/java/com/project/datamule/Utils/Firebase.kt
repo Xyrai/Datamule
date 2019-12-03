@@ -49,8 +49,6 @@ object Firebase {
             var sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
             fileRef = storageRef.child(fileName)
-            //remove from filesdir
-            File(basePath + fileName).delete()
             sortedSet.remove(sortedSet.first())
             prefs!!.edit().putStringSet("dataFiles", sortedSet).apply()
         }
@@ -96,6 +94,9 @@ object Firebase {
             .addOnPausedListener { taskSnapshot ->
                 // Upload is paused
             }
+
+        //remove from filesdir
+        File(basePath + fileName).delete()
     }
 
     private fun uploadFinishedNotification(fileName: String, context: Context) {
