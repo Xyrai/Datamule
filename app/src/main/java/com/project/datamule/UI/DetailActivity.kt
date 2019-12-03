@@ -1,7 +1,9 @@
 package com.project.datamule.UI
 
 import android.animation.AnimatorInflater
+import android.app.AlertDialog
 import android.app.Dialog
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -32,6 +34,7 @@ import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import com.project.datamule.Constants.Companion.TAG_SOCKET
+import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -42,6 +45,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var pi: Pi
     private lateinit var handler: Handler
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -49,7 +53,36 @@ class DetailActivity : AppCompatActivity() {
         pi = intent.getParcelableExtra<Pi>(PI_EXTRA)
         handler = Handler()
 
+        if (!bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth()
+        }
+
         initViews()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth()
+        }
+    }
+
+    fun buildAlertMessageNoBluetooth() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.bluetooth_alert_title)
+            .setMessage(R.string.bluetooth_alert_text)
+            .setCancelable(false)
+            .setPositiveButton(R.string.bluetooth_alert_positive_button)
+            { _, _ ->
+                bluetoothAdapter?.enable()
+            }
+            .setNegativeButton(R.string.bluetooth_alert_negative_button)
+            { _, _ ->
+                finish()
+            }
+            .create()
+            .show()
     }
 
     private fun initViews() {

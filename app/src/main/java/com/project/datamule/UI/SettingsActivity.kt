@@ -24,6 +24,7 @@ import android.os.*
 import androidx.core.content.ContextCompat.getColor
 import com.project.datamule.R
 import android.animation.ValueAnimator
+import android.bluetooth.BluetoothAdapter
 import android.content.*
 import android.net.wifi.WifiManager
 import android.util.Log
@@ -32,6 +33,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.core.net.toFile
+import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 import com.project.datamule.Utils.WifiStateReceiver
 
 
@@ -44,17 +46,45 @@ class SettingsActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
     private var wifiStateReceiver : BroadcastReceiver? =  null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
-        initView()
 
+        if (!bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth()
+        }
+        initView()
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth()
+        }    }
 
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
+
+    fun buildAlertMessageNoBluetooth() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.bluetooth_alert_title)
+            .setMessage(R.string.bluetooth_alert_text)
+            .setCancelable(false)
+            .setPositiveButton(R.string.bluetooth_alert_positive_button)
+            { _, _ ->
+                bluetoothAdapter?.enable()
+            }
+            .setNegativeButton(R.string.bluetooth_alert_negative_button)
+            { _, _ ->
+                finish()
+            }
+            .create()
+            .show()
     }
 
     private fun initView() {
@@ -369,6 +399,7 @@ class SettingsActivity : AppCompatActivity() {
     /**
      * Clear cache example for demo on 12th of November.
      */
+    //TODO: Loop through filesDir
     private fun deleteCache() {
         var basePath = this.cacheDir.toString()
         var fileName = "/PI-data.json"

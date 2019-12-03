@@ -1,5 +1,6 @@
 package com.project.datamule.UI
 
+import android.app.AlertDialog
 import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.project.datamule.Adapter.PiAdapter
 import com.project.datamule.Constants
+import com.project.datamule.Constants.Companion.REQUEST_ENABLE_BT
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
 import com.project.datamule.Utils.IntentService
@@ -28,24 +30,31 @@ import kotlinx.android.synthetic.main.content_home.*
 
 class HomeActivity : AppCompatActivity() {
 
+
+    companion object {
+        var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    }
+
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
     private lateinit var auth: FirebaseAuth
 
-    var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var pairedDevices: Set<BluetoothDevice>
     private var wifiStateReceiver: BroadcastReceiver? = null
 
     override fun onResume() {
         super.onResume()
 
+        if (!Companion.bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth()
+        }
+
         val notificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //removes all the notifications, useful when user enters the app by clicking on the notifications
         notificationManager.cancelAll()
 
-        pairedDeviceList()
-        piAdapter.notifyDataSetChanged()
+        updatePiList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +64,12 @@ class HomeActivity : AppCompatActivity() {
         val intent = Intent(this, IntentService::class.java)
         startService(intent)
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null) {
+        if (Companion.bluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_no_bluetooth, Toast.LENGTH_SHORT).show()
             finish()
         }
-        if (!bluetoothAdapter!!.isEnabled) {
-            buildAlertMessageNoBluetooth(bluetoothAdapter!!)
+        if (!Companion.bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth()
         }
 
         //Initialize Firebase Auth
@@ -74,6 +82,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+
         clRectangle.visibility = View.INVISIBLE
 
         //Initialize Buttons
@@ -85,8 +94,11 @@ class HomeActivity : AppCompatActivity() {
             LinearLayoutManager(this@HomeActivity, RecyclerView.VERTICAL, false)
         rvPiList.adapter = piAdapter
 
-        pairedDeviceList()
+        updatePiList()
+    }
 
+    private fun updatePiList() {
+        pairedDeviceList()
         piAdapter.notifyDataSetChanged()
     }
 
@@ -108,7 +120,7 @@ class HomeActivity : AppCompatActivity() {
         unregisterReceiver(wifiStateReceiver)
     }
 
-    private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
+//    private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
 //        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
 //        val builder = AlertDialog.Builder(this)
@@ -131,7 +143,7 @@ class HomeActivity : AppCompatActivity() {
 //            }
 //        val alert = builder.create()
 //        alert.show()
-    }
+//    }
 
     private fun onClickOpenSearchPi() {
         val intent = Intent(this, SearchPiActivity::class.java)
@@ -153,7 +165,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun pairedDeviceList() {
         pi_s.clear()
-        pairedDevices = bluetoothAdapter!!.bondedDevices
+        pairedDevices = Companion.bluetoothAdapter!!.bondedDevices
 
         if (pairedDevices.isNotEmpty()) {
             clRectangle.visibility = View.INVISIBLE
@@ -201,40 +213,22 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun isBluetoothAvailable() {
-        var manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        var mBluetoothAdapter = manager.adapter
-
-        if (mBluetoothAdapter.isEnabled) {
-            Toast.makeText(this, "wel bluetooth!!!", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "NOOOO bluetooth!!!", Toast.LENGTH_LONG).show()
-//            buildAlertMessageNoBluetooth(mBluetoothAdapter)
+    fun buildAlertMessageNoBluetooth() {
+        AlertDialog.Builder(this)
+        .setTitle(R.string.bluetooth_alert_title)
+        .setMessage(R.string.bluetooth_alert_text)
+        .setCancelable(false)
+        .setPositiveButton(R.string.bluetooth_alert_positive_button)
+        { _, _ ->
+            Companion.bluetoothAdapter?.enable()
+            updatePiList()
         }
+        .setNegativeButton(R.string.bluetooth_alert_negative_button)
+        { _, _ ->
+            finish()
+        }
+        .create()
+        .show()
     }
 
-//    private fun buildAlertMessageNoBluetooth(bluetoothAdapter: BluetoothAdapter) {
-////        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-//
-//        val builder = AlertDialog.Builder(this)
-//        builder.setTitle(R.string.bluetooth_alert_title)
-//            .setMessage(R.string.bluetooth_alert_text)
-//            .setCancelable(false)
-//            .setPositiveButton(R.string.bluetooth_alert_positive_button
-//            ) { dialog, id ->
-//                // Button for going to wifi settings
-//                bluetoothAdapter.enable()
-////                val enableBtIntent = Intent()
-////                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-//            }
-//            .setNegativeButton(R.string.bluetooth_alert_negative_button
-//            ) { dialog, which ->
-//                // Cancel button, brings you back to main activity
-//                val intent = Intent(Intent.ACTION_MAIN)
-//                intent.addCategory(Intent.CATEGORY_HOME)
-//                startActivity(intent)
-//            }
-//        val alert = builder.create()
-//        alert.show()
-//    }
 }

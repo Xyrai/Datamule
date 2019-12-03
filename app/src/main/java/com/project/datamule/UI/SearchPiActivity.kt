@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.annotation.TargetApi
+import android.app.AlertDialog
 import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -30,16 +31,13 @@ import kotlinx.android.synthetic.main.activity_search_pi.*
 import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.item_pi.view.*
 import android.os.Handler
+import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 import kotlinx.android.synthetic.main.dialog_connecting.*
 import kotlinx.coroutines.*
 import java.lang.Runnable
 import java.util.concurrent.TimeUnit
 
 class SearchPiActivity : AppCompatActivity() {
-
-    companion object {
-        var bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-    }
 
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
@@ -64,6 +62,14 @@ class SearchPiActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (!bluetoothAdapter!!.isEnabled) {
+            buildAlertMessageNoBluetooth()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_pi)
@@ -75,13 +81,30 @@ class SearchPiActivity : AppCompatActivity() {
             finish()
         }
         if (!bluetoothAdapter!!.isEnabled) {
-//            buildAlertMessageNoBluetooth(bluetoothAdapter!!)
+            buildAlertMessageNoBluetooth()
         }
 
         var discoveryIntentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         registerReceiver(broadCastReceiver, discoveryIntentFilter)
 
         initView()
+    }
+
+    fun buildAlertMessageNoBluetooth() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.bluetooth_alert_title)
+            .setMessage(R.string.bluetooth_alert_text)
+            .setCancelable(false)
+            .setPositiveButton(R.string.bluetooth_alert_positive_button)
+            { _, _ ->
+                bluetoothAdapter?.enable()
+            }
+            .setNegativeButton(R.string.bluetooth_alert_negative_button)
+            { _, _ ->
+                finish()
+            }
+            .create()
+            .show()
     }
 
     private fun checkLocationPermission(): Boolean {
@@ -110,7 +133,7 @@ class SearchPiActivity : AppCompatActivity() {
 
     override fun finish() {
         unregisterReceiver(broadCastReceiver)
-        bluetoothAdapter.cancelDiscovery()
+        bluetoothAdapter?.cancelDiscovery()
         super.finish()
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
@@ -146,7 +169,7 @@ class SearchPiActivity : AppCompatActivity() {
         pi_s.clear()
 
         // Run the discovery
-        bluetoothAdapter.startDiscovery()
+        bluetoothAdapter?.startDiscovery()
         ivLoader2.visibility = View.VISIBLE
         ivRerunSearch.visibility = View.INVISIBLE
         btnAddPi.visibility = View.VISIBLE
@@ -171,7 +194,7 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     private fun pauseSearch() {
-        bluetoothAdapter.cancelDiscovery()
+        bluetoothAdapter?.cancelDiscovery()
         ivLoader2.visibility = View.INVISIBLE
         ivRerunSearch.visibility = View.VISIBLE
 
@@ -179,7 +202,7 @@ class SearchPiActivity : AppCompatActivity() {
 
     private fun stopSearch() {
         // Stop the discovery
-        bluetoothAdapter.cancelDiscovery()
+        bluetoothAdapter?.cancelDiscovery()
 
         // Hide elements of Search Pi screen
         clRectangle.visibility = View.VISIBLE
