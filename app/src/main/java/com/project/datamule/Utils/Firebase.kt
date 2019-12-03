@@ -43,19 +43,19 @@ object Firebase {
 
         Log.e("TESTTTTFIILESS+++", set.toString())
 
+        val basePath = context.filesDir.toString() + "/"
+
         if (!set.isEmpty()) {
             var sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
             fileRef = storageRef.child(fileName)
             //remove from filesdir
-            val bool = File(fileName).delete()
-            Log.e("removed file:  " , fileName)
+            File(basePath + fileName).delete()
             sortedSet.remove(sortedSet.first())
             prefs!!.edit().putStringSet("dataFiles", sortedSet).apply()
         }
 
 //        val networkResult = getConnectionType(this)
-        val basePath = context.filesDir.toString() + "/"
 //        var fileName = "/PI-data.json"
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 

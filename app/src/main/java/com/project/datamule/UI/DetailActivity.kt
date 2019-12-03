@@ -112,7 +112,7 @@ class DetailActivity : AppCompatActivity() {
 
         for (file in filesDir.listFiles()) {
             if (file.isFile() && file.name.startsWith(Constants.PI_PREFIX_NAME) && file.name.startsWith(pi.name)) {
-                Log.e("DEFEF ", file.name)
+//                Log.e("FILE:  ", file.name)
                 bytes += file.length()
             }
             sizeOfFiles = humanReadableByteCount(bytes)
@@ -124,6 +124,12 @@ class DetailActivity : AppCompatActivity() {
             tvThereIs.visibility = View.INVISIBLE
             tvEndText.visibility = View.INVISIBLE
             availableData.visibility = View.INVISIBLE
+        } else {
+            imageView4.backgroundTintList = null
+            tvNoDataAvailable.visibility = View.INVISIBLE
+            tvThereIs.visibility = View.VISIBLE
+            tvEndText.visibility = View.VISIBLE
+            availableData.visibility = View.VISIBLE
         }
 
         availableData.text = getString(R.string.detail_data_size, sizeOfFiles)
