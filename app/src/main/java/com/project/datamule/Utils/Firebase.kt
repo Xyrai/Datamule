@@ -47,6 +47,9 @@ object Firebase {
             var sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
             fileRef = storageRef.child(fileName)
+            //remove from filesdir
+            val bool = File(fileName).delete()
+            Log.e("removed file:  " , fileName)
             sortedSet.remove(sortedSet.first())
             prefs!!.edit().putStringSet("dataFiles", sortedSet).apply()
         }

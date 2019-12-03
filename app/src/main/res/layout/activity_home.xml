@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay"/>
 
-    <include layout="@layout/content_home"/>
+    <include layout="@layout/content_home" />
 
     <ImageView
             android:id="@+id/ivSettings"

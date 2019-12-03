@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -64,9 +65,35 @@ class DetailActivity : AppCompatActivity() {
 
         tvPiName.text = pi.name
 
+        setsavedPiData()
+
         // Check for valid pi
         // Auto
         isValidPi()
+    }
+
+    private fun setsavedPiData() {
+
+        var bytes: Long = 0
+        var sizeOfFiles = ""
+
+        for (file in filesDir.listFiles()) {
+            if (file.isFile() && file.name.startsWith(Constants.PI_PREFIX_NAME) && file.name.startsWith(pi.name)) {
+                Log.e("DEFEF ", file.name)
+                bytes += file.length()
+            }
+            sizeOfFiles = humanReadableByteCount(bytes)
+        }
+
+        if (bytes.toInt() == 0) {
+            imageView4.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), R.color.deleteCacheColorDarkGreyPressed)
+            tvNoDataAvailable.visibility = View.VISIBLE
+            tvThereIs.visibility = View.INVISIBLE
+            tvEndText.visibility = View.INVISIBLE
+            availableData.visibility = View.INVISIBLE
+        }
+
+        availableData.text = getString(R.string.detail_data_size, sizeOfFiles)
     }
 
     private fun unpairDevice(device: BluetoothDevice) {
@@ -118,8 +145,6 @@ class DetailActivity : AppCompatActivity() {
                     println("VALIDDE " + valid)
                     Toast.makeText(applicationContext, "Ready for data transfer.", Toast.LENGTH_LONG).show()
                 } else {
-                    clDataAvailable.isVisible = false
-                    clNoDataAvailable.isVisible = true
                     Toast.makeText(applicationContext, "Invalid Pi. No data transfer available.", Toast.LENGTH_LONG).show()
                 }
             }}
@@ -208,8 +233,8 @@ class DetailActivity : AppCompatActivity() {
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
 
-        var maxSize = humanReadableByteCount(0, true)
-        var zeroData = humanReadableByteCount(0, true)
+        var maxSize = humanReadableByteCount(0)
+        var zeroData = humanReadableByteCount(0)
 
         dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
 
@@ -251,6 +276,8 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private suspend fun buildSuccessTransfer(packageSize: String) {
+        setsavedPiData()
+
         var dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
 
@@ -306,8 +333,8 @@ class DetailActivity : AppCompatActivity() {
 
                 // Initialze the progressBar with the full size and zero downloaded size
                 var maxBytes = btSocket.inputStream.available() + 1
-                var maxSize = humanReadableByteCount(maxBytes.toLong(), true)
-                var zeroData = humanReadableByteCount(0, true)
+                var maxSize = humanReadableByteCount(maxBytes.toLong())
+                var zeroData = humanReadableByteCount(0)
                 withContext(Dispatchers.Main) {
                     dialog.progressBar.max = maxBytes
                     dialog.progressBar.progress = 0
@@ -322,7 +349,7 @@ class DetailActivity : AppCompatActivity() {
                 // As long as the inputstream still returns a byte, continue..
                 while (btSocket.inputStream.available() > 0) {
 
-                    var transferredData = humanReadableByteCount((y).toLong(), true)
+                    var transferredData = humanReadableByteCount((y).toLong())
 
                         // if the 1024th byte is initialized...
                         if (data.size == 1024 && data[1023].hashCode() != 0) {
@@ -348,7 +375,7 @@ class DetailActivity : AppCompatActivity() {
                             // If the available bytes in the inputStream suddenly gets bigger, update the progressbar
                             if ((btSocket.inputStream.available() + 1) > maxBytes) {
                                 maxBytes = btSocket.inputStream.available() + 1
-                                maxSize = humanReadableByteCount(maxBytes.toLong(), true)
+                                maxSize = humanReadableByteCount(maxBytes.toLong())
 
                                 println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
 
@@ -365,7 +392,7 @@ class DetailActivity : AppCompatActivity() {
                             // If the bytecount exceeds the earlier counted maxBytes (maxBytes sometimes suddenly grow)
                             if (y > maxBytes) {
                                 maxBytes += (btSocket.inputStream.available())
-                                maxSize = humanReadableByteCount(maxBytes.toLong(), true)
+                                maxSize = humanReadableByteCount(maxBytes.toLong())
 
                                 println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
 
@@ -469,7 +496,7 @@ class DetailActivity : AppCompatActivity() {
         return date.replace("/", "").replace(":", "").replace(" ", "")
     }
 
-    private fun humanReadableByteCount(bytes: Long, si: Boolean): String {
+    private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
         if (bytes < unit) return "$bytes B"
         val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()

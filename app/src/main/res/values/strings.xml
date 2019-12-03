@@ -42,12 +42,14 @@
     <string name="detail_text_distance_1">Raspberry Pi is</string>
     <string name="detail_text_distance_2">%dm away</string>
     <string name="detail_text_distance_3">Get closer for DataTransfer</string>
-    <string name="detail_no_data">No data available to be synced</string>
+    <string name="detail_no_data">No data saved from this Pi</string>
+    <string name="detail_data_available_start">There is </string>
+    <string name="detail_data_available_end"> of cached files from this Pi</string>
     <string name="detail_no_data_mb">0 MB</string>
     <string name="detail_auto_transfer">Auto Transfer is turned on\nafter %d seconds</string>
     <string name="detail_no_auto_transfer">Auto Transfer is\nturned off</string>
     <string name="detail_data">Data available</string>
-    <string name="detail_data_mb">%d MB</string>
+    <string name="detail_data_size">%s</string>
     <string name="detail_data_button">Transfer Data</string>
     <string name="detail_data_button_disabled">No Data to Transfer</string>
 
