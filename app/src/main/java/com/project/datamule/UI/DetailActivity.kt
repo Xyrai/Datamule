@@ -33,6 +33,7 @@ import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import com.project.datamule.Constants.Companion.TAG_SOCKET
+import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -42,7 +43,6 @@ class DetailActivity : AppCompatActivity() {
     private val mainScope = CoroutineScope(Dispatchers.IO)
     private lateinit var pi: Pi
     private lateinit var handler: Handler
-    var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

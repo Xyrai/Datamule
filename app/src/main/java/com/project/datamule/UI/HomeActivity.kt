@@ -30,18 +30,22 @@ import kotlinx.android.synthetic.main.content_home.*
 
 class HomeActivity : AppCompatActivity() {
 
+
+    companion object {
+        var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    }
+
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
     private lateinit var auth: FirebaseAuth
 
-    var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     lateinit var pairedDevices: Set<BluetoothDevice>
     private var wifiStateReceiver: BroadcastReceiver? = null
 
     override fun onResume() {
         super.onResume()
 
-        if (!bluetoothAdapter!!.isEnabled) {
+        if (!Companion.bluetoothAdapter!!.isEnabled) {
             buildAlertMessageNoBluetooth()
         }
 
@@ -60,11 +64,11 @@ class HomeActivity : AppCompatActivity() {
         val intent = Intent(this, IntentService::class.java)
         startService(intent)
 
-        if (bluetoothAdapter == null) {
+        if (Companion.bluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_no_bluetooth, Toast.LENGTH_SHORT).show()
             finish()
         }
-        if (!bluetoothAdapter!!.isEnabled) {
+        if (!Companion.bluetoothAdapter!!.isEnabled) {
             buildAlertMessageNoBluetooth()
         }
 
@@ -161,7 +165,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun pairedDeviceList() {
         pi_s.clear()
-        pairedDevices = bluetoothAdapter!!.bondedDevices
+        pairedDevices = Companion.bluetoothAdapter!!.bondedDevices
 
         if (pairedDevices.isNotEmpty()) {
             clRectangle.visibility = View.INVISIBLE
@@ -216,7 +220,7 @@ class HomeActivity : AppCompatActivity() {
         .setCancelable(false)
         .setPositiveButton(R.string.bluetooth_alert_positive_button)
         { _, _ ->
-            bluetoothAdapter?.enable()
+            Companion.bluetoothAdapter?.enable()
             updatePiList()
         }
         .setNegativeButton(R.string.bluetooth_alert_negative_button)
@@ -226,4 +230,5 @@ class HomeActivity : AppCompatActivity() {
         .create()
         .show()
     }
+
 }

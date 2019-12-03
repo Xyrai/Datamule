@@ -33,6 +33,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.core.net.toFile
+import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 import com.project.datamule.Utils.WifiStateReceiver
 
 
@@ -44,7 +45,6 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var fontAwesomeFont: Typeface
     private var prefs: SharedPreferences? = null
     private var wifiStateReceiver : BroadcastReceiver? =  null
-    var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
