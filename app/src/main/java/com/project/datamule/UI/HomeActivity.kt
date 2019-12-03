@@ -155,6 +155,7 @@ class HomeActivity : AppCompatActivity() {
         pairedDevices = bluetoothAdapter!!.bondedDevices
 
         if (pairedDevices.isNotEmpty()) {
+            clRectangle.visibility = View.INVISIBLE
             for (device: BluetoothDevice in pairedDevices) {
                 if (device.name.startsWith(Constants.PI_PREFIX_NAME)) pi_s.add(
                     Pi(
