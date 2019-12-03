@@ -38,7 +38,6 @@ private const val TAG = "MY_APP_DEBUG_TAG"
 class DetailActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
     private val mainScope = CoroutineScope(Dispatchers.IO)
-    val uuid = UUID.fromString("4b0164aa-1820-444e-83d4-3c702cfec373")
     private lateinit var pi: Pi
     private lateinit var handler: Handler
 
@@ -277,7 +276,7 @@ class DetailActivity : AppCompatActivity() {
      */
     private fun transferData() {
         var dialog = buildTransferDialog()
-        var btSocket = pi.device.createRfcommSocketToServiceRecord(uuid)
+        var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         mainScope.launch {
             try {
