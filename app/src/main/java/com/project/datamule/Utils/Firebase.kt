@@ -19,19 +19,15 @@ import com.project.datamule.Constants
 import com.project.datamule.R
 import java.io.File
 import java.util.HashSet
+import kotlin.math.ln
 
 object Firebase {
     private val storageRef = FirebaseStorage.getInstance().reference
-    //TODO: Change this to where you want to safe it
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
-    private var fileRef: StorageReference = storageRef.child("TEST23.json")
+    private var fileRef: StorageReference = storageRef.child("TEST.json")
     //TAG for Logs
     private val TAG = "Firebase"
-    private var PROGRESS_MAX = 100
-    private var PROGRESS_CURRENT = 0
-
     private var prefs: SharedPreferences? = null
-
 
     fun uploadFile(context: Context) {
         // getSharedPreferences
@@ -45,7 +41,7 @@ object Firebase {
 
         val basePath = context.filesDir.toString() + "/"
 
-        if (!set.isEmpty()) {
+        if (set.isNotEmpty()) {
             var sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
             fileRef = storageRef.child(fileName)
@@ -82,11 +78,16 @@ object Firebase {
                 // Handle unsuccessful uploads
             }
             .addOnProgressListener { taskSnapshot ->
-                PROGRESS_MAX = taskSnapshot.totalByteCount.toInt() / 1000
-                PROGRESS_CURRENT = taskSnapshot.bytesTransferred.toInt() / 1000
+                var minSize = humanReadableByteCount(taskSnapshot.bytesTransferred)
+                var maxSize = humanReadableByteCount(taskSnapshot.totalByteCount)
+                var minSizeInt = humanReadableByteCountToInt(taskSnapshot.bytesTransferred)
+                var maxSizeInt = humanReadableByteCountToInt(taskSnapshot.totalByteCount)
+
                 makeNotification(
                     "Uploading file",
-                    "$PROGRESS_CURRENT KB / $PROGRESS_MAX KB",
+                    "$minSize / $maxSize ",
+                    minSizeInt,
+                    maxSizeInt,
                     0,
                     context
                 )
@@ -140,6 +141,8 @@ object Firebase {
     private fun makeNotification(
         title: String,
         content: String,
+        minSize: Int,
+        maxSize: Int,
         notificationID: Int,
         context: Context
     ) {
@@ -160,8 +163,8 @@ object Firebase {
         NotificationManagerCompat.from(context).apply {
             // Issue the initial notification with zero progress
             builder.setProgress(
-                PROGRESS_MAX,
-                PROGRESS_CURRENT, false
+                maxSize,
+                minSize, false
             )
             notify(0, builder.build())
 
@@ -179,6 +182,19 @@ object Firebase {
 
             notificationManager.notify(notificationID, builder.build())
         }
+    }
 
+    private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
+        val unit = if (si) 1000 else 1024
+        if (bytes < unit) return "$bytes B"
+        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
+        return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
+    }
+
+    private fun humanReadableByteCountToInt(bytes: Long, si: Boolean = true): Int {
+        val unit = if (si) 1000 else 1024
+        if (bytes < unit) return bytes.toInt()
+        return (ln(bytes.toDouble()) / ln(unit.toDouble())).toInt()
     }
 }
