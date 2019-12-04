@@ -23,9 +23,8 @@ import kotlin.math.ln
 
 object Firebase {
     private val storageRef = FirebaseStorage.getInstance().reference
-    //TODO: Change this to where you want to safe it
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
-    private var fileRef: StorageReference = storageRef.child("TEST23.json")
+    private var fileRef: StorageReference = storageRef.child("TEST.json")
     //TAG for Logs
     private val TAG = "Firebase"
     private var prefs: SharedPreferences? = null
@@ -42,7 +41,7 @@ object Firebase {
 
         val basePath = context.filesDir.toString() + "/"
 
-        if (!set.isEmpty()) {
+        if (set.isNotEmpty()) {
             var sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
             fileRef = storageRef.child(fileName)
