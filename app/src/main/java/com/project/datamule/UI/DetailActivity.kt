@@ -502,8 +502,8 @@ class DetailActivity : AppCompatActivity() {
 //                }
 
                 Log.e(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
-                Log.e(TAG, "Test transferData() data string?: " + String(data))
-                createCacheFile(String(data))
+                Log.e(TAG, "Test transferData() data string?: " + dataText)
+                createCacheFile(dataText)
 
                 withContext(Dispatchers.Main) {
                     dialog.cancel()
