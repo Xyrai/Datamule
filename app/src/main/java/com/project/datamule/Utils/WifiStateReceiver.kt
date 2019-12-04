@@ -25,8 +25,17 @@ class WifiStateReceiver : BroadcastReceiver() {
                 val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
                 val netInfo = cm!!.activeNetworkInfo
                 if (netInfo != null) {
-                    fireBase.uploadFile(context)
+                    cm.allNetworks.forEach { network ->
+                        cm.getNetworkInfo(network).apply {
+                            if (type == ConnectivityManager.TYPE_WIFI) {
+                                Log.e("WEL", "INTERRNETTT JAAA")
+                                fireBase.uploadFile(context)
+                            }
+                        }
+                    }
                 }
+                Log.e("GEEN", "INTERRNETTT NEEEE")
+
                 Log.e("IntentService", "WIFI ON TEST")
             }
 
