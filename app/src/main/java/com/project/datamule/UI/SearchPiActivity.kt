@@ -180,7 +180,7 @@ class SearchPiActivity : AppCompatActivity() {
         animatorSet.setTarget(ivLoader2)
         animatorSet.start()
 
-        // After 10 seconds stop the search
+        // After 15 seconds stop the search
         Handler().postDelayed(
             Runnable {
                 if (pi_s.size == 0) {
@@ -189,7 +189,7 @@ class SearchPiActivity : AppCompatActivity() {
                     pauseSearch()
                 }
             },
-            10000 // 10 seconds
+            15000 // 10 seconds
         )
     }
 
