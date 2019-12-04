@@ -39,9 +39,11 @@
     <string name="settings_ram">available ram: %d MB</string>
 
     <!--DetailActivity Strings-->
-    <string name="detail_text_distance_1">Raspberry Pi is</string>
-    <string name="detail_text_distance_2">%dm away</string>
-    <string name="detail_text_distance_3">Get closer for DataTransfer</string>
+    <string name="detail_text_active">Raspberry Pi is</string>
+    <string name="detail_text_active_1">valid and connected</string>
+    <string name="detail_text_active_2">invalid or too far away</string>
+    <string name="detail_text_sub_1">Ready for Data Transfer!</string>
+    <string name="detail_text_sub_2">Data Transfer is not available!</string>
     <string name="detail_no_data">No data saved from this Pi</string>
     <string name="detail_data_available_start">There is </string>
     <string name="detail_data_available_end"> of cached files from this Pi</string>
@@ -66,6 +68,8 @@
     <string name="detail_dialog_success_transfer">Successfully transferred\n%s of data from\n%s</string>
     <string name="detail_dialog_success_transfer_small">Connect to Wi-Fi for syncing\nthe saved data with cloud</string>
 
+    <string name="detail_dialog_connecting">Connecting…</string>
+
     <!--SearchPiActivity Strings-->
     <string name="add_pi_title">No Pi\'s Found!</string>
     <string name="add_pi_desc">Try adding one by clicking
@@ -77,14 +81,14 @@
     <string name="search_button">Search</string>
     <string name="add_this_pi_button">Add this Pi</string>
 
-    <string name="dialog_connecting">Connecting…</string>
-    <string name="dialog_could_not_connect">Couldn\'t connect</string>
+    <string name="dialog_pairing">Pairing…</string>
+    <string name="dialog_could_not_connect">Could not connect</string>
     <string name="dialog_connected">Successfully connected</string>
     <string name="dialog_sub_1">Please wait…</string>
     <string name="dialog_sub_2">Returning to Home…</string>
     <string name="dialog_sub_3">Try connecting to another Pi…</string>
 
-    <string name="error_no_bluetooth">This device doesn\'t support bluetooth!</string>
+    <string name="error_no_bluetooth">This device does not support bluetooth!</string>
     <string name="bluetooth_alert_title">Bluetooth is turned off</string>
     <string name="bluetooth_alert_text">Your bluetooth is turned off. Please turn on your bluetooth to continue.</string>
     <string name="bluetooth_alert_positive_button">Turn on</string>

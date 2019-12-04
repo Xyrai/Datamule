@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"
-            android:text="@string/detail_text_distance_1"
+            android:text="@string/detail_text_active"
             android:textColor="@color/colorAccent"
             android:textSize="26sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -116,15 +116,15 @@
             app:layout_constraintVertical_bias="0.39999998" />
 
     <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvSubText1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/rubik"
-            android:text="@string/detail_text_distance_2"
+            android:text="@string/detail_text_active_2"
             android:textColor="@color/colorPressedPrimaryDark"
-            android:textSize="26sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/divider"
             app:layout_constraintEnd_toEndOf="parent"
@@ -148,19 +148,19 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="16dp"
             android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toTopOf="@+id/textView3"
+            app:layout_constraintBottom_toTopOf="@+id/tvSubText2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/tvSubText1"
             app:layout_constraintWidth_percent="0.65" />
 
     <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tvSubText2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/rubik"
-            android:text="@string/detail_text_distance_3"
+            android:text="@string/detail_text_sub_2"
             android:textColor="@color/colorAccent"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -179,7 +179,7 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3">
+            app:layout_constraintTop_toBottomOf="@+id/tvSubText2">
 
         <ImageView
             android:id="@+id/imageView4"
@@ -228,16 +228,18 @@
             app:layout_constraintTop_toTopOf="@+id/availableData" />
 
         <TextView
-            android:id="@+id/tvNoDataAvailable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/detail_no_data"
-            android:textColor="@color/colorAccent"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/tvNoDataAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/rubik"
+                android:text="@string/detail_no_data"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

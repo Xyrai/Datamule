@@ -35,6 +35,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import com.project.datamule.Constants.Companion.TAG_SOCKET
 import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
+import kotlinx.android.synthetic.main.dialog_connecting.*
 
 const val PI_EXTRA = "PI_EXTRA"
 private const val TAG = "MY_APP_DEBUG_TAG"
@@ -44,6 +45,7 @@ class DetailActivity : AppCompatActivity() {
     private val mainScope = CoroutineScope(Dispatchers.IO)
     private lateinit var pi: Pi
     private lateinit var handler: Handler
+    private lateinit var connectingDialog: Dialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,10 +100,13 @@ class DetailActivity : AppCompatActivity() {
 
         tvPiName.text = pi.name
 
+        connectingDialog = buildConnectingDialog()
+
+        // Check if the phone has data saved from this Pi
         setsavedPiData()
 
         // Check for valid pi
-        // Auto
+        // (inside validPi check for Autotransfer)
         isValidPi()
     }
 
@@ -163,8 +168,6 @@ class DetailActivity : AppCompatActivity() {
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         mainScope.launch {
-//            TODO uncomment when PI resets connections
-
             try {
                 btSocket.connect()
             } catch (e: InterruptedException) {
@@ -176,15 +179,16 @@ class DetailActivity : AppCompatActivity() {
             }
 
             withContext(Dispatchers.Main) {
-                println("DATTE2 " + valid)
-
                 if (valid) {
                     autoTransfer()
                     btnTransferData.isEnabled = true
-                    println("VALIDDE " + valid)
-                    Toast.makeText(applicationContext, "Ready for data transfer.", Toast.LENGTH_LONG).show()
+                    tvSubText1.text = getString(R.string.detail_text_active_1)
+                    tvSubText2.text = getString(R.string.detail_text_sub_1)
+                    connectingDialog.cancel()
                 } else {
-                    Toast.makeText(applicationContext, "Invalid Pi. No data transfer available.", Toast.LENGTH_LONG).show()
+                    tvSubText1.text = getString(R.string.detail_text_active_2)
+                    tvSubText2.text = getString(R.string.detail_text_sub_2)
+                    connectingDialog.cancel()
                 }
             }}
     }
@@ -334,6 +338,26 @@ class DetailActivity : AppCompatActivity() {
         dialog.show()
         delay(TimeUnit.SECONDS.toMillis(5))
         dialog.cancel()
+    }
+
+    private fun buildConnectingDialog(): Dialog {
+        var dialog = Dialog(this@DetailActivity)
+        dialog.setContentView(R.layout.dialog_connecting)
+        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        var animatorSet =
+            AnimatorInflater.loadAnimator(this@DetailActivity, R.animator.loading_animator)
+        animatorSet.setTarget(dialog.ivConnectingLoader)
+        animatorSet.start()
+
+        dialog.tvDialogTitle.text = getString(R.string.detail_dialog_connecting)
+
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+
+        dialog.show()
+
+        return dialog
     }
 
     /**
