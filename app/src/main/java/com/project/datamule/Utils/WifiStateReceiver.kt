@@ -6,6 +6,11 @@ import android.content.Intent
 import android.net.wifi.WifiManager
 import android.util.Log
 import android.widget.Toast
+import android.net.NetworkInfo
+import androidx.core.content.ContextCompat.getSystemService
+import android.net.ConnectivityManager
+
+
 
 class WifiStateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -17,8 +22,12 @@ class WifiStateReceiver : BroadcastReceiver() {
         when (wifiStateExtra) {
             WifiManager.WIFI_STATE_ENABLED -> {
 //                Toast.makeText(context, "Connecting to wifi", Toast.LENGTH_LONG).show()
+                val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+                val netInfo = cm!!.activeNetworkInfo
+                if (netInfo != null) {
+                    fireBase.uploadFile(context)
+                }
                 Log.e("IntentService", "WIFI ON TEST")
-                fireBase.uploadFile(context)
             }
 
             WifiManager.WIFI_STATE_DISABLED -> {
