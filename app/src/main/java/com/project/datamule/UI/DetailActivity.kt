@@ -3,12 +3,10 @@ package com.project.datamule.UI
 import android.animation.AnimatorInflater
 import android.app.AlertDialog
 import android.app.Dialog
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -16,7 +14,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
@@ -257,9 +254,36 @@ class DetailActivity : AppCompatActivity() {
         }
 
         dialog.btnConfirmTransfer.setOnClickListener {
-            unpairDevice(pi.device)
             dialog.cancel()
-            onClickBack()
+
+            unpairDevice(pi.device)
+
+            mainScope.launch {
+                withContext(Dispatchers.Main) {
+
+                    var unpairDialog = Dialog(this@DetailActivity)
+                    unpairDialog.setContentView(R.layout.dialog_connecting)
+                    unpairDialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
+                    var animatorSet =
+                        AnimatorInflater.loadAnimator(this@DetailActivity, R.animator.loading_animator)
+                    animatorSet.setTarget(unpairDialog.ivConnectingLoader)
+                    animatorSet.start()
+
+                    unpairDialog.setCanceledOnTouchOutside(false)
+                    unpairDialog.setCancelable(false)
+
+                    unpairDialog.tvDialogTitle.text = getString(R.string.detail_dialog_unpairing)
+
+                    unpairDialog.show()
+                    delay(1000)
+                    animatorSet.end()
+                    unpairDialog.cancel()
+
+                    onClickBack()
+                }
+            }
 
         }
     }
