@@ -178,11 +178,11 @@ class DetailActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 if (valid) {
-                    autoTransfer()
                     btnTransferData.isEnabled = true
                     tvSubText1.text = getString(R.string.detail_text_active_1)
                     tvSubText2.text = getString(R.string.detail_text_sub_1)
                     connectingDialog.cancel()
+                    autoTransfer()
                 } else {
                     tvSubText1.text = getString(R.string.detail_text_active_2)
                     tvSubText2.text = getString(R.string.detail_text_sub_2)
@@ -192,14 +192,17 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun autoTransfer() {
-        val autoTransfer = prefs!!.getBoolean("auto_transfer", true)
+        val autoTransfer = prefs!!.getBoolean("auto_transfer", false)
 
         if (autoTransfer) {
-            println("HIERO")
             val autoTransferSeconds = prefs!!.getInt("auto_transfer_delay",  5)
             val autoTransferMillis: Long = (autoTransferSeconds * 1000).toLong()
             tvAutoTransfer.text = getString(R.string.detail_auto_transfer, autoTransferSeconds)
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_autoupdate_black))
+
+            btnTransferData.isEnabled = false
+            btnTransferData.text = getString(R.string.detail_auto_transfer_btn)
+            deletePi.isEnabled = false
 
             handler.postDelayed(
                 {
@@ -255,9 +258,36 @@ class DetailActivity : AppCompatActivity() {
         }
 
         dialog.btnConfirmTransfer.setOnClickListener {
-            unpairDevice(pi.device)
             dialog.cancel()
-            onClickBack()
+
+            unpairDevice(pi.device)
+
+            mainScope.launch {
+                withContext(Dispatchers.Main) {
+
+                    var unpairDialog = Dialog(this@DetailActivity)
+                    unpairDialog.setContentView(R.layout.dialog_connecting)
+                    unpairDialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
+                    var animatorSet =
+                        AnimatorInflater.loadAnimator(this@DetailActivity, R.animator.loading_animator)
+                    animatorSet.setTarget(unpairDialog.ivConnectingLoader)
+                    animatorSet.start()
+
+                    unpairDialog.setCanceledOnTouchOutside(false)
+                    unpairDialog.setCancelable(false)
+
+                    unpairDialog.tvDialogTitle.text = getString(R.string.detail_dialog_unpairing)
+
+                    unpairDialog.show()
+                    delay(1000)
+                    animatorSet.end()
+                    unpairDialog.cancel()
+
+                    onClickBack()
+                }
+            }
 
         }
     }
@@ -456,7 +486,12 @@ class DetailActivity : AppCompatActivity() {
 //            }
             } finally {
                 btSocket.close()
-                Log.e("BluetoothSocket","Socket successfully closed")
+                mainScope.launch {
+                    btnTransferData.text = getString(R.string.detail_data_button)
+                    btnTransferData.isEnabled = true
+                    deletePi.isEnabled = true
+                }
+                Log.d("BluetoothSocket","Socket successfully closed")
             }
         }
 

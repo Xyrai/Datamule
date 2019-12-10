@@ -35,7 +35,7 @@
     <string name="settings_delay_sec">%d sec.</string>
     <string name="settings_support_phone">Call us</string>
     <string name="settings_support_email">E-mail us</string>
-    <string name="settings_total_storage">Total storage: %s GB</string>
+    <string name="settings_total_storage">Total storage: %s</string>
     <string name="settings_ram">available ram: %d MB</string>
 
     <!--DetailActivity Strings-->
@@ -49,6 +49,7 @@
     <string name="detail_data_available_end"> of cached files from this Pi</string>
     <string name="detail_no_data_mb">0 MB</string>
     <string name="detail_auto_transfer">Auto Transfer is turned on\nafter %d seconds</string>
+    <string name="detail_auto_transfer_btn">Auto Transfer is ON</string>
     <string name="detail_no_auto_transfer">Auto Transfer is\nturned off</string>
     <string name="detail_data">Data available</string>
     <string name="detail_data_size">%s</string>
@@ -57,6 +58,7 @@
 
     <string name="detail_dialog_question">Are you sure you want to\n start the Data Transfer?</string>
     <string name="detail_dialog_question_unpair_pi">Are you sure you want to\n unpair %s?</string>
+    <string name="detail_dialog_unpairing">Unpairing..</string>
     <string name="detail_dialog">Transferring data…</string>
     <string name="detail_dialog_bytes">%s / %s</string>
     <string name="detail_dialog_small">The transferred data will be uploaded to
