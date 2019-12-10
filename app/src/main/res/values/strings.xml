@@ -49,6 +49,7 @@
     <string name="detail_data_available_end"> of cached files from this Pi</string>
     <string name="detail_no_data_mb">0 MB</string>
     <string name="detail_auto_transfer">Auto Transfer is turned on\nafter %d seconds</string>
+    <string name="detail_auto_transfer_btn">Auto Transfer is ON</string>
     <string name="detail_no_auto_transfer">Auto Transfer is\nturned off</string>
     <string name="detail_data">Data available</string>
     <string name="detail_data_size">%s</string>

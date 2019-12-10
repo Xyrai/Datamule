@@ -146,7 +146,7 @@ class SettingsActivity : AppCompatActivity() {
         val smallHeight = dpToPx(40)
 
         //init of the constraintlayout
-        val startVal = prefs!!.getBoolean("auto_transfer", true)
+        val startVal = prefs!!.getBoolean("auto_transfer", false)
         if(startVal) valueAnimator(clAutoTransfer, smallHeight, largeHeight)
         sAutoTransfer.setChecked(startVal)
 
