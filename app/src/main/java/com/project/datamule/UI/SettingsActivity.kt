@@ -199,9 +199,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun dpToPx(dp: Int): Int {
-    val density: Float = this.resources.displayMetrics.density
-    return Math.round(dp * density)
-}
+        val density: Float = this.resources.displayMetrics.density
+        return Math.round(dp * density)
+    }
 
     private fun valueAnimator(cl: ConstraintLayout, startValue: Int, endValue: Int) {
         val va = ValueAnimator.ofInt(startValue, endValue)
@@ -335,13 +335,12 @@ class SettingsActivity : AppCompatActivity() {
 //        clipboard.setPrimaryClip(clip)
 //    }
 
-    private fun getfolderSizeInMB(directory: File): Double {
+    private fun getfolderSize(directory: File): Long {
         var bytesTotal: Long = 0
         for (file in directory.listFiles()) {
             if (file.isFile()) bytesTotal += file.length()
         }
-        val sizeInMb: Double = bytesTotal / BYTE_TO_MB_DIVIDER
-        return sizeInMb
+        return bytesTotal
     }
 
     fun onClickBack() {
@@ -349,50 +348,42 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setStorage() {
-        tvTotalStorage.text =
-            getString(R.string.settings_total_storage, doubleMBToStringGB(getTotalStorageInMB()))
-        tvUsed.text = doubleMBToStringGB(getUsedStorageInMB()) + " GB"
-        tvFree.text = doubleMBToStringGB(getFreeStorageInMB()) + " GB"
-        //display in MB instead of GB
-        tvCache.text = (Math.round(getCacheStorageInMB() * 100.0) / 100.0).toString() + " MB"
+        tvTotalStorage.text = getString(R.string.settings_total_storage, humanReadableByteCount(getTotalStorage()))
+        tvUsed.text = humanReadableByteCount(getUsedStorage())
+        tvFree.text = humanReadableByteCount(getFreeStorage())
+        tvCache.text = humanReadableByteCount(getCacheStorage())
         setProgressBar()
     }
 
-    private fun doubleMBToStringGB(mb: Double): String {
-        // /1000 is for mb->gb, 100.0 is for amount of decimals (2)
-        return (Math.round((mb / 1000) * 100.0) / 100.0).toString()
-    }
-
-    private fun getTotalStorageInMB(): Double {
-        val stat = StatFs(Environment.getExternalStorageDirectory().getPath())
+    private fun getTotalStorage(): Long {
+        val stat = StatFs(Environment.getDataDirectory().getPath())
         val bytesTotal: Long = stat.blockSizeLong * stat.blockCountLong
-        val mbTotal: Double = (bytesTotal / BYTE_TO_MB_DIVIDER)
-        return mbTotal
+        return bytesTotal
     }
 
-    private fun getUsedStorageInMB(): Double {
-        return getTotalStorageInMB() - getFreeStorageInMB()
+    private fun getUsedStorage(): Long {
+        return getTotalStorage() - getFreeStorage()
     }
 
-    private fun getFreeStorageInMB(): Double {
-        val path = Environment.getDataDirectory()
-        val stats = StatFs(path.path)
-        val bytesAvailable = stats.blockSizeLong * stats.availableBlocksLong
-        val mbFree: Double = (bytesAvailable / BYTE_TO_MB_DIVIDER)
-        return mbFree
+    private fun getFreeStorage(): Long {
+        val stat = StatFs(Environment.getDataDirectory().getPath())
+        val bytesAvailable = stat.blockSizeLong * stat.availableBlocksLong
+        return bytesAvailable
     }
 
-    private fun getCacheStorageInMB(): Double {
-        if (cacheDir.listFiles() == null) return 0.0
-        else return getfolderSizeInMB(cacheDir)
+    private fun getCacheStorage(): Long {
+        if (filesDir.listFiles() == null) return 0
+        else return getfolderSize(filesDir)
     }
 
     private fun setProgressBar() {
         //maxOfProgressbar:free, primaryprogress: usedstorage secondaryprogress: cache
-        pbStorage.max = getTotalStorageInMB().toInt()
+        val total = (getTotalStorage() / BYTE_TO_MB_DIVIDER).toInt()
+        val used = (getUsedStorage() / BYTE_TO_MB_DIVIDER).toInt()
+        val cache = (getCacheStorage() / BYTE_TO_MB_DIVIDER).toInt() + used
 
-        pbStorage.progress = getUsedStorageInMB().toInt()
-        val cache = getCacheStorageInMB().toInt() + getUsedStorageInMB().toInt()
+        pbStorage.max = total
+        pbStorage.progress = used
         pbStorage.secondaryProgress = cache
     }
 
@@ -407,8 +398,16 @@ class SettingsActivity : AppCompatActivity() {
 
         if(fileUri?.toFile()!!.exists()) {
             fileUri.toFile().delete()
-            tvCache.text = (Math.round(getCacheStorageInMB() * 100.0) / 100.0).toString() + " MB"
+            tvCache.text = (Math.round(getCacheStorage() * 100.0) / 100.0).toString() + " MB"
             Toast.makeText(this, "Cache cleared", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
+        val unit = if (si) 1000 else 1024
+        if (bytes < unit) return "$bytes B"
+        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
+        return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
     }
 }

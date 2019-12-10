@@ -35,7 +35,7 @@
     <string name="settings_delay_sec">%d sec.</string>
     <string name="settings_support_phone">Call us</string>
     <string name="settings_support_email">E-mail us</string>
-    <string name="settings_total_storage">Total storage: %s GB</string>
+    <string name="settings_total_storage">Total storage: %s</string>
     <string name="settings_ram">available ram: %d MB</string>
 
     <!--DetailActivity Strings-->
