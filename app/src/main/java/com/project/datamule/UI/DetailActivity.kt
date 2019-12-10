@@ -3,20 +3,18 @@ package com.project.datamule.UI
 import android.animation.AnimatorInflater
 import android.app.AlertDialog
 import android.app.Dialog
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.project.datamule.Constants
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
@@ -33,7 +31,6 @@ import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
-import com.project.datamule.Constants.Companion.TAG_SOCKET
 import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 import kotlinx.android.synthetic.main.dialog_connecting.*
 
@@ -42,7 +39,8 @@ private const val TAG = "MY_APP_DEBUG_TAG"
 
 class DetailActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
-    private val mainScope = CoroutineScope(Dispatchers.IO)
+    private val mainScope = CoroutineScope(Dispatchers.Main)
+    private val ioScope = CoroutineScope(Dispatchers.IO)
     private lateinit var pi: Pi
     private lateinit var handler: Handler
     private lateinit var connectingDialog: Dialog
@@ -142,7 +140,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun unpairDevice(device: BluetoothDevice) {
         var message = ""
-        mainScope.launch {
+        ioScope.launch {
             try {
                 device::class.java.getMethod("removeBond").invoke(device)
                 message = "Succesfully unpaired Pi"
@@ -167,7 +165,7 @@ class DetailActivity : AppCompatActivity() {
         var valid = true
         var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
-        mainScope.launch {
+        ioScope.launch {
             try {
                 btSocket.connect()
             } catch (e: InterruptedException) {
@@ -371,155 +369,258 @@ class DetailActivity : AppCompatActivity() {
         mainScope.launch {
             try {
                 btSocket.connect()
+//                Log.e("testt", btSocket.inputStream.available().toString())
+//                Log.e("testt", btSocket.inputStream.read().toString())
+//                Log.e("testt", btSocket.inputStream.available().toString())
 
-                // InputStream forces you to read a byte before you can see the available amount,
-                // so we save the first byte
-                var byte = btSocket.inputStream.read().toByte()
-                Log.e(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
+                val buffer = ByteArray(5120)
+                var readMessage = ""
+                Log.e("iets0", "het lukt maybe wel? + connected ${btSocket.isConnected}")
 
-                // Get the available bytes left plus the one we pulled before
-                var availableBytes = btSocket.inputStream.available() + 1
-
-                // Initialize the byteArray with size:1024 equal to 1 kB,
-                // dataText is the string that holds the string in the inputStream
-                var data = ByteArray(1024)
-                var dataText = ""
-
-                // If the availableBytes in the inputStream is less than 1024 bytes (1 kB), reSet the byteArray to the actual size
-                if (availableBytes < 1024) {
-                    data = ByteArray(availableBytes)
-                }
-
-                // Set the byte we pulled before
-                data[0] = byte
-
+                Log.e("iets1", "het lukt maybe wel? + available ${btSocket.inputStream.available()}")
 
                 // Initialze the progressBar with the full size and zero downloaded size
-                var maxBytes = btSocket.inputStream.available() + 1
+                var maxBytes = btSocket.inputStream.available()
                 var maxSize = humanReadableByteCount(maxBytes.toLong())
-                var zeroData = humanReadableByteCount(0)
-                withContext(Dispatchers.Main) {
+                var transferredBytes = 0
+                var transferredSize = humanReadableByteCount(transferredBytes.toLong())
+//                withContext(Dispatchers.Main) {
                     dialog.progressBar.max = maxBytes
                     dialog.progressBar.progress = 0
-                    dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
-                }
-
-                // 'x' is for counting the bytes
-                // 'y' is for counting the progress
-                var x = 1
-                var y = 1
-
-                // As long as the inputstream still returns a byte, continue..
-                while (btSocket.inputStream.available() > 0) {
-
-                    var transferredData = humanReadableByteCount((y).toLong())
-
-                        // if the 1024th byte is initialized...
-                        if (data.size == 1024 && data[1023].hashCode() != 0) {
-
-                            // put the 1 kB of text to the string and reset the byteArray
-                            dataText += String(data)
-                            data = ByteArray(1024)
-
-                            // Are the available bytes less than 1 kB, set that value
-                            if (availableBytes < 1024) {
-                                data = ByteArray(availableBytes)
-                            }
-
-                            // Reset the byte count
-                            x = 0
-
-                            // todo deze bs printjes verwijderen
-                            println("byteArray was vol... is nu weer leeg")
-                            println("AVAILABLE: " + (btSocket.inputStream.available() + 1))
-                            println("Huidige string: $dataText")
-
-                            // todo dat maxsize gebeuren fixen
-                            // If the available bytes in the inputStream suddenly gets bigger, update the progressbar
-                            if ((btSocket.inputStream.available() + 1) > maxBytes) {
-                                maxBytes = btSocket.inputStream.available() + 1
-                                maxSize = humanReadableByteCount(maxBytes.toLong())
-
-                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
-
-                                withContext(Dispatchers.Main) {
-                                    dialog.progressBar.max = maxBytes
-                                    dialog.tvProgressText.text = getString(
-                                        R.string.detail_dialog_bytes,
-                                        transferredData,
-                                        maxSize
-                                    )
-                                }
-                            }
-
-                            // If the bytecount exceeds the earlier counted maxBytes (maxBytes sometimes suddenly grow)
-                            if (y > maxBytes) {
-                                maxBytes += (btSocket.inputStream.available())
-                                maxSize = humanReadableByteCount(maxBytes.toLong())
-
-                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
-
-                                withContext(Dispatchers.Main) {
-                                    dialog.progressBar.max = maxBytes
-                                    dialog.tvProgressText.text = getString(
-                                        R.string.detail_dialog_bytes,
-                                        transferredData,
-                                        maxSize
-                                    )
-                                }
-                            }
-                        }
-
-                    // Read and save the byte in the (1 kB or less) byteArray
-                    data[x] = btSocket.inputStream.read().toByte()
-
-                    // Set the current progress
-                    withContext(Dispatchers.Main) {
-                        dialog.progressBar.progress = y
-                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
-                    }
-
-                    // Increment the byte and progress ('x' and 'y') count
-                    // Reset the availableBytes
-                    x++
-                    y++
-                    availableBytes = btSocket.inputStream.available()
-                }
-
-                // If the last 1kB byteArray doesn't reach the 1023th index
-                dataText += String(data)
-
-//                for (x in 0 until btSocket.inputStream.available()) {
-//                    data[x + 1] = btSocket.inputStream.read().toByte()
-//                    var transferredData = humanReadableByteCount((x + 1).toLong(), true)
-//
-////                    println("HIEROOO222 " + )
-//
-//                    withContext(Dispatchers.Main) {
-//                        dialog.progressBar.progress = x + 1
-//                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
-//                    }
+                    dialog.tvProgressText.text =
+                        getString(R.string.detail_dialog_bytes, transferredSize, maxSize)
 //                }
 
-                Log.e(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
-                Log.e(TAG, "Test transferData() data string?: " + dataText)
-                createCacheFile(dataText)
+                Log.e("iets2", "het lukt maybe wel? + available ${btSocket.inputStream.available()}")
 
-                withContext(Dispatchers.Main) {
-                    dialog.cancel()
-                    buildSuccessTransfer(maxSize)
+
+                // Data transfer is too quick for Progress Dialog to show :)
+                delay(200)
+
+                while (btSocket.inputStream.available() > 0) {
+                    Log.e("INFOOOS", "progress maax = ${dialog.progressBar.max} en de huidige progress = ${dialog.progressBar.progress}")
+
+                    Log.e("iets3", "het lukt maybe wel? + available ${btSocket.inputStream.available()}")
+                    try {
+                        var bytes = btSocket.inputStream.read(buffer)
+                        readMessage += String(buffer, 0, bytes)
+//                        Log.e("DataTransfer", readMessage + "")
+
+                    } catch (e: IOException) {
+                        print(e.stackTrace)
+                        break
+                    }
+
+                     // If the available bytes in the inputStream suddenly gets bigger, update the progressbar
+                    if (btSocket.inputStream.available() > maxBytes) {
+                        maxBytes = btSocket.inputStream.available()
+                        Log.e("DataTransfer", "MAXSIZE IS GEUPDATED naar : ${humanReadableByteCount(maxBytes.toLong())}, in tekst :$maxBytes")
+                    }
+
+                    // If the bytecount exceeds the earlier counted maxBytes (maxBytes sometimes suddenly grow)
+                    if (transferredBytes > maxBytes) {
+                        maxBytes += (btSocket.inputStream.available())
+                        Log.e("DataTransfer", "MAXSIZE IS GEUPDATED naar : ${humanReadableByteCount(maxBytes.toLong())}, in tekst :$maxBytes")
+                    }
+
+//                    withContext(Dispatchers.Main) {
+                        transferredBytes += buffer.size
+                        updateProgressBarInDialog(dialog, buffer.size, maxBytes)
+                        Log.e("UPDATE PROGRESS", "Huidige proces = ${dialog.progressBar.progress}, Max proces = ${maxBytes}, ")
+                        // Data transfer is too quick for Progress Dialog to show :)
+                        delay(200)
+//                    }
                 }
-            } catch (e: IOException) {
-                Log.d(TAG, e.message)
-                withContext(Dispatchers.Main) {
+
+                // Data transfer is too quick for Progress Dialog to show :)
+                delay(200)
+
+                if (readMessage !== "") {
+                    Log.e("THE MESSAGE", readMessage)
+                    createCacheFile(readMessage)
+                }
+
+//                withContext(Dispatchers.Main) {
                     dialog.cancel()
-                    buildFailedTransfer() }
+                    buildSuccessTransfer(humanReadableByteCount(maxBytes.toLong()))
+//                }
+
+//
+//            var text = String(bytes)
+//            Log.e("testt", text)
+            } catch (e: IOException) {
+                Log.e(TAG, e.message)
+//                withContext(Dispatchers.Main) {
+                    dialog.cancel()
+                    buildFailedTransfer()
+//            }
             } finally {
                 btSocket.close()
-                Log.d(TAG_SOCKET,"Socket successfully closed")
+                Log.e("BluetoothSocket","Socket successfully closed")
             }
-
         }
+
+//        mainScope.launch {
+//            try {
+//                btSocket.connect()
+//
+//                // InputStream forces you to read a byte before you can see the available amount,
+//                // so we save the first byte
+//                var byte = btSocket.inputStream.read().toByte()
+//                Log.e(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
+//
+//                // Get the available bytes left plus the one we pulled before
+//                var availableBytes = btSocket.inputStream.available() + 1
+//
+//                // Initialize the byteArray with size:1024 equal to 1 kB,
+//                // dataText is the string that holds the string in the inputStream
+//                var data = ByteArray(1024)
+//                var dataText = ""
+//
+//                // If the availableBytes in the inputStream is less than 1024 bytes (1 kB), reSet the byteArray to the actual size
+//                if (availableBytes < 1024) {
+//                    data = ByteArray(availableBytes)
+//                }
+//
+//                // Set the byte we pulled before
+//                data[0] = byte
+//
+//
+//                // Initialze the progressBar with the full size and zero downloaded size
+//                var maxBytes = btSocket.inputStream.available() + 1
+//                var maxSize = humanReadableByteCount(maxBytes.toLong())
+//                var zeroData = humanReadableByteCount(0)
+//                withContext(Dispatchers.Main) {
+//                    dialog.progressBar.max = maxBytes
+//                    dialog.progressBar.progress = 0
+//                    dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
+//                }
+//
+//                // 'x' is for counting the bytes
+//                // 'y' is for counting the progress
+//                var x = 1
+//                var y = 1
+//
+//                // As long as the inputstream still returns a byte, continue..
+//                while (btSocket.inputStream.available() > 0) {
+//
+//                    var transferredData = humanReadableByteCount((y).toLong())
+//
+//                        // if the 1024th byte is initialized...
+//                        if (data.size == 1024 && data[1023].hashCode() != 0) {
+//
+//                            // put the 1 kB of text to the string and reset the byteArray
+//                            dataText += String(data)
+//                            data = ByteArray(1024)
+//
+//                            // Are the available bytes less than 1 kB, set that value
+//                            if (availableBytes < 1024) {
+//                                data = ByteArray(availableBytes)
+//                            }
+//
+//                            // Reset the byte count
+//                            x = 0
+//
+//                            // todo deze bs printjes verwijderen
+//                            println("byteArray was vol... is nu weer leeg")
+//                            println("AVAILABLE: " + (btSocket.inputStream.available() + 1))
+//                            println("Huidige string: $dataText")
+//
+//                            // todo dat maxsize gebeuren fixen
+//                            // If the available bytes in the inputStream suddenly gets bigger, update the progressbar
+//                            if ((btSocket.inputStream.available() + 1) > maxBytes) {
+//                                maxBytes = btSocket.inputStream.available() + 1
+//                                maxSize = humanReadableByteCount(maxBytes.toLong())
+//
+//                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
+//
+//                                withContext(Dispatchers.Main) {
+//                                    dialog.progressBar.max = maxBytes
+//                                    dialog.tvProgressText.text = getString(
+//                                        R.string.detail_dialog_bytes,
+//                                        transferredData,
+//                                        maxSize
+//                                    )
+//                                }
+//                            }
+//
+//                            // If the bytecount exceeds the earlier counted maxBytes (maxBytes sometimes suddenly grow)
+//                            if (y > maxBytes) {
+//                                maxBytes += (btSocket.inputStream.available())
+//                                maxSize = humanReadableByteCount(maxBytes.toLong())
+//
+//                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
+//
+//                                withContext(Dispatchers.Main) {
+//                                    dialog.progressBar.max = maxBytes
+//                                    dialog.tvProgressText.text = getString(
+//                                        R.string.detail_dialog_bytes,
+//                                        transferredData,
+//                                        maxSize
+//                                    )
+//                                }
+//                            }
+//                        }
+//
+//                    // Read and save the byte in the (1 kB or less) byteArray
+//                    data[x] = btSocket.inputStream.read().toByte()
+//
+//                    // Set the current progress
+//                    withContext(Dispatchers.Main) {
+//                        dialog.progressBar.progress = y
+//                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
+//                    }
+//
+//                    // Increment the byte and progress ('x' and 'y') count
+//                    // Reset the availableBytes
+//                    x++
+//                    y++
+//                    availableBytes = btSocket.inputStream.available()
+//                }
+//
+//                // If the last 1kB byteArray doesn't reach the 1023th index
+//                dataText += String(data)
+//
+////                for (x in 0 until btSocket.inputStream.available()) {
+////                    data[x + 1] = btSocket.inputStream.read().toByte()
+////                    var transferredData = humanReadableByteCount((x + 1).toLong(), true)
+////
+//////                    println("HIEROOO222 " + )
+////
+////                    withContext(Dispatchers.Main) {
+////                        dialog.progressBar.progress = x + 1
+////                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
+////                    }
+////                }
+//
+//                Log.e(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
+//                Log.e(TAG, "Test transferData() data string?: " + dataText)
+//                createCacheFile(dataText)
+//
+//                withContext(Dispatchers.Main) {
+//                    dialog.cancel()
+//                    buildSuccessTransfer(maxSize)
+//                }
+//            } catch (e: IOException) {
+//                Log.d(TAG, e.message)
+//                withContext(Dispatchers.Main) {
+//                    dialog.cancel()
+//                    buildFailedTransfer() }
+//            } finally {
+//                btSocket.close()
+//                Log.d(TAG_SOCKET,"Socket successfully closed")
+//            }
+//
+//        }
+    }
+
+    private fun updateProgressBarInDialog(dialog: Dialog, progress: Int, maxSize: Int) {
+        dialog.progressBar.progress += progress
+        dialog.progressBar.max = maxSize
+        var progressText = humanReadableByteCount(dialog.progressBar.progress.toLong())
+        var maxSizeText = humanReadableByteCount(maxSize.toLong())
+        dialog.tvProgressText.text =
+            getString(R.string.detail_dialog_bytes, progressText, maxSizeText)
     }
 
     private fun onClickBack() {
@@ -532,7 +633,8 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun createCacheFile(jsonText: String) {
-        var dateFromString = jsonText.substringBefore('{')
+//        var dateFromString = jsonText.substringBefore('{')
+        var dateFromString = jsonText.substring(0, 17)
         var formattedDate = getSuffixFromDateString(dateFromString)
 
         //temporary create file for cache demo purposes

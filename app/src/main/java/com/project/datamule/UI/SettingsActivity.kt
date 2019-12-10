@@ -35,6 +35,7 @@ import android.widget.Toast
 import androidx.core.net.toFile
 import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 import com.project.datamule.Utils.WifiStateReceiver
+import java.util.HashSet
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -396,19 +397,13 @@ class SettingsActivity : AppCompatActivity() {
         pbStorage.secondaryProgress = cache
     }
 
-    /**
-     * Clear cache example for demo on 12th of November.
-     */
-    //TODO: Loop through filesDir
     private fun deleteCache() {
-        var basePath = this.cacheDir.toString()
-        var fileName = "/PI-data.json"
-        val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
+        filesDir.listFiles().forEach { it.delete() }
+        val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
+        set.clear()
+        prefs!!.edit().putStringSet("dataFiles", set).apply()
 
-        if(fileUri?.toFile()!!.exists()) {
-            fileUri.toFile().delete()
-            tvCache.text = (Math.round(getCacheStorageInMB() * 100.0) / 100.0).toString() + " MB"
-            Toast.makeText(this, "Cache cleared", Toast.LENGTH_SHORT).show()
-        }
+        Log.e("DATAFILES", set.toString())
+        Toast.makeText(this, "Cache cleared", Toast.LENGTH_SHORT).show()
     }
 }
