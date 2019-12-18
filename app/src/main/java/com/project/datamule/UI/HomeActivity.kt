@@ -23,13 +23,12 @@ import com.project.datamule.Constants
 import com.project.datamule.Constants.Companion.REQUEST_ENABLE_BT
 import com.project.datamule.DataClass.Pi
 import com.project.datamule.R
-import com.project.datamule.Utils.IntentService
+import com.project.datamule.Utils.BackgroundService
 import com.project.datamule.Utils.WifiStateReceiver
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 
 class HomeActivity : AppCompatActivity() {
-
 
     companion object {
         var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -61,8 +60,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val intent = Intent(this, IntentService::class.java)
-
+       // val intent = Intent(this, BackgroundService::class.java)
         //TODO: Implement Background service/Job Scheduler
 //        startService(intent)
 
@@ -207,30 +205,30 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
+    //TODO: Add authentication rules here if needed
     private fun updateUI(user: FirebaseUser?) {
-        //TODO: do something if the user is authenticated || not
         if (user != null) {
+
         } else {
-            //TODO: do something if the user isn't authenticated
+
         }
     }
 
-    fun buildAlertMessageNoBluetooth() {
+    private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
-        .setTitle(R.string.bluetooth_alert_title)
-        .setMessage(R.string.bluetooth_alert_text)
-        .setCancelable(false)
-        .setPositiveButton(R.string.bluetooth_alert_positive_button)
-        { _, _ ->
-            Companion.bluetoothAdapter?.enable()
-            updatePiList()
-        }
-        .setNegativeButton(R.string.bluetooth_alert_negative_button)
-        { _, _ ->
-            finish()
-        }
-        .create()
-        .show()
+            .setTitle(R.string.bluetooth_alert_title)
+            .setMessage(R.string.bluetooth_alert_text)
+            .setCancelable(false)
+            .setPositiveButton(R.string.bluetooth_alert_positive_button)
+            { _, _ ->
+                Companion.bluetoothAdapter?.enable()
+                updatePiList()
+            }
+            .setNegativeButton(R.string.bluetooth_alert_negative_button)
+            { _, _ ->
+                finish()
+            }
+            .create()
+            .show()
     }
-
 }
