@@ -270,8 +270,8 @@ class SettingsActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_change_log)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialog.tvChangeLog.text = assets.open("1mbOfText.txt").bufferedReader().use {
-            it.readText().substring(0, 700)
+        dialog.tvChangeLog.text = assets.open("ChangeLogs.txt").bufferedReader().use {
+            it.readText().substring(0)
         }
 
         dialog.tvChangeLog.movementMethod = ScrollingMovementMethod()

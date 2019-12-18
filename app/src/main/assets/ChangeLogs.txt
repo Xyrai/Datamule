@@ -1,0 +1,15 @@
+Version 1.0.0
+-----------------------
+
+• Bluetooth pairing
+
+• Unpair Raspberry Pi's
+
+• Manual data transfer from Raspberry Pi's to Phones
+
+• Automatic data transfer
+
+• Automatic data upload with Wifi to the Cloud
+
+• Local data saves & much more!
+
