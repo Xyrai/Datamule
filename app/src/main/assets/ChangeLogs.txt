@@ -12,4 +12,3 @@ Version 1.0.0
 • Automatic data upload with Wifi to the Cloud
 
 • Local data saves & much more!
-
