@@ -20,6 +20,7 @@ import com.project.datamule.R
 import java.io.File
 import java.util.HashSet
 import kotlin.math.ln
+import kotlin.math.pow
 
 object Firebase {
     private val storageRef = FirebaseStorage.getInstance().reference
@@ -49,18 +50,17 @@ object Firebase {
             prefs!!.edit().putStringSet("dataFiles", sortedSet).apply()
         }
 
-//        val networkResult = getConnectionType(this)
-//        var fileName = "/PI-data.json"
+        //Full path name to a file
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
         Log.e("BASEPATH", basePath)
         Log.e("FILEuRI", fileUri.toString())
 
-
         if (!fileUri?.toFile()!!.exists() || fileName.isEmpty()) {
             Toast.makeText(context, "No file(s) found", Toast.LENGTH_LONG).show()
             return
         }
+
         fileRef.putFile(fileUri)
             .addOnSuccessListener { taskSnapshot ->
                 Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
@@ -69,10 +69,6 @@ object Firebase {
                     fileUri.toFile().name,
                     context
                 )
-                // Uri: taskSnapshot.downloadUrl
-                // Name: taskSnapshot.metadata!!.name
-                // Path: taskSnapshot.metadata!!.path
-                // Size: taskSnapshot.metadata!!.sizeBytes
             }
             .addOnFailureListener { exception ->
                 // Handle unsuccessful uploads
@@ -100,6 +96,9 @@ object Firebase {
         File(basePath + fileName).delete()
     }
 
+    /**
+     * Notification used for successful file uploads
+     */
     private fun uploadFinishedNotification(fileName: String, context: Context) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -138,6 +137,9 @@ object Firebase {
         }
     }
 
+    /**
+     * Notification used for file uploads
+     */
     private fun makeNotification(
         title: String,
         content: String,
@@ -184,12 +186,15 @@ object Firebase {
         }
     }
 
+    /**
+     * Method to get dynamic values of bytes (e.g. 1000 Bytes == 1 kB)
+     */
     private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
         if (bytes < unit) return "$bytes B"
-        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val exp = (ln(bytes.toDouble()) / ln(unit.toDouble())).toInt()
         val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
-        return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
+        return String.format("%.1f %sB", bytes / unit.toDouble().pow(exp.toDouble()), pre)
     }
 
     private fun humanReadableByteCountToInt(bytes: Long, si: Boolean = true): Int {
