@@ -29,7 +29,8 @@ class Constants {
 
         //Debug TAGS
         val TAG_SOCKET = "BLUETOOTH_SOCKET"
-
+        val TAG_WIFI_STATUS = "WIFI-STATUS: "
+        val TAG_FIREBASE = "Firebase"
 
 
     }

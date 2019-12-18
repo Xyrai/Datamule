@@ -16,6 +16,7 @@ import androidx.core.net.toFile
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.project.datamule.Constants
+import com.project.datamule.Constants.Companion.TAG_FIREBASE
 import com.project.datamule.R
 import java.io.File
 import java.util.HashSet
@@ -26,8 +27,6 @@ object Firebase {
     private val storageRef = FirebaseStorage.getInstance().reference
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
     private var fileRef: StorageReference = storageRef.child("TEST.json")
-    //TAG for Logs
-    private val TAG = "Firebase"
     private var prefs: SharedPreferences? = null
 
     fun uploadFile(context: Context) {
@@ -63,8 +62,8 @@ object Firebase {
 
         fileRef.putFile(fileUri)
             .addOnSuccessListener { taskSnapshot ->
-                Log.e(TAG, "Uri: " + taskSnapshot.uploadSessionUri)
-                Log.e(TAG, "Name: " + taskSnapshot.metadata!!.name)
+                Log.e(TAG_FIREBASE, "Uri: " + taskSnapshot.uploadSessionUri)
+                Log.e(TAG_FIREBASE, "Name: " + taskSnapshot.metadata!!.name)
                 uploadFinishedNotification(
                     fileUri.toFile().name,
                     context
