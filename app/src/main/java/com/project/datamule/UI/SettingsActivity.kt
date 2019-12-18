@@ -71,7 +71,7 @@ class SettingsActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
-    fun buildAlertMessageNoBluetooth() {
+    private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
             .setMessage(R.string.bluetooth_alert_text)

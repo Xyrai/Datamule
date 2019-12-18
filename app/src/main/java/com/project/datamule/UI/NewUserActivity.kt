@@ -72,6 +72,9 @@ class NewUserActivity : AppCompatActivity() {
         btnNewSearchPi.setOnClickListener { onClickOpenPiList() }
     }
 
+    /**
+     * Checks how many pi's are nearby & updates text based on the amount
+     */
     private fun updateUI() {
         if (pi_s.size == ONE_NEARBY_PI) {
             tvNewNearbyPiTitle.text = getString(R.string.one_nearby_pi_title, pi_s.size)
@@ -147,7 +150,7 @@ class NewUserActivity : AppCompatActivity() {
 //        }
 //    }
 
-    fun buildAlertMessageNoBluetooth() {
+    private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
             .setMessage(R.string.bluetooth_alert_text)

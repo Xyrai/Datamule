@@ -32,6 +32,5 @@ class Constants {
         val TAG_WIFI_STATUS = "WIFI-STATUS: "
         val TAG_FIREBASE = "Firebase"
 
-
     }
 }

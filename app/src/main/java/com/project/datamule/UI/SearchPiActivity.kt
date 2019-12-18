@@ -44,7 +44,7 @@ class SearchPiActivity : AppCompatActivity() {
     private var selectedPi: Pi? = null
     private val mainScope = CoroutineScope(Dispatchers.IO)
 
-    val broadCastReceiver = object : BroadcastReceiver() {
+    private val broadCastReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
 
             when (intent?.action) {
@@ -90,7 +90,7 @@ class SearchPiActivity : AppCompatActivity() {
         initView()
     }
 
-    fun buildAlertMessageNoBluetooth() {
+    private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
             .setMessage(R.string.bluetooth_alert_text)
@@ -215,6 +215,9 @@ class SearchPiActivity : AppCompatActivity() {
         ivRerunSearch.visibility = View.INVISIBLE
     }
 
+    /**
+     * Checks how many pi's are nearby & updates text based on the amount
+     */
     private fun updateRecyclerView() {
         when {
             pi_s.size < ONE_NEARBY_PI -> {
@@ -331,7 +334,7 @@ class SearchPiActivity : AppCompatActivity() {
                 selectedPiItem!!.tvName.setTextColor(getColor(R.color.colorAccent))
                 selectedPiItem!!.ivPi.setImageDrawable(getDrawable(R.drawable.logo_pi))
 
-                // Select the newely clicked
+                // Select the newly clicked
                 selectedPi = clickedPi
                 clickedPiItem.background = getDrawable(R.drawable.rectangle_color_green)
                 clickedPiItem.tvName.setTextColor(getColor(R.color.white))

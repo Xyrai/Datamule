@@ -60,9 +60,9 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-       // val intent = Intent(this, BackgroundService::class.java)
+        //val intent = Intent(this, BackgroundService::class.java)
         //TODO: Implement Background service/Job Scheduler
-//        startService(intent)
+        //startService(intent)
 
         if (Companion.bluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_no_bluetooth, Toast.LENGTH_SHORT).show()
