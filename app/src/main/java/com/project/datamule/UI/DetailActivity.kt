@@ -116,7 +116,7 @@ class DetailActivity : AppCompatActivity() {
         var sizeOfFiles = ""
 
         for (file in filesDir.listFiles()) {
-            if (file.isFile() && file.name.startsWith(Constants.PI_PREFIX_NAME) && file.name.startsWith(pi.name)) {
+            if (file.isFile && file.name.startsWith(Constants.PI_PREFIX_NAME) && file.name.startsWith(pi.name)) {
 //                Log.e("FILE:  ", file.name)
                 bytes += file.length()
             }
@@ -124,7 +124,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         if (bytes.toInt() == 0) {
-            imageView4.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), R.color.deleteCacheColorDarkGreyPressed)
+            imageView4.backgroundTintList = ContextCompat.getColorStateList(applicationContext, R.color.deleteCacheColorDarkGreyPressed)
             tvNoDataAvailable.visibility = View.VISIBLE
             tvThereIs.visibility = View.INVISIBLE
             tvEndText.visibility = View.INVISIBLE
