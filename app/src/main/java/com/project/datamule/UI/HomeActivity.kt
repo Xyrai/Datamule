@@ -44,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (!Companion.bluetoothAdapter!!.isEnabled) {
+        if (!bluetoothAdapter!!.isEnabled) {
             buildAlertMessageNoBluetooth()
         }
 
@@ -64,11 +64,11 @@ class HomeActivity : AppCompatActivity() {
         //TODO: Implement Background service/Job Scheduler
         //startService(intent)
 
-        if (Companion.bluetoothAdapter == null) {
+        if (bluetoothAdapter == null) {
             Toast.makeText(this, R.string.error_no_bluetooth, Toast.LENGTH_SHORT).show()
             finish()
         }
-        if (!Companion.bluetoothAdapter!!.isEnabled) {
+        if (!bluetoothAdapter!!.isEnabled) {
             buildAlertMessageNoBluetooth()
         }
 
@@ -165,7 +165,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun pairedDeviceList() {
         pi_s.clear()
-        pairedDevices = Companion.bluetoothAdapter!!.bondedDevices
+        pairedDevices = bluetoothAdapter!!.bondedDevices
 
         if (pairedDevices.isNotEmpty()) {
             clRectangle.visibility = View.INVISIBLE
@@ -221,7 +221,7 @@ class HomeActivity : AppCompatActivity() {
             .setCancelable(false)
             .setPositiveButton(R.string.bluetooth_alert_positive_button)
             { _, _ ->
-                Companion.bluetoothAdapter?.enable()
+                bluetoothAdapter?.enable()
                 updatePiList()
             }
             .setNegativeButton(R.string.bluetooth_alert_negative_button)

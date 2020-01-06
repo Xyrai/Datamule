@@ -113,7 +113,7 @@ class NewUserActivity : AppCompatActivity() {
     @TargetApi(Build.VERSION_CODES.M)
     private fun onPiClicked(clickedPi: Pi) {
         var position = pi_s.indexOf(clickedPi)
-        var clickedPiItem = rvNewSearchPi.get(position)
+        var clickedPiItem = rvNewSearchPi[position]
 
         when (selectedPi) {
             null -> { //select pi
