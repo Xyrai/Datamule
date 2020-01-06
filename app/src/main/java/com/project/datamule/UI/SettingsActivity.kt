@@ -24,7 +24,6 @@ import android.os.*
 import androidx.core.content.ContextCompat.getColor
 import com.project.datamule.R
 import android.animation.ValueAnimator
-import android.bluetooth.BluetoothAdapter
 import android.content.*
 import android.net.wifi.WifiManager
 import android.util.Log
@@ -32,7 +31,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
-import androidx.core.net.toFile
 import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 import com.project.datamule.Utils.WifiStateReceiver
 import java.util.HashSet
@@ -53,7 +51,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        fontAwesomeFont = Typeface.createFromAsset(getAssets(), "fa-solid-900.ttf")
+        fontAwesomeFont = Typeface.createFromAsset(assets, "fa-solid-900.ttf")
 
         if (!bluetoothAdapter!!.isEnabled) {
             buildAlertMessageNoBluetooth()
@@ -93,8 +91,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun initView() {
         prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
 
-        tvPushArrow.setTypeface(fontAwesomeFont)
-        tvPushArrowInfo.setTypeface(fontAwesomeFont)
+        tvPushArrow.typeface = fontAwesomeFont
+        tvPushArrowInfo.typeface = fontAwesomeFont
         ivBack.setOnClickListener { onClickBack() }
         clChangeLog.setOnClickListener { buildChangeLogDialog() }
         clSupport.setOnClickListener { buildSupportDialog() }
@@ -127,14 +125,14 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun pushNotificationSwitch() {
-        sPushNotification.setChecked(prefs!!.getBoolean("notifications", true))
+        sPushNotification.isChecked = prefs!!.getBoolean("notifications", true)
 
         clPushNotification.setOnClickListener {
             if(sPushNotification.isChecked) {
-                sPushNotification.setChecked(false)
+                sPushNotification.isChecked = false
                 setPushNotification(false)
             } else {
-                sPushNotification.setChecked(true)
+                sPushNotification.isChecked = true
                 setPushNotification(true)
             }
         }
@@ -151,12 +149,12 @@ class SettingsActivity : AppCompatActivity() {
         //init of the constraintlayout
         val startVal = prefs!!.getBoolean("auto_transfer", false)
         if(startVal) valueAnimator(clAutoTransfer, smallHeight, largeHeight)
-        sAutoTransfer.setChecked(startVal)
+        sAutoTransfer.isChecked = startVal
 
         //seekbar delay
         sbDelay.incrementProgressBy(1)
         val delay = prefs!!.getInt("auto_transfer_delay", 5)
-        sbDelay.setProgress(delay)
+        sbDelay.progress = delay
         tvDelay.text = getString(R.string.settings_delay_sec, delay)
 
         sbDelay.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -174,12 +172,12 @@ class SettingsActivity : AppCompatActivity() {
 
         clAutoTransfer.setOnClickListener {
             if(sAutoTransfer.isChecked) {
-                sAutoTransfer.setChecked(false)
+                sAutoTransfer.isChecked = false
                 setAutoTransferPreference(false)
                 //change height to small
                 valueAnimator(clAutoTransfer, largeHeight, smallHeight)
             } else {
-                sAutoTransfer.setChecked(true)
+                sAutoTransfer.isChecked = true
                 setAutoTransferPreference(true)
                 //set height larger
                 valueAnimator(clAutoTransfer, smallHeight, largeHeight)
@@ -211,7 +209,7 @@ class SettingsActivity : AppCompatActivity() {
         va.duration = 400
         va.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
-            cl.getLayoutParams().height = value
+            cl.layoutParams.height = value
             cl.requestLayout()
         }
         va.start()
@@ -348,7 +346,7 @@ class SettingsActivity : AppCompatActivity() {
         return bytesTotal
     }
 
-    fun onClickBack() {
+    private fun onClickBack() {
         finish()
     }
 
@@ -362,8 +360,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun getTotalStorage(): Long {
         val stat = StatFs(Environment.getDataDirectory().getPath())
-        val bytesTotal: Long = stat.blockSizeLong * stat.blockCountLong
-        return bytesTotal
+        return stat.blockSizeLong * stat.blockCountLong
     }
 
     private fun getUsedStorage(): Long {
@@ -372,8 +369,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun getFreeStorage(): Long {
         val stat = StatFs(Environment.getDataDirectory().getPath())
-        val bytesAvailable = stat.blockSizeLong * stat.availableBlocksLong
-        return bytesAvailable
+        return stat.blockSizeLong * stat.availableBlocksLong
     }
 
     private fun getCacheStorage(): Long {
