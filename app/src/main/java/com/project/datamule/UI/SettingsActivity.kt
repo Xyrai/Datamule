@@ -36,6 +36,8 @@ import androidx.core.net.toFile
 import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
 import com.project.datamule.Utils.WifiStateReceiver
 import java.util.HashSet
+import kotlin.math.ln
+import kotlin.math.pow
 
 
 //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
@@ -231,6 +233,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun makeNotification(title: String, content: String, notificationID: Int) {
         val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+       // Use this if you want sound for your Notification
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         val notificationIntent = Intent(this, HomeActivity::class.java)
@@ -286,10 +290,10 @@ class SettingsActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_support)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialog.tvPhoneIcon.setTypeface(fontAwesomeFont)
-        dialog.tvEmailIcon.setTypeface(fontAwesomeFont)
-        dialog.tvPushArrowInfo.setTypeface(fontAwesomeFont)
-        dialog.tvPushArrowInfo2.setTypeface(fontAwesomeFont)
+        dialog.tvPhoneIcon.typeface = fontAwesomeFont
+        dialog.tvEmailIcon.typeface = fontAwesomeFont
+        dialog.tvPushArrowInfo.typeface = fontAwesomeFont
+        dialog.tvPushArrowInfo2.typeface = fontAwesomeFont
 
 
         dialog.clPhone.setOnClickListener {
@@ -339,7 +343,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun getfolderSize(directory: File): Long {
         var bytesTotal: Long = 0
         for (file in directory.listFiles()) {
-            if (file.isFile()) bytesTotal += file.length()
+            if (file.isFile) bytesTotal += file.length()
         }
         return bytesTotal
     }
@@ -401,8 +405,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
         if (bytes < unit) return "$bytes B"
-        val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+        val exp = (ln(bytes.toDouble()) / ln(unit.toDouble())).toInt()
         val pre = (if (si) "kMGTPE" else "KMGTPE")[exp - 1] + if (si) "" else "i"
-        return String.format("%.1f %sB", bytes / Math.pow(unit.toDouble(), exp.toDouble()), pre)
+        return String.format("%.1f %sB", bytes / unit.toDouble().pow(exp.toDouble()), pre)
     }
 }
