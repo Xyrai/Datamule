@@ -69,8 +69,9 @@ object Firebase {
                     context
                 )
             }
-            .addOnFailureListener { exception ->
+            .addOnFailureListener {
                 // Handle unsuccessful uploads
+                Log.e(TAG_FIREBASE, "ERROR: $it")
             }
             .addOnProgressListener { taskSnapshot ->
                 var minSize = humanReadableByteCount(taskSnapshot.bytesTransferred)
@@ -87,11 +88,11 @@ object Firebase {
                     context
                 )
             }
-            .addOnPausedListener { taskSnapshot ->
+            .addOnPausedListener {
                 // Upload is paused
             }
 
-        //remove from filesdir
+        //Remove file from FilesDir
         File(basePath + fileName).delete()
     }
 
