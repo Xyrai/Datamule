@@ -326,7 +326,7 @@ class SearchPiActivity : AppCompatActivity() {
                 var selectedPiItem: View? = null
                 if (selectedPi != null) {
                     var positionSelected = pi_s.indexOf(selectedPi!!)
-                    selectedPiItem = rvSearchPi.get(positionSelected)
+                    selectedPiItem = rvSearchPi[positionSelected]
                 }
 
                 // Deselect the already selected

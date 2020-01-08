@@ -200,8 +200,6 @@ class HomeActivity : AppCompatActivity() {
                     ).show()
                     updateUI(null)
                 }
-
-                // ...
             }
     }
 
