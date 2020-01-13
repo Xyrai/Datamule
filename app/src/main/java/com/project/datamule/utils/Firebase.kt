@@ -23,6 +23,9 @@ import java.util.HashSet
 import kotlin.math.ln
 import kotlin.math.pow
 
+/**
+ * Object that contains Firebase functions, such as file uploads
+ */
 object Firebase {
     private val storageRef = FirebaseStorage.getInstance().reference
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
@@ -30,13 +33,12 @@ object Firebase {
     private var prefs: SharedPreferences? = null
 
     fun uploadFile(context: Context) {
-        // getSharedPreferences
+        //getSharedPreferences
         prefs = context.getSharedPreferences("com.project.datamule", AppCompatActivity.MODE_PRIVATE)
 
-        // Retrieve & save the Set of cacheFiles
+        //Retrieve & save the Set of cacheFiles
         val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
         var fileName = ""
-
         val basePath = context.filesDir.toString() + "/"
 
         if (set!!.isNotEmpty()) {
@@ -68,7 +70,7 @@ object Firebase {
                 )
             }
             .addOnFailureListener {
-                // Handle unsuccessful uploads
+                //Handle unsuccessful uploads
                 Log.e(TAG_FIREBASE, "ERROR: $it")
             }
             .addOnProgressListener { taskSnapshot ->
@@ -85,7 +87,8 @@ object Firebase {
                 )
             }
             .addOnPausedListener {
-                // Upload is paused
+                //Upload is paused
+                Log.e(TAG_FIREBASE, "PAUSED: $it")
             }
 
         //Remove file from FilesDir
