@@ -122,7 +122,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     /**
-     * configures the wifi receiver
+     * Configures the wifi receiver
      */
     private fun configureReceiver() {
         val filter = IntentFilter()
@@ -280,7 +280,7 @@ class SettingsActivity : AppCompatActivity() {
 
     //TODO duplicate method
     /**
-     * makes the notification and shows it to the user
+     * Makes the notification and shows it to the user
      * @param title the title of the notiification
      * @param content the content of the notification
      */

@@ -44,6 +44,7 @@ class SearchPiActivity : AppCompatActivity() {
     private val mainScope = CoroutineScope(Dispatchers.IO)
 
     private val broadCastReceiver = object : BroadcastReceiver() {
+
         override fun onReceive(contxt: Context?, intent: Intent?) {
 
             when (intent?.action) {
@@ -61,6 +62,11 @@ class SearchPiActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -69,6 +75,9 @@ class SearchPiActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Perform initialization of all fragments.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_pi)
@@ -89,6 +98,11 @@ class SearchPiActivity : AppCompatActivity() {
         initView()
     }
 
+    //TODO duplicate method
+    /**
+     * Method builds alert message dialog for
+     * when there is no bluetooth available
+     */
     private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
@@ -106,6 +120,9 @@ class SearchPiActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Checks if location services are granted by the user
+     */
     private fun checkLocationPermission(): Boolean {
         var permissionCheck = ContextCompat.checkSelfPermission(
             this@SearchPiActivity,
@@ -115,6 +132,7 @@ class SearchPiActivity : AppCompatActivity() {
             this@SearchPiActivity,
             android.Manifest.permission.ACCESS_COARSE_LOCATION
         )
+        //if granted or not
         if (permissionCheck != 0) {
 
             ActivityCompat.requestPermissions(
@@ -137,6 +155,9 @@ class SearchPiActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom)
     }
 
+    /**
+     * Initializes anything UI related
+     */
     private fun initView() {
         startSearch()
 
@@ -154,6 +175,7 @@ class SearchPiActivity : AppCompatActivity() {
         // Set onClick listeners
         ivBack.setOnClickListener { onClickBack() }
         btnSearchPi.setOnClickListener { onClickSearchPi() }
+        //new thread to reduce workload
         btnAddPi.setOnClickListener { mainScope.launch { withContext(Dispatchers.Main) { onClickAddPi() } } }
         ivRerunSearch.setOnClickListener { startSearch() }
 
@@ -163,6 +185,9 @@ class SearchPiActivity : AppCompatActivity() {
         rvSearchPi.adapter = piAdapter
     }
 
+    /**
+     * Searches for Pi's by using Bluetooth
+     */
     private fun startSearch() {
         // Clear the bluetooth devices list
         pi_s.clear()
@@ -192,6 +217,9 @@ class SearchPiActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Pauzes the search
+     */
     private fun pauseSearch() {
         bluetoothAdapter?.cancelDiscovery()
         ivLoader2.visibility = View.INVISIBLE
@@ -199,6 +227,9 @@ class SearchPiActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Stops the search completely
+     */
     private fun stopSearch() {
         // Stop the discovery
         bluetoothAdapter?.cancelDiscovery()
@@ -235,6 +266,9 @@ class SearchPiActivity : AppCompatActivity() {
         piAdapter.notifyDataSetChanged()
     }
 
+    /**
+     * Hides some UI elements
+     */
     private fun onClickSearchPi() {
         // Hide elements of Search Pi screen
         clRectangle.visibility = View.INVISIBLE
@@ -243,9 +277,13 @@ class SearchPiActivity : AppCompatActivity() {
         tvNearbyPiDesc.visibility = View.VISIBLE
         rvSearchPi.visibility = View.VISIBLE
 
+        //starts the searching of PI's
         startSearch()
     }
 
+    /**
+     * When clicked on PI. The app tries to connect to the PI.
+     */
     private suspend fun onClickAddPi() {
         pauseSearch()
         var device = selectedPi!!.device
@@ -265,6 +303,8 @@ class SearchPiActivity : AppCompatActivity() {
 
         dialog.show()
 
+
+        //loops 15 times
         for (i in 0..15) {
             if (device.bondState == BluetoothDevice.BOND_NONE) {
                 dialog.tvDialogTitle.text = getString(R.string.dialog_could_not_connect)
@@ -288,6 +328,7 @@ class SearchPiActivity : AppCompatActivity() {
                 break
             }
 
+            // a delay of 1 second. Trying to connect with the PI...
             delay(TimeUnit.SECONDS.toMillis(1))
         }
 
@@ -300,7 +341,10 @@ class SearchPiActivity : AppCompatActivity() {
         dialog.cancel()
     }
 
-
+    /**
+     * Some logic for selecting and deselecting the pi's in the list
+     * @param clickedPi the pi that got clicked on by the user
+     */
     @TargetApi(Build.VERSION_CODES.M)
     private fun onPiClicked(clickedPi: Pi) {
         var position = pi_s.indexOf(clickedPi)
