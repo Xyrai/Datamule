@@ -1,4 +1,4 @@
-package com.project.datamule.UI
+package com.project.datamule.ui
 
 import android.annotation.TargetApi
 import android.app.AlertDialog
@@ -14,9 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.project.datamule.Adapter.PiAdapter
+import com.project.datamule.adapter.PiAdapter
 import com.project.datamule.Constants.Companion.ONE_NEARBY_PI
-import com.project.datamule.DataClass.Pi
+import com.project.datamule.model.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_new_user.*
 import kotlinx.android.synthetic.main.item_pi.view.*

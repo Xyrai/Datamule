@@ -1,4 +1,4 @@
-package com.project.datamule.UI
+package com.project.datamule.ui
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.app.Dialog
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -22,16 +21,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.project.datamule.Adapter.PiAdapter
+import com.project.datamule.adapter.PiAdapter
 import com.project.datamule.Constants
 import com.project.datamule.Constants.Companion.ONE_NEARBY_PI
-import com.project.datamule.DataClass.Pi
+import com.project.datamule.model.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_search_pi.*
 import kotlinx.android.synthetic.main.activity_settings.ivBack
 import kotlinx.android.synthetic.main.item_pi.view.*
 import android.os.Handler
-import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
+import com.project.datamule.ui.HomeActivity.Companion.bluetoothAdapter
 import kotlinx.android.synthetic.main.dialog_connecting.*
 import kotlinx.coroutines.*
 import java.lang.Runnable
