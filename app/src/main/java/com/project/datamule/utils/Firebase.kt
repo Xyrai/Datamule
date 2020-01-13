@@ -37,12 +37,10 @@ object Firebase {
         val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
         var fileName = ""
 
-        Log.e("TESTTTTFIILESS+++", set.toString())
-
         val basePath = context.filesDir.toString() + "/"
 
-        if (set.isNotEmpty()) {
-            var sortedSet = set.sorted().toMutableSet()
+        if (set!!.isNotEmpty()) {
+            val sortedSet = set.sorted().toMutableSet()
             fileName = sortedSet.first()
             fileRef = storageRef.child(fileName)
             sortedSet.remove(sortedSet.first())
@@ -74,17 +72,15 @@ object Firebase {
                 Log.e(TAG_FIREBASE, "ERROR: $it")
             }
             .addOnProgressListener { taskSnapshot ->
-                var minSize = humanReadableByteCount(taskSnapshot.bytesTransferred)
-                var maxSize = humanReadableByteCount(taskSnapshot.totalByteCount)
-                var minSizeInt = humanReadableByteCountToInt(taskSnapshot.bytesTransferred)
-                var maxSizeInt = humanReadableByteCountToInt(taskSnapshot.totalByteCount)
+                val minSize = humanReadableByteCount(taskSnapshot.bytesTransferred)
+                val maxSize = humanReadableByteCount(taskSnapshot.totalByteCount)
+                val minSizeInt = humanReadableByteCountToInt(taskSnapshot.bytesTransferred)
+                val maxSizeInt = humanReadableByteCountToInt(taskSnapshot.totalByteCount)
 
                 makeNotification(
-                    "Uploading file",
                     "$minSize / $maxSize ",
                     minSizeInt,
                     maxSizeInt,
-                    0,
                     context
                 )
             }
@@ -141,11 +137,9 @@ object Firebase {
      * Notification used for file uploads
      */
     private fun makeNotification(
-        title: String,
         content: String,
         minSize: Int,
         maxSize: Int,
-        notificationID: Int,
         context: Context
     ) {
         val notificationManager =
@@ -157,7 +151,7 @@ object Firebase {
         )
             .setSmallIcon(R.drawable.logo_no_text)
             .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-            .setContentTitle(title)
+            .setContentTitle("Uploading File")
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true)
@@ -182,7 +176,7 @@ object Firebase {
                 notificationManager.createNotificationChannel(channel)
             }
 
-            notificationManager.notify(notificationID, builder.build())
+            notificationManager.notify(0, builder.build())
         }
     }
 
