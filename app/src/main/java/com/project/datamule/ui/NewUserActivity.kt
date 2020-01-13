@@ -137,21 +137,6 @@ class NewUserActivity : AppCompatActivity() {
         }
     }
 
-//        private fun isBluetoothAvailable() {
-//        var manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-//        var mBluetoothAdapter = manager.adapter
-//
-//            mBluetoothAdapter.startDiscovery()
-//            mBluetoothAdapter.
-//
-//        if (mBluetoothAdapter.isEnabled) {
-//            Toast.makeText(this, "wel bluetooth!!!", Toast.LENGTH_LONG).show()
-//        } else {
-//            Toast.makeText(this, "NOOOO bluetooth!!!", Toast.LENGTH_LONG).show()
-//            buildAlertMessageNoBluetooth(mBluetoothAdapter)
-//        }
-//    }
-
     private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
