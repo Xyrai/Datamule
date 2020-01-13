@@ -41,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var fontAwesomeFont: Typeface
     private var prefs: SharedPreferences? = null
-    private var wifiStateReceiver : BroadcastReceiver? =  null
+    private var wifiStateReceiver: BroadcastReceiver? =  null
 
     /**
      * Perform initialization of all fragments.
