@@ -1,4 +1,4 @@
-package com.project.datamule.UI
+package com.project.datamule.ui
 
 import android.Manifest
 import android.app.*
@@ -31,8 +31,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
-import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
-import com.project.datamule.Utils.WifiStateReceiver
+import com.project.datamule.ui.HomeActivity.Companion.bluetoothAdapter
+import com.project.datamule.utils.WifiStateReceiver
 import java.util.HashSet
 import kotlin.math.ln
 import kotlin.math.pow

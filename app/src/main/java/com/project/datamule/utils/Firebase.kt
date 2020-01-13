@@ -1,4 +1,4 @@
-package com.project.datamule.Utils
+package com.project.datamule.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

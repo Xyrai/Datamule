@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         package="com.project.datamule">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -15,20 +16,21 @@
             android:label="@string/app_name"
             android:roundIcon="@drawable/logo_no_text"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-        <activity android:name=".UI.DetailActivity" />
-        <activity android:name=".UI.SearchPiActivity" />
-        <activity android:name=".UI.SettingsActivity" />
-        <activity android:name=".UI.HomeActivity" />
-        <activity android:name=".UI.NewUserActivity"/>
-        <activity android:name=".UI.SplashActivity">
+            android:theme="@style/AppTheme"
+            tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity android:name=".ui.DetailActivity" />
+        <activity android:name=".ui.SearchPiActivity" />
+        <activity android:name=".ui.SettingsActivity" />
+        <activity android:name=".ui.HomeActivity" />
+        <activity android:name=".ui.NewUserActivity"/>
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Utils.BackgroundService" />
+        <service android:name=".utils.BackgroundService" />
     </application>
 
 </manifest>

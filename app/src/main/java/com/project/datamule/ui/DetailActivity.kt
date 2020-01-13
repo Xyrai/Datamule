@@ -1,4 +1,4 @@
-package com.project.datamule.UI
+package com.project.datamule.ui
 
 import android.animation.AnimatorInflater
 import android.app.AlertDialog
@@ -12,11 +12,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.project.datamule.Constants
-import com.project.datamule.DataClass.Pi
+import com.project.datamule.model.Pi
 import com.project.datamule.R
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.dialog_transfer.*
@@ -31,14 +30,12 @@ import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
-import com.project.datamule.UI.HomeActivity.Companion.bluetoothAdapter
+import com.project.datamule.ui.HomeActivity.Companion.bluetoothAdapter
 import kotlinx.android.synthetic.main.dialog_connecting.*
 import kotlin.math.ln
 import kotlin.math.pow
 
-const val PI_EXTRA = "PI_EXTRA"
-private const val TAG = "MY_APP_DEBUG_TAG"
-
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
     private val mainScope = CoroutineScope(Dispatchers.Main)
@@ -47,30 +44,42 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var handler: Handler
     private lateinit var connectingDialog: Dialog
 
+    companion object {
+        const val PI_EXTRA = "PI_EXTRA"
+        private const val TAG = "MY_APP_DEBUG_TAG"
+    }
 
+    /**
+     * Perform initialization of all fragments.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        pi = intent.getParcelableExtra<Pi>(PI_EXTRA)
+        pi = intent.getParcelableExtra(PI_EXTRA)
         handler = Handler()
 
-        if (!bluetoothAdapter!!.isEnabled) {
-            buildAlertMessageNoBluetooth()
-        }
+        if (!bluetoothAdapter!!.isEnabled) buildAlertMessageNoBluetooth()
 
         initViews()
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.
+     */
     override fun onResume() {
         super.onResume()
 
-        if (!bluetoothAdapter!!.isEnabled) {
-            buildAlertMessageNoBluetooth()
-        }
+        if (!bluetoothAdapter!!.isEnabled) buildAlertMessageNoBluetooth()
     }
 
-    fun buildAlertMessageNoBluetooth() {
+    /**
+     * Method builds alert message dialog for
+     * when there is no bluetooth available
+     */
+    private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
             .setMessage(R.string.bluetooth_alert_text)
@@ -87,6 +96,9 @@ class DetailActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Initializes anything UI related
+     */
     private fun initViews() {
         // Initialize shared preferences
         prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
@@ -110,14 +122,16 @@ class DetailActivity : AppCompatActivity() {
         isValidPi()
     }
 
+    /**
+     * Method calculates the amount of save data from this pi that is on the phone.
+     * It then sets that value in the availableData TextView in the activity.
+     */
     private fun setsavedPiData() {
-
         var bytes: Long = 0
         var sizeOfFiles = ""
 
         for (file in filesDir.listFiles()) {
             if (file.isFile && file.name.startsWith(Constants.PI_PREFIX_NAME) && file.name.startsWith(pi.name)) {
-//                Log.e("FILE:  ", file.name)
                 bytes += file.length()
             }
             sizeOfFiles = humanReadableByteCount(bytes)
@@ -140,8 +154,13 @@ class DetailActivity : AppCompatActivity() {
         availableData.text = getString(R.string.detail_data_size, sizeOfFiles)
     }
 
+
+    /**
+     * Method removes the selected BluetoothDevice from the paired list on the phone
+     * @param device the BluetoothDevice to be unpaired
+     */
     private fun unpairDevice(device: BluetoothDevice) {
-        var message = ""
+        var message: String
         ioScope.launch {
             try {
                 device::class.java.getMethod("removeBond").invoke(device)
@@ -160,12 +179,10 @@ class DetailActivity : AppCompatActivity() {
     /**
      * Checks if a Pi is valid for data transfer.
      * It checks if the Pi has the correct UUID and it checks if it is able to connect to the phone.
-     *
      */
-
     private fun isValidPi() {
         var valid = true
-        var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
+        val btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         ioScope.launch {
             try {
@@ -193,6 +210,10 @@ class DetailActivity : AppCompatActivity() {
             }}
     }
 
+    /**
+     * Method checks if autoTransfer is turned on from the sharedPreferences.
+     * If it is turned on it gets the auto transfer delay time and start the data transfer after that time.
+     */
     private fun autoTransfer() {
         val autoTransfer = prefs!!.getBoolean("auto_transfer", false)
 
@@ -213,14 +234,13 @@ class DetailActivity : AppCompatActivity() {
                 autoTransferMillis // seconds x 1000 = milliseconds
             )
         } else {
-            println("HIERO2")
             tvAutoTransfer.text = getString(R.string.detail_no_auto_transfer)
             ivUpdateAuto.setImageDrawable(getDrawable(R.drawable.ic_do_not_disturb_black))
         }
     }
 
     private fun buildDialogTransferQuestion() {
-        var dialog = Dialog(this@DetailActivity)
+        val dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer_question)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
@@ -233,20 +253,17 @@ class DetailActivity : AppCompatActivity() {
             transferData()
             dialog.cancel()
         }
-
-//        val builder = android.app.AlertDialog.Builder(this)
-//        builder.setView(layoutInflater.inflate(R.layout.dialog_transfer_question, null))
-//        builder.create().show()
     }
 
     private fun buildDialogDeletePiQuestion() {
-        var dialog = Dialog(this@DetailActivity)
+        val dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer_question)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialog.ivTransferLoader.setImageResource(0)
         dialog.ivTransferLoader.setBackgroundResource(R.drawable.logo_delete_drawable_large)
-        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_red_light)
+        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(
+            applicationContext, android.R.color.holo_red_light)
         dialog.tvDialogTitle.text = getString(R.string.detail_dialog_question_unpair_pi, pi.name)
         dialog.btnConfirmTransfer.text = getString(R.string.unpair)
 
@@ -266,13 +283,12 @@ class DetailActivity : AppCompatActivity() {
 
             mainScope.launch {
                 withContext(Dispatchers.Main) {
-
-                    var unpairDialog = Dialog(this@DetailActivity)
+                    val unpairDialog = Dialog(this@DetailActivity)
                     unpairDialog.setContentView(R.layout.dialog_connecting)
                     unpairDialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
-                    var animatorSet =
+                    val animatorSet =
                         AnimatorInflater.loadAnimator(this@DetailActivity, R.animator.loading_animator)
                     animatorSet.setTarget(unpairDialog.ivConnectingLoader)
                     animatorSet.start()
@@ -300,18 +316,18 @@ class DetailActivity : AppCompatActivity() {
      * @return Dialog - Returns a view.
      */
     private fun buildTransferDialog(): Dialog {
-        var dialog = Dialog(this@DetailActivity)
+        val dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
 
-        var maxSize = humanReadableByteCount(0)
-        var zeroData = humanReadableByteCount(0)
+        val maxSize = humanReadableByteCount(0)
+        val zeroData = humanReadableByteCount(0)
 
         dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
 
-        var animatorSet = AnimatorInflater.loadAnimator(
+        val animatorSet = AnimatorInflater.loadAnimator(
             this@DetailActivity,
             R.animator.loading_animator
         )
@@ -325,10 +341,10 @@ class DetailActivity : AppCompatActivity() {
 
 
     /**
-     * Starting a dialog when transfer does fail.
+     * Build and show a dialog when transfer fails.
      */
     private suspend fun buildFailedTransfer() {
-        var dialog = Dialog(this@DetailActivity)
+        val dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
 
         //failed
@@ -336,7 +352,8 @@ class DetailActivity : AppCompatActivity() {
         dialog.textView8.text = getString(R.string.detail_dialog_failed_transfer_small)
         dialog.ivTransferLoader.setImageResource(0)
         dialog.ivTransferLoader.setBackgroundResource(R.drawable.ic_error_outline_black)
-        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_red_light)
+        dialog.ivTransferLoader.backgroundTintList = ContextCompat.getColorStateList(
+            applicationContext, android.R.color.holo_red_light)
         dialog.progressBar.visibility = View.GONE
         dialog.tvProgressText.visibility = View.GONE
 
@@ -348,10 +365,13 @@ class DetailActivity : AppCompatActivity() {
         dialog.cancel()
     }
 
+    /**
+     * Build and show a dialog when transfer succeeds.
+     */
     private suspend fun buildSuccessTransfer(packageSize: String) {
         setsavedPiData()
 
-        var dialog = Dialog(this@DetailActivity)
+        val dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_transfer)
 
         //success
@@ -370,12 +390,15 @@ class DetailActivity : AppCompatActivity() {
         dialog.cancel()
     }
 
+    /**
+     * Build and show a dialog for while connecting with the BluetoothDevice.
+     */
     private fun buildConnectingDialog(): Dialog {
-        var dialog = Dialog(this@DetailActivity)
+        val dialog = Dialog(this@DetailActivity)
         dialog.setContentView(R.layout.dialog_connecting)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        var animatorSet =
+        val animatorSet =
             AnimatorInflater.loadAnimator(this@DetailActivity, R.animator.loading_animator)
         animatorSet.setTarget(dialog.ivConnectingLoader)
         animatorSet.start()
@@ -391,53 +414,37 @@ class DetailActivity : AppCompatActivity() {
     }
 
     /**
-     * Transfer data to this device. Checks if the bluetooth socket is connected and if
-     * the inputstream is avaible.
+     * Transfer data from the connected BluetoothSocket. Checks if the BluetoothSocket is connected and if
+     * the InputStream is available.
      */
     private fun transferData() {
-        var dialog = buildTransferDialog()
-        var btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
+        val dialog = buildTransferDialog()
+        val btSocket = pi.device.createRfcommSocketToServiceRecord(Constants.PI_UUID)
 
         mainScope.launch {
             try {
                 btSocket.connect()
-//                Log.e("testt", btSocket.inputStream.available().toString())
-//                Log.e("testt", btSocket.inputStream.read().toString())
-//                Log.e("testt", btSocket.inputStream.available().toString())
 
                 val buffer = ByteArray(5120)
                 var readMessage = ""
-                Log.e("iets0", "het lukt maybe wel? + connected ${btSocket.isConnected}")
 
-                Log.e("iets1", "het lukt maybe wel? + available ${btSocket.inputStream.available()}")
-
-                // Initialze the progressBar with the full size and zero downloaded size
+                // Initialize the progressBar with the full size and zero downloaded size
                 var maxBytes = btSocket.inputStream.available()
-                var maxSize = humanReadableByteCount(maxBytes.toLong())
+                val maxSize = humanReadableByteCount(maxBytes.toLong())
                 var transferredBytes = 0
-                var transferredSize = humanReadableByteCount(transferredBytes.toLong())
-//                withContext(Dispatchers.Main) {
-                    dialog.progressBar.max = maxBytes
-                    dialog.progressBar.progress = 0
-                    dialog.tvProgressText.text =
-                        getString(R.string.detail_dialog_bytes, transferredSize, maxSize)
-//                }
-
-                Log.e("iets2", "het lukt maybe wel? + available ${btSocket.inputStream.available()}")
-
+                val transferredSize = humanReadableByteCount(transferredBytes.toLong())
+                dialog.progressBar.max = maxBytes
+                dialog.progressBar.progress = 0
+                dialog.tvProgressText.text =
+                    getString(R.string.detail_dialog_bytes, transferredSize, maxSize)
 
                 // Data transfer is too quick for Progress Dialog to show :)
                 delay(200)
 
                 while (btSocket.inputStream.available() > 0) {
-                    Log.e("INFOOOS", "progress maax = ${dialog.progressBar.max} en de huidige progress = ${dialog.progressBar.progress}")
-
-                    Log.e("iets3", "het lukt maybe wel? + available ${btSocket.inputStream.available()}")
                     try {
-                        var bytes = btSocket.inputStream.read(buffer)
+                        val bytes = btSocket.inputStream.read(buffer)
                         readMessage += String(buffer, 0, bytes)
-//                        Log.e("DataTransfer", readMessage + "")
-
                     } catch (e: IOException) {
                         print(e.stackTrace)
                         break
@@ -455,13 +462,11 @@ class DetailActivity : AppCompatActivity() {
                         Log.e("DataTransfer", "MAXSIZE IS GEUPDATED naar : ${humanReadableByteCount(maxBytes.toLong())}, in tekst :$maxBytes")
                     }
 
-//                    withContext(Dispatchers.Main) {
-                        transferredBytes += buffer.size
-                        updateProgressBarInDialog(dialog, buffer.size, maxBytes)
-                        Log.e("UPDATE PROGRESS", "Huidige proces = ${dialog.progressBar.progress}, Max proces = ${maxBytes}, ")
-                        // Data transfer is too quick for Progress Dialog to show :)
-                        delay(200)
-//                    }
+                    transferredBytes += buffer.size
+                    updateProgressBarInDialog(dialog, buffer.size, maxBytes)
+                    Log.e("UPDATE PROGRESS", "Huidige proces = ${dialog.progressBar.progress}, Max proces = ${maxBytes}, ")
+                    // Data transfer is too quick for Progress Dialog to show :)
+                    delay(200)
                 }
 
                 // Data transfer is too quick for Progress Dialog to show :)
@@ -472,20 +477,12 @@ class DetailActivity : AppCompatActivity() {
                     createCacheFile(readMessage)
                 }
 
-//                withContext(Dispatchers.Main) {
-                    dialog.cancel()
-                    buildSuccessTransfer(humanReadableByteCount(maxBytes.toLong()))
-//                }
-
-//
-//            var text = String(bytes)
-//            Log.e("testt", text)
+                dialog.cancel()
+                buildSuccessTransfer(humanReadableByteCount(maxBytes.toLong()))
             } catch (e: IOException) {
                 Log.e(TAG, e.message)
-//                withContext(Dispatchers.Main) {
                     dialog.cancel()
                     buildFailedTransfer()
-//            }
             } finally {
                 btSocket.close()
                 mainScope.launch {
@@ -496,166 +493,13 @@ class DetailActivity : AppCompatActivity() {
                 Log.d("BluetoothSocket","Socket successfully closed")
             }
         }
-
-//        mainScope.launch {
-//            try {
-//                btSocket.connect()
-//
-//                // InputStream forces you to read a byte before you can see the available amount,
-//                // so we save the first byte
-//                var byte = btSocket.inputStream.read().toByte()
-//                Log.e(TAG, "Test transferData() Available Before?: " + btSocket.inputStream.available() + 1)
-//
-//                // Get the available bytes left plus the one we pulled before
-//                var availableBytes = btSocket.inputStream.available() + 1
-//
-//                // Initialize the byteArray with size:1024 equal to 1 kB,
-//                // dataText is the string that holds the string in the inputStream
-//                var data = ByteArray(1024)
-//                var dataText = ""
-//
-//                // If the availableBytes in the inputStream is less than 1024 bytes (1 kB), reSet the byteArray to the actual size
-//                if (availableBytes < 1024) {
-//                    data = ByteArray(availableBytes)
-//                }
-//
-//                // Set the byte we pulled before
-//                data[0] = byte
-//
-//
-//                // Initialze the progressBar with the full size and zero downloaded size
-//                var maxBytes = btSocket.inputStream.available() + 1
-//                var maxSize = humanReadableByteCount(maxBytes.toLong())
-//                var zeroData = humanReadableByteCount(0)
-//                withContext(Dispatchers.Main) {
-//                    dialog.progressBar.max = maxBytes
-//                    dialog.progressBar.progress = 0
-//                    dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, zeroData, maxSize)
-//                }
-//
-//                // 'x' is for counting the bytes
-//                // 'y' is for counting the progress
-//                var x = 1
-//                var y = 1
-//
-//                // As long as the inputstream still returns a byte, continue..
-//                while (btSocket.inputStream.available() > 0) {
-//
-//                    var transferredData = humanReadableByteCount((y).toLong())
-//
-//                        // if the 1024th byte is initialized...
-//                        if (data.size == 1024 && data[1023].hashCode() != 0) {
-//
-//                            // put the 1 kB of text to the string and reset the byteArray
-//                            dataText += String(data)
-//                            data = ByteArray(1024)
-//
-//                            // Are the available bytes less than 1 kB, set that value
-//                            if (availableBytes < 1024) {
-//                                data = ByteArray(availableBytes)
-//                            }
-//
-//                            // Reset the byte count
-//                            x = 0
-//
-//                            // todo deze bs printjes verwijderen
-//                            println("byteArray was vol... is nu weer leeg")
-//                            println("AVAILABLE: " + (btSocket.inputStream.available() + 1))
-//                            println("Huidige string: $dataText")
-//
-//                            // todo dat maxsize gebeuren fixen
-//                            // If the available bytes in the inputStream suddenly gets bigger, update the progressbar
-//                            if ((btSocket.inputStream.available() + 1) > maxBytes) {
-//                                maxBytes = btSocket.inputStream.available() + 1
-//                                maxSize = humanReadableByteCount(maxBytes.toLong())
-//
-//                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
-//
-//                                withContext(Dispatchers.Main) {
-//                                    dialog.progressBar.max = maxBytes
-//                                    dialog.tvProgressText.text = getString(
-//                                        R.string.detail_dialog_bytes,
-//                                        transferredData,
-//                                        maxSize
-//                                    )
-//                                }
-//                            }
-//
-//                            // If the bytecount exceeds the earlier counted maxBytes (maxBytes sometimes suddenly grow)
-//                            if (y > maxBytes) {
-//                                maxBytes += (btSocket.inputStream.available())
-//                                maxSize = humanReadableByteCount(maxBytes.toLong())
-//
-//                                println("MAXSIZE IS GEUPDATED naar : $maxSize, in tekst :$maxBytes")
-//
-//                                withContext(Dispatchers.Main) {
-//                                    dialog.progressBar.max = maxBytes
-//                                    dialog.tvProgressText.text = getString(
-//                                        R.string.detail_dialog_bytes,
-//                                        transferredData,
-//                                        maxSize
-//                                    )
-//                                }
-//                            }
-//                        }
-//
-//                    // Read and save the byte in the (1 kB or less) byteArray
-//                    data[x] = btSocket.inputStream.read().toByte()
-//
-//                    // Set the current progress
-//                    withContext(Dispatchers.Main) {
-//                        dialog.progressBar.progress = y
-//                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
-//                    }
-//
-//                    // Increment the byte and progress ('x' and 'y') count
-//                    // Reset the availableBytes
-//                    x++
-//                    y++
-//                    availableBytes = btSocket.inputStream.available()
-//                }
-//
-//                // If the last 1kB byteArray doesn't reach the 1023th index
-//                dataText += String(data)
-//
-////                for (x in 0 until btSocket.inputStream.available()) {
-////                    data[x + 1] = btSocket.inputStream.read().toByte()
-////                    var transferredData = humanReadableByteCount((x + 1).toLong(), true)
-////
-//////                    println("HIEROOO222 " + )
-////
-////                    withContext(Dispatchers.Main) {
-////                        dialog.progressBar.progress = x + 1
-////                        dialog.tvProgressText.text = getString(R.string.detail_dialog_bytes, transferredData, maxSize)
-////                    }
-////                }
-//
-//                Log.e(TAG, "Test transferData() Available After?: " + btSocket.inputStream.available())
-//                Log.e(TAG, "Test transferData() data string?: " + dataText)
-//                createCacheFile(dataText)
-//
-//                withContext(Dispatchers.Main) {
-//                    dialog.cancel()
-//                    buildSuccessTransfer(maxSize)
-//                }
-//            } catch (e: IOException) {
-//                Log.d(TAG, e.message)
-//                withContext(Dispatchers.Main) {
-//                    dialog.cancel()
-//                    buildFailedTransfer() }
-//            } finally {
-//                btSocket.close()
-//                Log.d(TAG_SOCKET,"Socket successfully closed")
-//            }
-//
-//        }
     }
 
     private fun updateProgressBarInDialog(dialog: Dialog, progress: Int, maxSize: Int) {
         dialog.progressBar.progress += progress
         dialog.progressBar.max = maxSize
-        var progressText = humanReadableByteCount(dialog.progressBar.progress.toLong())
-        var maxSizeText = humanReadableByteCount(maxSize.toLong())
+        val progressText = humanReadableByteCount(dialog.progressBar.progress.toLong())
+        val maxSizeText = humanReadableByteCount(maxSize.toLong())
         dialog.tvProgressText.text =
             getString(R.string.detail_dialog_bytes, progressText, maxSizeText)
     }
@@ -670,9 +514,8 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun createCacheFile(jsonText: String) {
-//        var dateFromString = jsonText.substringBefore('{')
-        var dateFromString = jsonText.substring(0, 17)
-        var formattedDate = getSuffixFromDateString(dateFromString)
+        val dateFromString = jsonText.substring(0, 17)
+        val formattedDate = getSuffixFromDateString(dateFromString)
 
         //temporary create file for cache demo purposes
         val fileName = getString(R.string.data_file_prefix, pi.name, formattedDate)
@@ -687,17 +530,20 @@ class DetailActivity : AppCompatActivity() {
         prefs!!.edit().putStringSet("dataFiles", set).apply()
 
         Log.e("DATAFILES", set.toString())
-
-//        println(set.)
-
-        //for reading from json file
-//        println(file.readText(Charsets.UTF_8))
     }
 
+    /**
+     *
+     */
     private fun getSuffixFromDateString(date: String): String {
         return date.replace("/", "").replace(":", "").replace(" ", "")
     }
 
+    /**
+     * Method returns human readable data size from Long: bytes
+     * @param bytes large numbers of bytes that you want to convert to readable size
+     * @param si return in metric system or not
+     */
     private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
         if (bytes < unit) return "$bytes B"

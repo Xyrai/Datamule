@@ -1,10 +1,9 @@
-package com.project.datamule.UI
+package com.project.datamule.ui
 
 import android.app.AlertDialog
 import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -18,13 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.project.datamule.Adapter.PiAdapter
+import com.project.datamule.adapter.PiAdapter
 import com.project.datamule.Constants
-import com.project.datamule.Constants.Companion.REQUEST_ENABLE_BT
-import com.project.datamule.DataClass.Pi
+import com.project.datamule.model.Pi
 import com.project.datamule.R
-import com.project.datamule.Utils.BackgroundService
-import com.project.datamule.Utils.WifiStateReceiver
+import com.project.datamule.ui.DetailActivity.Companion.PI_EXTRA
+import com.project.datamule.utils.WifiStateReceiver
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 

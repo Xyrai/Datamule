@@ -1,4 +1,4 @@
-package com.project.datamule.UI
+package com.project.datamule.ui
 
 import android.animation.AnimatorInflater
 import android.content.Intent
