@@ -91,8 +91,11 @@ class SettingsActivity : AppCompatActivity() {
     private fun initView() {
         prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
 
+        //sets the icons
         tvPushArrow.typeface = fontAwesomeFont
         tvPushArrowInfo.typeface = fontAwesomeFont
+
+        //sets the onclicklisteners
         ivBack.setOnClickListener { onClickBack() }
         clChangeLog.setOnClickListener { buildChangeLogDialog() }
         clSupport.setOnClickListener { buildSupportDialog() }
@@ -100,12 +103,13 @@ class SettingsActivity : AppCompatActivity() {
 
         pushNotificationSwitch()
         autoTransfer()
-
         configureReceiver()
-
         setStorage()
     }
 
+    /**
+     * configures the wifi receiver
+     */
     private fun configureReceiver() {
         val filter = IntentFilter()
         filter.addAction("com.project.datamule")
@@ -124,6 +128,9 @@ class SettingsActivity : AppCompatActivity() {
         unregisterReceiver(wifiStateReceiver)
     }
 
+    /**
+     * Controls the switch of pushnotifications
+     */
     private fun pushNotificationSwitch() {
         sPushNotification.isChecked = prefs!!.getBoolean("notifications", true)
 
@@ -142,6 +149,10 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+
+    /**
+     * Controls the delay of auto transfer when auto transfer is turned on
+     */
     private fun autoTransfer() {
         val largeHeight = dpToPx(140)
         val smallHeight = dpToPx(40)
@@ -199,11 +210,18 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+
+    /**
+     * Converts the dp to px based on the screen metrics of the phone it's running on
+     */
     private fun dpToPx(dp: Int): Int {
         val density: Float = this.resources.displayMetrics.density
         return Math.round(dp * density)
     }
 
+    /**
+     * Animates the change of height
+     */
     private fun valueAnimator(cl: ConstraintLayout, startValue: Int, endValue: Int) {
         val va = ValueAnimator.ofInt(startValue, endValue)
         va.duration = 400
@@ -215,20 +233,33 @@ class SettingsActivity : AppCompatActivity() {
         va.start()
     }
 
+    /**
+     * Calls the correct notification
+     */
     private fun setPushNotification(allowPushNotification: Boolean) {
         if(allowPushNotification) makeNotification("Push notifications", "Push notifications are now turned on.", 0)
         else makeNotification("Push notifications", "Push notifications are now turned off.", 0)
         setNotificationPreference(allowPushNotification)
     }
 
+    /**
+     * Sets the notification preference
+     */
     private fun setNotificationPreference(allowPushNotification: Boolean) {
         prefs!!.edit().putBoolean("notifications", allowPushNotification).apply()
     }
 
+    /**
+     * Sets the auto transfer preference
+     */
     private fun setAutoTransferPreference(autoTransfer: Boolean) {
         prefs!!.edit().putBoolean("auto_transfer", autoTransfer).apply()
     }
 
+
+    /**
+     * makes the notification and shows it to the user
+     */
     private fun makeNotification(title: String, content: String, notificationID: Int) {
         val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -267,6 +298,9 @@ class SettingsActivity : AppCompatActivity() {
         notificationManager.notify(notificationID, builder.build())
     }
 
+    /**
+     * Builds the changelog in the app
+     */
     private fun buildChangeLogDialog() {
         var dialog = Dialog(this@SettingsActivity)
         dialog.setContentView(R.layout.dialog_change_log)
@@ -281,19 +315,27 @@ class SettingsActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Converts Boolean to int
+     */
     private fun Boolean.toInt() = if (this) 1 else 0
 
+    /**
+     * Builds the dialog where the user can contact the support center, by using e-mail or phone
+     */
     private fun buildSupportDialog() {
         var dialog = Dialog(this@SettingsActivity)
         dialog.setContentView(R.layout.dialog_support)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        //sets the icons
         dialog.tvPhoneIcon.typeface = fontAwesomeFont
         dialog.tvEmailIcon.typeface = fontAwesomeFont
         dialog.tvPushArrowInfo.typeface = fontAwesomeFont
         dialog.tvPushArrowInfo2.typeface = fontAwesomeFont
 
 
+        //sets onclick
         dialog.clPhone.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     this@SettingsActivity,
@@ -309,6 +351,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
+        //sets onclick
         dialog.clEmail.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + Constants.DATAMULE_EMAIL))
             startActivity(intent)
@@ -318,11 +361,20 @@ class SettingsActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Opens the phone app
+     */
     private fun openPhoneApp() {
         val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + Constants.DATAMULE_PHONE_NUMBER))
         startActivity(intent)
     }
 
+    /**
+     * Opens the phone app if it is granted by the user
+     * @param requestCode
+     * @param permissions
+     * @param grantResults granted or denied
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             Constants.REQUEST_PHONE_CALL -> {
@@ -332,12 +384,10 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-//    private fun copyToClipboard(text: String) {
-//        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-//        val clip = ClipData.newPlainText("DataMule", text)
-//        clipboard.setPrimaryClip(clip)
-//    }
-
+    /**
+     * Gets size of a folder
+     * @param directory the folder to read the size
+     */
     private fun getfolderSize(directory: File): Long {
         var bytesTotal: Long = 0
         for (file in directory.listFiles()) {
@@ -346,10 +396,15 @@ class SettingsActivity : AppCompatActivity() {
         return bytesTotal
     }
 
+
+
     private fun onClickBack() {
         finish()
     }
 
+    /**
+     * Sets the numbers (size) for each type of storage. (free storage, used storage, cache)
+     */
     private fun setStorage() {
         tvTotalStorage.text = getString(R.string.settings_total_storage, humanReadableByteCount(getTotalStorage()))
         tvUsed.text = humanReadableByteCount(getUsedStorage())
@@ -358,25 +413,42 @@ class SettingsActivity : AppCompatActivity() {
         setProgressBar()
     }
 
+
+    /**
+     * Returns total storage of the phone
+     */
     private fun getTotalStorage(): Long {
         val stat = StatFs(Environment.getDataDirectory().getPath())
         return stat.blockSizeLong * stat.blockCountLong
     }
 
+    /**
+     * Returns the used storage
+     */
     private fun getUsedStorage(): Long {
         return getTotalStorage() - getFreeStorage()
     }
 
+    /**
+     * Returns the free storage
+     *
+     */
     private fun getFreeStorage(): Long {
         val stat = StatFs(Environment.getDataDirectory().getPath())
         return stat.blockSizeLong * stat.availableBlocksLong
     }
 
+    /**
+     * Returns the cache
+     */
     private fun getCacheStorage(): Long {
         if (filesDir.listFiles() == null) return 0
         else return getfolderSize(filesDir)
     }
 
+    /**
+     * Sets the progressbar of the storage
+     */
     private fun setProgressBar() {
         //maxOfProgressbar:free, primaryprogress: usedstorage secondaryprogress: cache
         val total = (getTotalStorage() / BYTE_TO_MB_DIVIDER).toInt()
@@ -388,16 +460,21 @@ class SettingsActivity : AppCompatActivity() {
         pbStorage.secondaryProgress = cache
     }
 
+    /**
+     * Deletes the cache from filesDir.
+     * Also deletes the datafiles names from the preferences
+     */
     private fun deleteCache() {
         filesDir.listFiles().forEach { it.delete() }
         val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
         set.clear()
         prefs!!.edit().putStringSet("dataFiles", set).apply()
-
-        Log.e("DATAFILES", set.toString())
         Toast.makeText(this, "Cache cleared", Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Converts the bytes to a human readable text (Eg. 123 MB)
+     */
     private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
         if (bytes < unit) return "$bytes B"
