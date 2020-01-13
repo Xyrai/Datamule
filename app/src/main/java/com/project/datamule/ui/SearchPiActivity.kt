@@ -36,6 +36,9 @@ import kotlinx.coroutines.*
 import java.lang.Runnable
 import java.util.concurrent.TimeUnit
 
+/**
+ * Class for searching the PIs
+ */
 class SearchPiActivity : AppCompatActivity() {
 
     private var pi_s = arrayListOf<Pi>()

@@ -37,6 +37,9 @@ import java.util.HashSet
 import kotlin.math.ln
 import kotlin.math.pow
 
+/**
+ * Class for settings in the app
+ */
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var fontAwesomeFont: Typeface

@@ -35,6 +35,9 @@ import kotlinx.android.synthetic.main.dialog_connecting.*
 import kotlin.math.ln
 import kotlin.math.pow
 
+/**
+ * Class for connecting to a PI and transfering the data
+ */
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class DetailActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
