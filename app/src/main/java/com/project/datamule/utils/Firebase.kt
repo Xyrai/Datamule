@@ -52,14 +52,16 @@ object Firebase {
         //Full path name to a file
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
+        //Logs for debugging purposes
         Log.e("BASEPATH", basePath)
-        Log.e("FILEuRI", fileUri.toString())
+        Log.e("FILEURI", fileUri.toString())
 
         if (!fileUri?.toFile()!!.exists() || fileName.isEmpty()) {
             Toast.makeText(context, "No file(s) found", Toast.LENGTH_LONG).show()
             return
         }
 
+        //File upload
         fileRef.putFile(fileUri)
             .addOnSuccessListener { taskSnapshot ->
                 Log.e(TAG_FIREBASE, "Uri: " + taskSnapshot.uploadSessionUri)
@@ -97,6 +99,8 @@ object Firebase {
 
     /**
      * Notification used for successful file uploads
+     * @param fileName name of the file being uploaded
+     * @param context context of the application
      */
     private fun uploadFinishedNotification(fileName: String, context: Context) {
         val notificationManager =
@@ -138,6 +142,10 @@ object Firebase {
 
     /**
      * Notification used for file uploads
+     * @param content min & max size of the file as a String
+     * @param minSize min size of the file as an Integer
+     * @param maxSize max size of the file as an Integer
+     * @param context context of the application
      */
     private fun makeNotification(
         content: String,
