@@ -22,7 +22,9 @@ import kotlinx.android.synthetic.main.activity_new_user.*
 import kotlinx.android.synthetic.main.item_pi.view.*
 import android.graphics.Paint
 
-
+/**
+ * WIP - At this moment turned off, this is the class that creates the new user screen
+ */
 class NewUserActivity : AppCompatActivity() {
 
     var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -112,8 +114,8 @@ class NewUserActivity : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun onPiClicked(clickedPi: Pi) {
-        var position = pi_s.indexOf(clickedPi)
-        var clickedPiItem = rvNewSearchPi[position]
+        val position = pi_s.indexOf(clickedPi)
+        val clickedPiItem = rvNewSearchPi[position]
 
         when (selectedPi) {
             null -> { //select pi
