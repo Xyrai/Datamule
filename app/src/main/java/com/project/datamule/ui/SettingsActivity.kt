@@ -47,7 +47,9 @@ class SettingsActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
     private var wifiStateReceiver : BroadcastReceiver? =  null
 
-
+    /**
+     * Perform initialization of all fragments.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -59,6 +61,11 @@ class SettingsActivity : AppCompatActivity() {
         initView()
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -71,6 +78,10 @@ class SettingsActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
+    /**
+     * Method builds alert message dialog for
+     * when there is no bluetooth available
+     */
     private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
@@ -88,6 +99,9 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Initializes anything UI related
+     */
     private fun initView() {
         prefs = getSharedPreferences("com.project.datamule", MODE_PRIVATE)
 
@@ -213,6 +227,7 @@ class SettingsActivity : AppCompatActivity() {
 
     /**
      * Converts the dp to px based on the screen metrics of the phone it's running on
+     * @param dp the dp to convert to px
      */
     private fun dpToPx(dp: Int): Int {
         val density: Float = this.resources.displayMetrics.density
@@ -221,6 +236,9 @@ class SettingsActivity : AppCompatActivity() {
 
     /**
      * Animates the change of height
+     * @param cl the layout that needs animation
+     * @param startValue the value to start from
+     * @param endValue the value where the animation ends
      */
     private fun valueAnimator(cl: ConstraintLayout, startValue: Int, endValue: Int) {
         val va = ValueAnimator.ofInt(startValue, endValue)
@@ -235,6 +253,7 @@ class SettingsActivity : AppCompatActivity() {
 
     /**
      * Calls the correct notification
+     * @param allowPushNotification pushnotifications that are on or off
      */
     private fun setPushNotification(allowPushNotification: Boolean) {
         if(allowPushNotification) makeNotification("Push notifications", "Push notifications are now turned on.", 0)
@@ -244,6 +263,7 @@ class SettingsActivity : AppCompatActivity() {
 
     /**
      * Sets the notification preference
+     * @param allowPushNotification pushnotifications are on or off
      */
     private fun setNotificationPreference(allowPushNotification: Boolean) {
         prefs!!.edit().putBoolean("notifications", allowPushNotification).apply()
@@ -251,14 +271,18 @@ class SettingsActivity : AppCompatActivity() {
 
     /**
      * Sets the auto transfer preference
+     * @param autoTransfer auto transfer is on or off
      */
     private fun setAutoTransferPreference(autoTransfer: Boolean) {
         prefs!!.edit().putBoolean("auto_transfer", autoTransfer).apply()
     }
 
 
+    //TODO duplicate method
     /**
      * makes the notification and shows it to the user
+     * @param title the title of the notiification
+     * @param content the content of the notification
      */
     private fun makeNotification(title: String, content: String, notificationID: Int) {
         val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -306,6 +330,7 @@ class SettingsActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_change_log)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        //reads the changelog file
         dialog.tvChangeLog.text = assets.open("ChangeLogs.txt").bufferedReader().use {
             it.readText().substring(0)
         }
@@ -472,8 +497,11 @@ class SettingsActivity : AppCompatActivity() {
         Toast.makeText(this, "Cache cleared", Toast.LENGTH_SHORT).show()
     }
 
+    //TODO Duplicate method
     /**
-     * Converts the bytes to a human readable text (Eg. 123 MB)
+     * Method returns human readable data size from Long: bytes
+     * @param bytes large numbers of bytes that you want to convert to readable size
+     * @param si return in metric system or not
      */
     private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
