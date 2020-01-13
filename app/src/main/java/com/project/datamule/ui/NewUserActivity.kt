@@ -22,7 +22,9 @@ import kotlinx.android.synthetic.main.activity_new_user.*
 import kotlinx.android.synthetic.main.item_pi.view.*
 import android.graphics.Paint
 
-
+/**
+ * WIP - At this moment turned off, this is the class that creates the new user screen
+ */
 class NewUserActivity : AppCompatActivity() {
 
     var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -112,8 +114,8 @@ class NewUserActivity : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun onPiClicked(clickedPi: Pi) {
-        var position = pi_s.indexOf(clickedPi)
-        var clickedPiItem = rvNewSearchPi[position]
+        val position = pi_s.indexOf(clickedPi)
+        val clickedPiItem = rvNewSearchPi[position]
 
         when (selectedPi) {
             null -> { //select pi
@@ -134,21 +136,6 @@ class NewUserActivity : AppCompatActivity() {
                 clickedPiItem.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_shaker))
         }
     }
-
-//        private fun isBluetoothAvailable() {
-//        var manager = this.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-//        var mBluetoothAdapter = manager.adapter
-//
-//            mBluetoothAdapter.startDiscovery()
-//            mBluetoothAdapter.
-//
-//        if (mBluetoothAdapter.isEnabled) {
-//            Toast.makeText(this, "wel bluetooth!!!", Toast.LENGTH_LONG).show()
-//        } else {
-//            Toast.makeText(this, "NOOOO bluetooth!!!", Toast.LENGTH_LONG).show()
-//            buildAlertMessageNoBluetooth(mBluetoothAdapter)
-//        }
-//    }
 
     private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
