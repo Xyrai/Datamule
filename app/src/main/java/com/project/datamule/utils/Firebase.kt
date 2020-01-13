@@ -185,7 +185,9 @@ object Firebase {
 
     //TODO: Duplicate method
     /**
-     * Method to get dynamic values of bytes (e.g. 1000 Bytes == 1 kB)
+     * Method returns human readable data size from Long: bytes
+     * @param bytes large numbers of bytes that you want to convert to readable size
+     * @param si return in metric system or not
      */
     private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
