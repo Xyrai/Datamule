@@ -26,6 +26,9 @@ import com.project.datamule.utils.WifiStateReceiver
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 
+/**
+ * Class for the base of the application
+ */
 class HomeActivity : AppCompatActivity() {
 
     companion object {
@@ -35,10 +38,14 @@ class HomeActivity : AppCompatActivity() {
     private var pi_s = arrayListOf<Pi>()
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
     private lateinit var auth: FirebaseAuth
-
     lateinit var pairedDevices: Set<BluetoothDevice>
     private var wifiStateReceiver: BroadcastReceiver? = null
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.
+     */
     override fun onResume() {
         super.onResume()
 
@@ -46,20 +53,22 @@ class HomeActivity : AppCompatActivity() {
             buildAlertMessageNoBluetooth()
         }
 
-        val notificationManager =
-            this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         //removes all the notifications, useful when user enters the app by clicking on the notifications
         notificationManager.cancelAll()
 
         updatePiList()
     }
 
+    /**
+     * Perform initialization of all fragments.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        //TODO: Fix implementation of the Background service/Job Scheduler
         //val intent = Intent(this, BackgroundService::class.java)
-        //TODO: Implement Background service/Job Scheduler
         //startService(intent)
 
         if (bluetoothAdapter == null) {
@@ -79,8 +88,10 @@ class HomeActivity : AppCompatActivity() {
         initViews()
     }
 
+    /**
+     * Initializes anything UI related
+     */
     private fun initViews() {
-
         clRectangle.visibility = View.INVISIBLE
 
         //Initialize Buttons
@@ -95,11 +106,17 @@ class HomeActivity : AppCompatActivity() {
         updatePiList()
     }
 
+    /**
+     * Updates the Pi List on the home screen
+     */
     private fun updatePiList() {
         pairedDeviceList()
         piAdapter.notifyDataSetChanged()
     }
 
+    /**
+     * Configures the WifiStateReceiver
+     */
     private fun configureReceiver() {
         val filter = IntentFilter()
         filter.addAction("com.project.datamule")
@@ -107,12 +124,18 @@ class HomeActivity : AppCompatActivity() {
         registerReceiver(wifiStateReceiver, filter)
     }
 
+    /**
+     * On Activity Start register the wifiStateReceiver
+     */
     public override fun onStart() {
         super.onStart()
         val intentFilter = IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION)
         registerReceiver(wifiStateReceiver, intentFilter)
     }
 
+    /**
+     * On Activity Stop unregister the wifiStateReceiver
+     */
     public override fun onStop() {
         super.onStop()
         unregisterReceiver(wifiStateReceiver)
@@ -155,12 +178,18 @@ class HomeActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
+    /**
+     * Opens {DetailActivity} with the info of the pi that has been clicked
+     */
     private fun onPiClicked(clickedPi: Pi) {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(PI_EXTRA, clickedPi)
         startActivity(intent)
     }
 
+    /**
+     * Adds all paired devices with the correct prefix to the Device List
+     */
     private fun pairedDeviceList() {
         pi_s.clear()
         pairedDevices = bluetoothAdapter!!.bondedDevices
@@ -180,6 +209,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Firebase initialization for authentication & file uploads
+     */
     private fun initFirebase() {
         auth = FirebaseAuth.getInstance()
 
@@ -202,6 +234,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     //TODO: Add authentication rules here if needed
+    /**
+     * Updates the Firebase interface when a user logs in
+     * @params user Information of the person using the Firebase service
+     */
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
 
@@ -210,6 +246,11 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    //TODO: Duplicate method
+    /**
+     * Method builds alert message dialog for
+     * when there is no bluetooth available
+     */
     private fun buildAlertMessageNoBluetooth() {
         AlertDialog.Builder(this)
             .setTitle(R.string.bluetooth_alert_title)
