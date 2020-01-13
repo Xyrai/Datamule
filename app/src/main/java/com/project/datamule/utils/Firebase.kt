@@ -183,6 +183,7 @@ object Firebase {
         }
     }
 
+    //TODO: Duplicate method
     /**
      * Method to get dynamic values of bytes (e.g. 1000 Bytes == 1 kB)
      */

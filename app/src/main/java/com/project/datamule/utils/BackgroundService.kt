@@ -7,7 +7,9 @@ import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.net.wifi.WifiManager
 
-
+/**
+ * WIP - At this moment turned off, this is the background wifi service to upload files in the background
+ */
 class BackgroundService : IntentService("BackgroundService") {
     private var wifiStateReceiver: BroadcastReceiver? = null
 
