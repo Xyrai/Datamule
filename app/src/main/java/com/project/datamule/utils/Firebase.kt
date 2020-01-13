@@ -23,6 +23,9 @@ import java.util.HashSet
 import kotlin.math.ln
 import kotlin.math.pow
 
+/**
+ * Object that contains Firebase functions, such as file uploads
+ */
 object Firebase {
     private val storageRef = FirebaseStorage.getInstance().reference
     //Example data/test.txt creates a folder: data, in the storage with the file test.txt in it
@@ -30,13 +33,12 @@ object Firebase {
     private var prefs: SharedPreferences? = null
 
     fun uploadFile(context: Context) {
-        // getSharedPreferences
+        //getSharedPreferences
         prefs = context.getSharedPreferences("com.project.datamule", AppCompatActivity.MODE_PRIVATE)
 
-        // Retrieve & save the Set of cacheFiles
+        //Retrieve & save the Set of cacheFiles
         val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
         var fileName = ""
-
         val basePath = context.filesDir.toString() + "/"
 
         if (set!!.isNotEmpty()) {
@@ -50,14 +52,16 @@ object Firebase {
         //Full path name to a file
         val fileUri: Uri? = Uri.fromFile(File(basePath + fileName))
 
+        //Logs for debugging purposes
         Log.e("BASEPATH", basePath)
-        Log.e("FILEuRI", fileUri.toString())
+        Log.e("FILEURI", fileUri.toString())
 
         if (!fileUri?.toFile()!!.exists() || fileName.isEmpty()) {
             Toast.makeText(context, "No file(s) found", Toast.LENGTH_LONG).show()
             return
         }
 
+        //File upload
         fileRef.putFile(fileUri)
             .addOnSuccessListener { taskSnapshot ->
                 Log.e(TAG_FIREBASE, "Uri: " + taskSnapshot.uploadSessionUri)
@@ -68,7 +72,7 @@ object Firebase {
                 )
             }
             .addOnFailureListener {
-                // Handle unsuccessful uploads
+                //Handle unsuccessful uploads
                 Log.e(TAG_FIREBASE, "ERROR: $it")
             }
             .addOnProgressListener { taskSnapshot ->
@@ -85,7 +89,8 @@ object Firebase {
                 )
             }
             .addOnPausedListener {
-                // Upload is paused
+                //Upload is paused
+                Log.e(TAG_FIREBASE, "PAUSED: $it")
             }
 
         //Remove file from FilesDir
@@ -94,6 +99,8 @@ object Firebase {
 
     /**
      * Notification used for successful file uploads
+     * @param fileName name of the file being uploaded
+     * @param context context of the application
      */
     private fun uploadFinishedNotification(fileName: String, context: Context) {
         val notificationManager =
@@ -135,6 +142,10 @@ object Firebase {
 
     /**
      * Notification used for file uploads
+     * @param content min & max size of the file as a String
+     * @param minSize min size of the file as an Integer
+     * @param maxSize max size of the file as an Integer
+     * @param context context of the application
      */
     private fun makeNotification(
         content: String,
@@ -180,8 +191,11 @@ object Firebase {
         }
     }
 
+    //TODO: Duplicate method
     /**
-     * Method to get dynamic values of bytes (e.g. 1000 Bytes == 1 kB)
+     * Method returns human readable data size from Long: bytes
+     * @param bytes large numbers of bytes that you want to convert to readable size
+     * @param si return in metric system or not
      */
     private fun humanReadableByteCount(bytes: Long, si: Boolean = true): String {
         val unit = if (si) 1000 else 1024
