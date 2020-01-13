@@ -32,5 +32,9 @@ class Constants {
         val TAG_WIFI_STATUS = "WIFI-STATUS: "
         val TAG_FIREBASE = "Firebase"
 
+        //1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
+        val BYTE_TO_MB_DIVIDER = 1048576.0
+
+
     }
 }

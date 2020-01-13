@@ -37,10 +37,6 @@ import java.util.HashSet
 import kotlin.math.ln
 import kotlin.math.pow
 
-
-//1 MB = 1048576 bytes (1024 bytes * 1024 KB = 1048576 bytes = 1MB)
-private const val BYTE_TO_MB_DIVIDER = 1048576.0
-
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var fontAwesomeFont: Typeface
@@ -476,9 +472,9 @@ class SettingsActivity : AppCompatActivity() {
      */
     private fun setProgressBar() {
         //maxOfProgressbar:free, primaryprogress: usedstorage secondaryprogress: cache
-        val total = (getTotalStorage() / BYTE_TO_MB_DIVIDER).toInt()
-        val used = (getUsedStorage() / BYTE_TO_MB_DIVIDER).toInt()
-        val cache = (getCacheStorage() / BYTE_TO_MB_DIVIDER).toInt() + used
+        val total = (getTotalStorage() /  Constants.BYTE_TO_MB_DIVIDER).toInt()
+        val used = (getUsedStorage() / Constants.BYTE_TO_MB_DIVIDER).toInt()
+        val cache = (getCacheStorage() / Constants.BYTE_TO_MB_DIVIDER).toInt() + used
 
         pbStorage.max = total
         pbStorage.progress = used
