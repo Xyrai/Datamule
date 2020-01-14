@@ -221,7 +221,7 @@ class SearchPiActivity : AppCompatActivity() {
     }
 
     /**
-     * Pauzes the search
+     * Pauses the search
      */
     private fun pauseSearch() {
         bluetoothAdapter?.cancelDiscovery()
