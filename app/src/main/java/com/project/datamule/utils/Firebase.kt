@@ -66,10 +66,15 @@ object Firebase {
             .addOnSuccessListener { taskSnapshot ->
                 Log.e(TAG_FIREBASE, "Uri: " + taskSnapshot.uploadSessionUri)
                 Log.e(TAG_FIREBASE, "Name: " + taskSnapshot.metadata!!.name)
-                uploadFinishedNotification(
-                    fileUri.toFile().name,
-                    context
-                )
+
+                //if push notifications are allowed
+                if (prefs!!.getBoolean("notifications", true)) {
+                    uploadFinishedNotification(
+                        fileUri.toFile().name,
+                        context
+                    )
+                }
+
             }
             .addOnFailureListener {
                 //Handle unsuccessful uploads
@@ -81,12 +86,16 @@ object Firebase {
                 val minSizeInt = humanReadableByteCountToInt(taskSnapshot.bytesTransferred)
                 val maxSizeInt = humanReadableByteCountToInt(taskSnapshot.totalByteCount)
 
-                makeNotification(
-                    "$minSize / $maxSize ",
-                    minSizeInt,
-                    maxSizeInt,
-                    context
-                )
+                //if push notifications are allowed
+                if (prefs!!.getBoolean("notifications", true)) {
+                    makeNotification(
+                        "$minSize / $maxSize ",
+                        minSizeInt,
+                        maxSizeInt,
+                        context
+                    )
+                }
+
             }
             .addOnPausedListener {
                 //Upload is paused
