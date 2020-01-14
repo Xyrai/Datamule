@@ -109,7 +109,7 @@ class DetailActivity : AppCompatActivity() {
         btnTransferData.isEnabled = false
 
         // Initialize Buttons
-        ivBack.setOnClickListener { onClickBack() }
+        ivBack.setOnClickListener { finish() }
         btnTransferData.setOnClickListener { buildDialogTransferQuestion() }
         deletePi.setOnClickListener { buildDialogDeletePiQuestion() }
 
@@ -306,7 +306,7 @@ class DetailActivity : AppCompatActivity() {
                     animatorSet.end()
                     unpairDialog.cancel()
 
-                    onClickBack()
+                    finish()
                 }
             }
 
@@ -442,7 +442,7 @@ class DetailActivity : AppCompatActivity() {
                     getString(R.string.detail_dialog_bytes, transferredSize, maxSize)
 
                 // Data transfer is too quick for Progress Dialog to show :)
-                delay(200)
+                delay(500)
 
                 while (btSocket.inputStream.available() > 0) {
                     try {
@@ -481,7 +481,7 @@ class DetailActivity : AppCompatActivity() {
                 }
 
                 dialog.cancel()
-                buildSuccessTransfer(humanReadableByteCount(maxBytes.toLong()))
+                buildSuccessTransfer(humanReadableByteCount(readMessage.toByteArray().size.toLong()))
             } catch (e: IOException) {
                 Log.e(TAG, e.message)
                     dialog.cancel()
@@ -498,6 +498,12 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Method updates the progressBar in a Dialog when transferring data
+     * @param dialog The dialog in which the progressBar needs to be updated
+     * @param progress The amount the progress should be
+     * @param maxSize The maxSize of the progressBar in case that might change while data transfer
+     */
     private fun updateProgressBarInDialog(dialog: Dialog, progress: Int, maxSize: Int) {
         dialog.progressBar.progress += progress
         dialog.progressBar.max = maxSize
@@ -505,10 +511,6 @@ class DetailActivity : AppCompatActivity() {
         val maxSizeText = humanReadableByteCount(maxSize.toLong())
         dialog.tvProgressText.text =
             getString(R.string.detail_dialog_bytes, progressText, maxSizeText)
-    }
-
-    private fun onClickBack() {
-        finish()
     }
 
     override fun finish() {

@@ -18,12 +18,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.DetailActivity" />
-        <activity android:name=".ui.SearchPiActivity" />
-        <activity android:name=".ui.SettingsActivity" />
-        <activity android:name=".ui.HomeActivity" />
-        <activity android:name=".ui.NewUserActivity"/>
-        <activity android:name=".ui.SplashActivity">
+        <activity android:name=".ui.DetailActivity"
+                android:screenOrientation="portrait" />
+        <activity android:name=".ui.SearchPiActivity"
+                android:screenOrientation="portrait" />
+        <activity android:name=".ui.SettingsActivity"
+                android:screenOrientation="portrait" />
+        <activity android:name=".ui.HomeActivity"
+                android:screenOrientation="portrait" />
+        <activity android:name=".ui.NewUserActivity"
+                android:screenOrientation="portrait" />
+        <activity android:name=".ui.SplashActivity"
+                android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
