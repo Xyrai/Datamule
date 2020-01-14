@@ -45,7 +45,6 @@ class SearchPiActivity : AppCompatActivity() {
     private var piAdapter = PiAdapter(pi_s) { clickedPi: Pi -> onPiClicked(clickedPi) }
     private var selectedPi: Pi? = null
     private val mainScope = CoroutineScope(Dispatchers.IO)
-
     private val broadCastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(contxt: Context?, intent: Intent?) {
