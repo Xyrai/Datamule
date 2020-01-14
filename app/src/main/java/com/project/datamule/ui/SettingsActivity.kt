@@ -493,6 +493,10 @@ class SettingsActivity : AppCompatActivity() {
         val set = prefs!!.getStringSet("dataFiles", HashSet<String>())
         set.clear()
         prefs!!.edit().putStringSet("dataFiles", set).apply()
+        //update progressbar
+        setProgressBar()
+        //update text
+        setStorage()
         Toast.makeText(this, "Cache cleared", Toast.LENGTH_SHORT).show()
     }
 
