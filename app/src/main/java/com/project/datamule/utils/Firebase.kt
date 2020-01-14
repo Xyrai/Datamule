@@ -75,6 +75,10 @@ object Firebase {
                     )
                 }
 
+                if (set.isNotEmpty()) {
+                    uploadFile(context)
+                }
+
             }
             .addOnFailureListener {
                 //Handle unsuccessful uploads
