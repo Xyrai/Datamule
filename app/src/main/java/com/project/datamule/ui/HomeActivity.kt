@@ -204,7 +204,9 @@ class HomeActivity : AppCompatActivity() {
                     )
                 )
             }
-        } else {
+        }
+
+        if (pi_s.isEmpty()) {
             clRectangle.visibility = View.VISIBLE
         }
     }
